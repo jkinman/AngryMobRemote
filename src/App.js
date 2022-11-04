@@ -1,13 +1,15 @@
+import React, { useEffect, useContext } from 'react'
 import './App.css';
-import * as peerjs from './modules/WebRTCPeer.js'
+
+// context
+import { AppContext } from './contexts/AppContext';
+import UplinkComponent from './smart/UplinkComponent';
 
 function App() {
 
-  const conneciton = peerjs.connect("9d64a6e7-767f-4e35-9ee3-fb866f3b4b5d")
-  console.log( conneciton)
   return (
     <div>
-
+      <UplinkComponent />
     </div>
   );
 }
