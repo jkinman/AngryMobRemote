@@ -1,0 +1,276 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Social Terrain Remote</title>
+    <link href='https://fonts.googleapis.com/css?family=VT323' rel='stylesheet' type='text/css'>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 24px Helvetica, Arial; }
+      form { padding: 3px;  width: 100vw;  }
+      form input {  border: 0; padding: 10px; width: 100vw; height: 15vw; font-size:44px;}
+      form button { width: 100vw; height: 10vw; background: rgb(53, 123, 56); border: none; padding: 10px; font-size:44px;}
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+
+
+      body {
+  background-color: #222;
+  text-align: center;
+}
+
+.crt {
+  width: 100vw;
+ letter-spacing: 1px;
+ font-family: 'VT323', monospace;
+ color: #95e208;
+ -webkit-filter: blur(.2px);
+ text-transform: uppercase;
+ text-shadow: 0 0 5px #22ff22, 0 0 5px #aaffaa;
+ font-size: 40px;
+}
+
+#monitor {
+ background-color: #222;
+ background-color: #161913;
+ 
+ position: relative;
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ width: 100vw;
+ height: 100vh;
+ text-transform: uppercase;
+ padding: 15px;
+}
+
+.content {
+  white-space: nowrap;
+  text-align: center;
+  display: inline-block;
+}
+
+.foreground, .background {
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.foreground {
+  /* background-image: url('https://dl.dropboxusercontent.com/u/5318200/IMG_Tile_Scalines.png'); */
+}
+
+.background {
+  opacity: .01;
+}
+
+.btn {
+  display: inline-block;
+  line-height: 18px;
+  cursor: pointer;
+}
+
+.btn:hover, .inv {
+ display: inline-block;
+ height: 16px;
+ line-height: 12px;
+ background-color: #95e208;
+ box-shadow: 0 0 5px #22ff22, 0 0 5px #aaffaa;
+ color: #1b3a22;
+ text-shadow: none;
+}
+
+.btn:hover {
+  background-color: rgb(141, 241, 102);
+  box-shadow: 0 0 3px #22ff22, 0 0 100px rgba(40,140,40,1);
+}
+
+.layout {
+  font-family: monospace;
+  white-space: pre;
+  display: block;
+}
+
+.message {
+  position: absolute;
+  left: 90px;
+}
+    </style>
+  </head>
+
+  <body>
+
+    <div>
+      <form>
+        <label>MESSAGE BROADCAST</label>
+        <input type="text" id="message-broadcast" placeholder="click here to broadcast" />
+        <br>
+        <button type="button" onclick="sendMessage(this);">SEND</button>
+      </form>
+    </div>
+          <div id="monitor" class="crt">
+          <pre class="content crt">
+        
+            <span id="display">Establishing Connection</span><br>
+                  ═══════════[†]═══════════<br><br><br>
+                <span class="message"></span>
+                <span id="x">x</span>
+                <br/>
+                <span id="y">y</span>
+                <br/>
+                <span id="z">z</span>
+                <br/>
+                <span id="alpha"></span>
+                <br/>
+                <span id="orientation">orientation</span>
+                    
+                </pre>
+                <div class="foreground">
+                  
+                </div>
+              </div>
+      <span id="motion"></span>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="js/socket.io-client/dist/socket.io.slim.js" ></script>
+
+    <script>
+        
+        function sendMessage( e ){
+          var message = $('#message-broadcast').val();
+          $('#message-broadcast').val('')
+          socket.emit('chat message', message );
+        }
+        var socket = io('/remote');
+        
+        document.addEventListener( 'click', function(event) {
+          socket.emit('remoteMessage', {event:'fullscreenclick'});
+        } )
+
+        function handleOrientation(event) {
+            socket.on('disconnect', () => $("#display").html("Disconnected"));
+            socket.emit('orientation', {
+                alpha:event.alpha, 
+                beta:event.beta, 
+                gamma:event.gamma, 
+                }
+            );
+            $("#display").html("Connection established");
+            var absolute = event.absolute;
+            var alpha    = event.alpha;
+            var beta     = event.beta;
+            var gamma    = event.gamma;
+
+            $("#x").html("alpha: " + (alpha - 180));
+            $("#y").html("beta: " + beta);
+            $("#z").html("gamma: " + (-gamma));
+            $("#alpha").html("alpha: " + absolute);
+        }
+
+        function orientationChange(event) {
+            socket.emit('screenrotation', {direction:window.orientation});
+            $("#orientation").html("orientation:" + window.orientation);
+            
+        }
+
+        function handleMotion(event) {
+            var rotationRate = [event.DeviceRotationRate.alpha, event.DeviceRotationRate.beta, event.DeviceRotationRate.gamma];
+            $("#motion").html( rotationRate );
+        }
+
+      $(function () {
+        $("#orientation").html("orientation:" + window.orientation);
+        window.addEventListener("orientationchange", orientationChange, true);
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener("deviceorientation", handleOrientation, true);
+        } else if (window.DeviceMotionEvent) {
+            window.addEventListener('devicemotion', handleMotion, true);
+        } else {
+            window.addEventListener("MozOrientation", handleOrientation, true);
+        }
+      });
+
+      // convert a rotate3d axis-angle to deviceorientation angles
+        function orient( aa ) {
+            var x = aa.x, y = aa.y, z = aa.z, a = aa.a,
+                c = Math.cos( aa.a ),
+                s = Math.sin( aa.a ),
+                t = 1 - c,
+                // axis-angle to rotation matrix
+                rm00 =    c + x*x * t,
+                rm10 =  z*s + y*x * t,
+                rm20 = -y*s + z*x * t,
+                rm01 = -z*s + x*y * t,
+                rm11 =    c + y*y * t,
+                rm21 =  x*s + z*y * t,
+                rm02 =  y*s + x*z * t,
+                rm12 = -x*s + y*z * t,
+                rm22 =    c + z*z * t,
+                
+                TO_DEG = 180 / Math.PI,
+                ea = [],
+                n = Math.sqrt( rm22 * rm22 + rm20 * rm20 );
+
+            // rotation matrix to Euler angles
+            ea[1] = Math.atan2( -rm21, n );
+
+            if ( n > 0.001 ) {
+                ea[0] = Math.atan2( rm01, rm11 );
+                ea[2] = Math.atan2( rm20, rm22 );
+
+            } else {
+                ea[0] = 0;
+                ea[2] = ( rm21 > 0 ? 1 : -1 ) * Math.atan2( -rm10, rm00 );
+            }
+
+            return {
+                alpha: -ea[0] * TO_DEG - 180,
+                beta:  -ea[1] * TO_DEG,
+                gamma:  ea[2] * TO_DEG
+            };
+        }
+
+        /* ThreeJS */
+
+var container = $("#canvas");
+var canvasWidth = container.width();
+var canvasHeight = container.height();
+
+// var scene = new THREE.Scene();
+// var camera = new THREE.PerspectiveCamera( 75, canvasWidth / canvasHeight, 0.1, 1000 );
+
+// this creates a 3d rendering context and
+// a canvas
+// var renderer = new THREE.WebGLRenderer( { alpha: true } );
+// renderer.setSize( canvasWidth, canvasHeight );
+// renderer.setClearColor( 0x000000, 0 );
+
+// the canvas is part of the renderer as a HTML DOM
+// element and needs to be appended in the DOM
+// container.get(0).appendChild( renderer.domElement );
+
+// var geometry = new THREE.SphereGeometry( 2, 12, 12 );
+// var material = new THREE.MeshBasicMaterial({
+//       color : 0x92ff38,
+//       wireframe : true,
+//       wireframeLinewidth: 2
+//     });
+// var cube = new THREE.Mesh( geometry, material );
+// scene.add( cube );
+
+// camera.position.z = 5;
+
+// function render() {
+// 	requestAnimationFrame( render );
+//   //cube.rotation.x += 0.02;
+//   cube.rotation.y += 0.008;
+// 	renderer.render( scene, camera );
+// }
+// render();
+    </script>
+  </body>
+</html>
