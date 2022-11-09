@@ -1,14 +1,13 @@
 import React, { useState, useReducer, useEffect } from "react";
 
 const initialState = {
-  rotationRate: { x: 0, y: 0, z: 0 },
+  permissionStatus: false,
+  deviceOrientation: { alpha: 0, beta: 0, gamma: 0 },
+  deviceMotion: { x: 0, y: 0, z: 0 },
   peerConnection: false,
   peerID: false,
   connectionID: false,
-  deviceOrientation: 0,
-  deviceMotion: { x: 0, y: 0, z: 0 },
   scrollY: window.scrollY,
-  alpha: 0,
 };
 
 const reducer = (state, action) => {
@@ -16,14 +15,20 @@ const reducer = (state, action) => {
     case "initializeState":
       return initialState;
 
-    case "device/setRotationRate":
+    case "device/setPermissionStatus":
+      return {
+        ...state,
+        permissionStatus: action.payload,
+      };
+
+    case "device/setDeviceOrientation":
       return {
         ...state,
         alpha: action.payload.alpha,
-        rotationRate: {
-          z: action.payload.alpha, //z
-          x: action.payload.beta, //x
-          y: action.payload.gamma, //y
+        deviceOrientation: {
+          alpha: action.payload.alpha, //z
+          beta: action.payload.beta, //x
+          gamma: action.payload.gamma, //y
         },
       };
 
@@ -35,12 +40,6 @@ const reducer = (state, action) => {
           y: action.payload.acceleration.y,
           z: action.payload.acceleration.z,
         },
-      };
-
-    case "device/setDeviceOrientation":
-      return {
-        ...state,
-        deviceOrientation: action.payload,
       };
 
     case "device/setScroll":
@@ -78,39 +77,44 @@ const DeviceMetricsProvider = (props) => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
   useEffect(() => {
-    console.log("DeviceMotionEvent", DeviceMotionEvent);
+    window.addEventListener("scroll", handleScrollCallback, true);
+    enableDeviceOrientationCallback();
+  }, []);
+
+  const linkHandlers = () => {
+    window.addEventListener("deviceorientation", handleDeviceOrientation, true);
+    window.addEventListener("devicemotion", handleDeviceMotion, true);
+  };
+
+  const enableDeviceOrientationCallback = (cb = () => {}) => {
     if (typeof DeviceMotionEvent.requestPermission === "function") {
       // Handle iOS 13+ devices.
       DeviceMotionEvent.requestPermission()
         .then((state) => {
+          dispatch({ type: "device/setPermissionStatus", payload: state });
           if (state === "granted") {
             linkHandlers();
           } else {
             console.error("Request to access the orientation was rejected");
           }
+          cb();
         })
-        .catch(console.error);
+        .catch((err) => {
+          console.error(err);
+          cb();
+        });
     } else {
       // Handle regular non iOS 13+ devices.
       linkHandlers();
+      cb();
     }
-    window.addEventListener("scroll", handleScrollCallback, true);
-    console.log("setup device events.", window);
-  }, []);
-
-  const linkHandlers = () => {
-    window.addEventListener("orientationchange", handleOrientationChange, true);
-    window.addEventListener("deviceorientation", handleDeviceOrientation, true);
-    window.addEventListener("devicemotion", handleDeviceMotion, true);
   };
 
   const handleDeviceOrientation = (event) => {
-    console.log("handleDeviceOrientation: ", event);
     dispatch({ type: "device/setDeviceOrientation", payload: event });
   };
 
   const handleDeviceMotion = (event) => {
-    console.log("handleDeviceMotion: ", event);
     dispatch({ type: "device/setDeviceMotion", payload: event });
   };
 
@@ -121,19 +125,12 @@ const DeviceMetricsProvider = (props) => {
     });
   };
 
-  const handleOrientationChange = (event) => {
-    console.log("handleOrientationChange: ", event);
-    dispatch({
-      type: "device/orientationChange",
-      payload: event.currentTarget.orientation,
-    });
-  };
-
   return (
     <DeviceMetricsContext.Provider
       value={{
         ...state,
         dispatch,
+        enableDeviceOrientationCallback,
       }}
     >
       {props.children}

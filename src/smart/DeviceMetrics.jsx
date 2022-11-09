@@ -12,12 +12,11 @@ const UplinkComponent = (props) => {
 
   return (
     <div>
+      <button onClick={deviceState.enableDeviceOrientationCallback}>enable device metrics</button>
       <AccelerometerDisplay
-        accelerometer={deviceState.rotationRate}
+        deviceMotion={deviceState.deviceMotion}
         deviceOrientation={deviceState.deviceOrientation}
-        motion={deviceState.deviceMotion}
-        scrollY={deviceState.scrollY}
-        motionx={deviceState.alpha}
+        permissionStatus={deviceState.permissionStatus}
       />
     </div>
   );

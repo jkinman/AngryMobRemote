@@ -2,17 +2,21 @@ import React, { useEffect, useContext } from 'react'
 
 const AccelerometerDisplay = (props) => {
 
-    const {accelerometer, deviceOrientation, motion, motionx, scrollY} = props
+    const {deviceMotion, deviceOrientation, permissionStatus} = props
 
     return(
         <div>
-            <h1>Orientation: {JSON.stringify(deviceOrientation)}</h1>
-            <h1>Accelerometer</h1> 
+            <h1>Permission</h1>
+            <p>{JSON.stringify(permissionStatus)}</p>
+            <h1>motion</h1> 
+            <p>x:{deviceMotion.x}</p>
+            <p>y:{deviceMotion.x}</p>
+            <p>z:{deviceMotion.x}</p>
+            <h1>orientation</h1> 
+            <p>alpha:{deviceOrientation.alpha}</p>
+            <p>beta :{deviceOrientation.beta}</p>
+            <p>gamma:{deviceOrientation.gamma}</p>
 
-            <h4>{JSON.stringify(accelerometer)}</h4>
-            <h4>{JSON.stringify(motion)}</h4>
-            <h5>scrollY: {scrollY}</h5>
-            <h5>motion x: {motionx}</h5>
         </div>
     )
 }
