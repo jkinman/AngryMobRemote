@@ -1,20 +1,22 @@
 
-export const init = (orientationChange = ()=>{}, deviceOrientation = ()=>{}, deviceMotion = ()=>{}) => {
+export const init = (orientationChange = console.log, deviceOrientation = console.log, deviceMotion = console.log, scrollCallback = console.log) => {
     
-    let foundOrientation = true
+    // let foundOrientation = true
 
     window.addEventListener("orientationchange", orientationChange, true);
 
-    if (window.DeviceOrientationEvent) {
+    // if (window.DeviceOrientationEvent) {
         window.addEventListener("deviceorientation", deviceOrientation, true);
-        foundOrientation = true
-    }
+        // foundOrientation = true
+    // }
     
-    if (window.DeviceMotionEvent) {
+    // if (window.DeviceMotionEvent) {
         window.addEventListener('devicemotion', deviceMotion, true)
-    }
+    // }
 
-    return foundOrientation
+    window.addEventListener('scroll', scrollCallback, true)
+
+    // return foundOrientation
 }
 
 // export function handleOrientation(event) {

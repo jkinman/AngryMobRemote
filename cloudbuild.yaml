@@ -1,0 +1,9 @@
+steps:
+    - name: 'gcr.io/cloud-builders/docker'
+      args:['build', '-t', 'gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA']
+
+
+# Copy to the bucket
+# gsutil rsync -R build gs://angrymob
+# make files public
+# gsutil iam ch allUsers:objectViewer gs://angrymob

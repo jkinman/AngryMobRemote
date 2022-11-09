@@ -5,14 +5,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 // contexts
-import AppProvider from './contexts/AppContext'
+import DeviceMetricsProvider from './contexts/DeviceMetricsContext'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <AppProvider>
+    <DeviceMetricsProvider>
       <App />
-    </AppProvider>
+    </DeviceMetricsProvider>
   </React.StrictMode>
 );
 
