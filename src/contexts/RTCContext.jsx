@@ -1,8 +1,8 @@
 import React, { useState, useReducer, useEffect } from "react"
 
-const EMPTY = 'UNINITIALIZED'
-const CONNECTING = 'CONNECTING'
-const OPEN = 'OPEN'
+const EMPTY = "UNINITIALIZED"
+const CONNECTING = "CONNECTING"
+const OPEN = "OPEN"
 
 const initialState = {
 	status: EMPTY,
@@ -12,11 +12,12 @@ const initialState = {
 	data: false,
 	dataHistory: [],
 	peerId: false,
-	connectionID: false,
+	connectionId: false,
 	peerConnection: false,
 }
 
 const reducer = (state, action) => {
+	// console.log(action)
 	switch (action.type) {
 		case "initializeState":
 			return initialState
@@ -24,7 +25,6 @@ const reducer = (state, action) => {
 		case "setConnection":
 			return {
 				...state,
-        connectionID: action.payload.connectionId,
 				connection: action.payload,
 			}
 		case "setStatus":
@@ -47,10 +47,11 @@ const reducer = (state, action) => {
 					action.payload
 				),
 			}
-		case "setConnectionID":
+		case "setConnectionId":
+      console.log('setConnectionId' ,action.payload)
 			return {
 				...state,
-				connectionID: action.payload,
+				connectionId: action.payload,
 			}
 		case "setPeerId":
 			return {
@@ -79,7 +80,7 @@ const RTCProvider = (props) => {
 		if (status !== EMPTY) return
 		if (state.peerId) return
 		dispatch({ type: "setStatus", payload: CONNECTING })
-    setStatus(CONNECTING)
+		setStatus(CONNECTING)
 
 		peer.on("close", console.log)
 		peer.on("error", console.log)
@@ -89,13 +90,15 @@ const RTCProvider = (props) => {
 			dispatch({ type: "setPeer", payload: peer })
 			dispatch({ type: "setPeerId", payload: id })
 			dispatch({ type: "setStatus", payload: OPEN })
-      setStatus(OPEN)
+			setStatus(OPEN)
 		})
 
 		peer.on("connection", (dataConnection) => {
 			console.log("dataConnection", dataConnection)
 			dispatch({ type: "addDataConnection", payload: dataConnection })
-      dataConnection.on("data", (data) => dispatch({ type: "dataRecieved", payload: data }))
+			dataConnection.on("data", (data) =>
+				dispatch({ type: "dataRecieved", payload: data })
+			)
 		})
 	}, [])
 
@@ -103,26 +106,26 @@ const RTCProvider = (props) => {
 		const connection = peer.connect(id)
 
 		dispatch({ type: "setConnection", payload: connection })
-		connection.on("data", console.log)
-		connection.on("open", console.log)
+		// connection.on("data", console.log)
+		// connection.on("open", console.log)
 		connection.on("close", console.log)
 		connection.on("error", console.log)
 
 		connection.on("data", (data) =>
 			dispatch({ type: "dataRecieved", payload: data })
 		)
-		connection.on("connection", (id, p2) => {
-			console.log("openEvent", id)
-			dispatch({ type: "setConnectionID", payload: id })
+		connection.on("open", () => {
+			dispatch({ type: "setConnectionId", payload: connection.connectionId })
 		})
 		connection.on("close", console.log)
 		connection.on("error", console.log)
 	}
 
 	const sendData = (data) => {
-    if(state.connectionID){
-      state.connection.send( data )
-    }
+    // console.log(state)
+		if (state.connection?.connectionId) {
+			state.connection.send(data)
+		}
 	}
 
 	return (

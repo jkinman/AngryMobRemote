@@ -20,8 +20,8 @@ const ConnectionStatus = (props) => {
             <ul>
                 {dataConnections.map(con => (<li key={con.connectionId}>{con.connectionId}</li>))}
             </ul>
-            {/* <h1>data</h1>
-            <p>{JSON.stringify(data)}</p> */}
+            {/* <h1>data</h1> */}
+            {/* <p>{JSON.stringify(data)}</p> */}
         </div>
     )
 }

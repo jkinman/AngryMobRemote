@@ -8,16 +8,17 @@ let connection
 const UplinkComponent = (props) => {
 	const deviceState = useContext(DeviceMetricsContext)
 
-  const fullscreenToggle = () => {
-    let de = document.documentElement;
-    if (de.requestFullscreen) { de.requestFullscreen(); }
-    else if (de.mozRequestFullScreen) { de.mozRequestFullScreen(); }
-    else if (de.webkitRequestFullscreen) { de.webkitRequestFullscreen(); }
-    else if (de.msRequestFullscreen) { de.msRequestFullscreen(); }
+  // const fullscreenToggle = () => {
+  //   let de = document.documentElement;
+  //   if (de.requestFullscreen) { de.requestFullscreen(); }
+  //   else if (de.mozRequestFullScreen) { de.mozRequestFullScreen(); }
+  //   else if (de.webkitRequestFullscreen) { de.webkitRequestFullscreen(); }
+  //   else if (de.msRequestFullscreen) { de.msRequestFullscreen(); }
   
-    // (A2) THEN LOCK ORIENTATION
-    screen.orientation.lock('portrait-primary');
-     }
+  //   // (A2) THEN LOCK ORIENTATION
+  //   screen.orientation.lock('portrait-primary');
+  //    }
+
 // const fullscreenToggle = () =>{
   
 //   if( document.body.requestFullscreen ) document.body.requestFullscreen()
@@ -27,8 +28,6 @@ const UplinkComponent = (props) => {
 		<div>
 			{deviceState.deviceMotionAvailable ? (
 				<div>
-          
-          <h2 onClick={()=>{fullscreenToggle()}}>go fullscreen</h2>
 
 					{!deviceState.permissionGranted ? (
 						

@@ -34,10 +34,10 @@ root.render(
 	<React.StrictMode>
 		<DeviceMetricsProvider>
 			<RTCProvider peer={peerConnection}>
-				{/* <App /> */}
-				<RouterProvider
+				<App />
+				{/* <RouterProvider
 					router={router}
-				/>
+				/> */}
        
 			</RTCProvider>
 		</DeviceMetricsProvider>

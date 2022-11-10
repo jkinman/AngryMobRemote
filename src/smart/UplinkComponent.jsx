@@ -1,28 +1,36 @@
 import React, { useEffect, useContext, useState } from "react"
 
 import QRCode from "qrcode"
-import { useLocation } from "react-router-dom"
 
 import { DeviceMetricsContext } from "../contexts/DeviceMetricsContext"
 import { RTCContext } from "../contexts/RTCContext"
 import ConnectionStatus from "../dumb/ConnectionStatus"
+import {useParams} from 'react-router-dom'
 
 let generatedQRDataURL
 
 const UplinkComponent = (props) => {
 	const [qrUrl, setQrUrl] = useState()
-	const { id } = props
-
+	let { id } = useParams()
+    const requestRef = React.useRef()
 	const RTCState = useContext(RTCContext)
 	const deviceState = useContext(DeviceMetricsContext)
-    const sendDeviceDetails = () => {
-        RTCState.sendData( {...deviceState.deviceMotion, ...deviceState.deviceOrientation})
-        if( deviceState.deviceMotionAvailable) requestAnimationFrame( sendDeviceDetails )
+    
+    const sendDeviceDetails = (sendData) => {
+        console.log( 'sendDeviceDetails')
+        sendData( {...deviceState.deviceMotion, ...deviceState.deviceOrientation})
+        // if( deviceState.deviceMotionAvailable) requestRef.current = requestAnimationFrame( sendDeviceDetails )
     }
 
     useEffect(()=>{
-        if( deviceState.deviceMotionAvailable) sendDeviceDetails()
-    }, [deviceState.deviceMotionAvailable])
+        if( deviceState.deviceMotionAvailable ){
+            // requestRef.current = requestAnimationFrame( sendDeviceDetails )
+            setInterval( ()=>sendDeviceDetails(RTCState.sendData), 1000 / 24)
+            // requestRef.current = requestAnimationFrame( sendDeviceDetails )
+        }
+        // return () => cancelAnimationFrame(requestRef.current)
+    }, [deviceState.deviceMotionAvailable, RTCState])
+
 	useEffect(() => {
 		if (id && RTCState.peerId) RTCState.connectToPeer(id)
 	}, [id, RTCState.peerId])
@@ -63,7 +71,7 @@ const UplinkComponent = (props) => {
 				peerOpen={RTCState.peer.open}
 				peer={RTCState.peer}
 				connection={RTCState.connection}
-				connectionID={RTCState.connectionID}
+				connectionID={RTCState.connectionId}
 				dataConnections={[...RTCState.dataConnections].map(
 					([key, value]) => value
 				)}
