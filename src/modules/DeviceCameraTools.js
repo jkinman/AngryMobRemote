@@ -19,7 +19,7 @@ export const cameraRotate = (obj, cam) => {
     let alpha = obj.alpha ? THREE.MathUtils.degToRad(obj.alpha) + alphaOffset : 0; // Z
     let beta = obj.beta ? THREE.MathUtils.degToRad(obj.beta) : 0; // X'
     let gamma = obj.gamma ? THREE.MathUtils.degToRad(obj.gamma) : 0; // Y''
-    // I LUCKED OUT AND EVERYTHING WORKS IF I MULTIPLY BEAT BY -1
+    // I LUCKED OUT AND EVERYTHING WORKS IF I MULTIPLY BETA BY -1
     beta = -beta;
 
     // var orient = this.screenOrientation ? THREE.MathUtils.degToRad(this.screenOrientation) : 0; // O

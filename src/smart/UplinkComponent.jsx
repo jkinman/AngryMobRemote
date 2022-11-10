@@ -12,6 +12,7 @@ let generatedQRDataURL
 const UplinkComponent = (props) => {
 	const [qrUrl, setQrUrl] = useState()
 	const { id } = props
+
 	const RTCState = useContext(RTCContext)
 	const deviceState = useContext(DeviceMetricsContext)
     const sendDeviceDetails = () => {

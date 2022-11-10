@@ -6,22 +6,25 @@ import reportWebVitals from "./reportWebVitals"
 import { Peer } from "peerjs"
 
 // Router
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import {
+	createBrowserRouter,
+	RouterProvider,
+	BrowserRouter,
+} from "react-router-dom"
 
 // contexts
 import DeviceMetricsProvider from "./contexts/DeviceMetricsContext"
 import RTCProvider from "./contexts/RTCContext"
 
-
 const peerConnection = new Peer()
 // App Routes
 const router = createBrowserRouter([
 	{
-		path: "*",
+		path: "/",
 		element: <App />,
 	},
 	{
-		path: "/peer/:peerId",
+		path: "/peer/:id",
 		element: <App />,
 	},
 ])
@@ -31,10 +34,11 @@ root.render(
 	<React.StrictMode>
 		<DeviceMetricsProvider>
 			<RTCProvider peer={peerConnection}>
+				{/* <App /> */}
 				<RouterProvider
 					router={router}
-					fallbackElement={<App />}
 				/>
+       
 			</RTCProvider>
 		</DeviceMetricsProvider>
 	</React.StrictMode>

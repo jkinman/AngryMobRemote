@@ -7,9 +7,6 @@ const initialState = {
 	permissionGranted: false,
 	deviceOrientation: { alpha: 0, beta: 0, gamma: 0 },
 	deviceMotion: { x: 0, y: 0, z: 0 },
-	peerConnection: false,
-	peerID: false,
-	connectionID: false,
 	scrollY: window.scrollY,
 }
 
@@ -50,24 +47,6 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				scrollY: action.payload,
-			}
-
-		case "connection/setPeer":
-			return {
-				...state,
-				peerConnection: action.payload,
-			}
-
-		case "connection/setPeerID":
-			return {
-				...state,
-				peerID: action.payload,
-			}
-
-		case "connection/setID":
-			return {
-				...state,
-				connectionID: action.payload,
 			}
 
 		default:
