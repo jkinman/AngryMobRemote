@@ -1,27 +1,52 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useContext, useState } from "react"
 
-import { DeviceMetricsContext } from '../contexts/DeviceMetricsContext'
-import ConnectionStatus from '../dumb/ConnectionStatus'
+import QRCode from "qrcode"
+import { useLocation } from "react-router-dom"
 
-import * as peerjs from '../modules/WebRTCPeer.js'
+import { DeviceMetricsContext } from "../contexts/DeviceMetricsContext"
+import { RTCContext } from "../contexts/RTCContext"
+import ConnectionStatus from "../dumb/ConnectionStatus"
 
-let connection
+let generatedQRDataURL
 
 const UplinkComponent = (props) => {
-    const appState = useContext(DeviceMetricsContext)
+	const [qrUrl, setQrUrl] = useState()
+	const { id } = props
+	const RTCState = useContext(RTCContext)
+	const deviceState = useContext(DeviceMetricsContext)
 
-    useEffect(()=>{
-      connection = peerjs.connect("092b7f7b-c0ab-4572-9011-fad75fd94cef")
-      appState.dispatch({type:'connection/setPeer', payload: connection})
-      appState.dispatch({type:'connection/setPeerID', payload: connection.peer})  
-      console.log( connection )
-    }, [])
-  
-    return(
-        <div>
-            <ConnectionStatus connection={appState.peerConnection}/>
-        </div>
-    )
-  } 
-  
-  export default UplinkComponent
+	useEffect(() => {
+		RTCState.connectToPeer(id)
+		const qrLink = `${window.location.origin}/peer/${RTCState.peer.id}`
+
+		QRCode.toDataURL(
+			qrLink,
+			{
+				errorCorrectionLevel: "L",
+				version: 4,
+				type: "image/jpeg",
+				quality: 0.5,
+				margin: 0,
+				color: {
+					dark: "#000000",
+					light: "#FFF",
+				},
+			},
+			(err, url) => {
+				if (err) console.error(err)
+				else {
+					setQrUrl(url)
+				}
+			}
+		)
+	}, [RTCState.peer])
+
+	return (
+		<div>
+			<ConnectionStatus connection={RTCState.connection} />
+			<img srcSet={qrUrl} />
+		</div>
+	)
+}
+
+export default UplinkComponent
