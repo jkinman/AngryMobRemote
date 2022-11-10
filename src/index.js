@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client"
 import "./index.css"
 import App from "./App"
 import reportWebVitals from "./reportWebVitals"
+import { Peer } from "peerjs"
 
 // Router
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
@@ -11,6 +12,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import DeviceMetricsProvider from "./contexts/DeviceMetricsContext"
 import RTCProvider from "./contexts/RTCContext"
 
+
+const peerConnection = new Peer()
 // App Routes
 const router = createBrowserRouter([
 	{
@@ -27,7 +30,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(
 	<React.StrictMode>
 		<DeviceMetricsProvider>
-			<RTCProvider>
+			<RTCProvider peer={peerConnection}>
 				<RouterProvider
 					router={router}
 					fallbackElement={<App />}

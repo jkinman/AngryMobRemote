@@ -1,14 +1,19 @@
 import React, { useState, useReducer, useEffect } from "react"
-import { Peer } from "peerjs"
+
+const EMPTY = 'UNINITIALIZED'
+const CONNECTING = 'CONNECTING'
+const OPEN = 'OPEN'
 
 const initialState = {
-  peer: new Peer(),
-  connection: {},
-  data: false,
-  dataHistory:[],
+	status: EMPTY,
+	peer: {},
+	connection: {},
+	dataConnections: new Map(),
+	data: false,
+	dataHistory: [],
 	peerId: false,
-	peerConnection: false,
 	connectionID: false,
+	peerConnection: false,
 }
 
 const reducer = (state, action) => {
@@ -19,20 +24,43 @@ const reducer = (state, action) => {
 		case "setConnection":
 			return {
 				...state,
+        connectionID: action.payload.connectionId,
 				connection: action.payload,
+			}
+		case "setStatus":
+			return {
+				...state,
+				status: action.payload,
 			}
 
 		case "dataRecieved":
 			return {
 				...state,
 				data: action.payload,
-        dataHistory: state.dataHistory.push(action.payload)
+				// dataHistory: state.dataHistory.push(action.payload),
 			}
-
-		case "setID":
+		case "addDataConnection":
+			return {
+				...state,
+				dataConnections: state.dataConnections.set(
+					action.payload.label,
+					action.payload
+				),
+			}
+		case "setConnectionID":
 			return {
 				...state,
 				connectionID: action.payload,
+			}
+		case "setPeerId":
+			return {
+				...state,
+				peerId: action.payload,
+			}
+		case "setPeer":
+			return {
+				...state,
+				peer: action.payload,
 			}
 
 		default:
@@ -44,39 +72,58 @@ const RTCContext = React.createContext()
 
 const RTCProvider = (props) => {
 	const [state, dispatch] = React.useReducer(reducer, initialState)
+	const [peer, setPeer] = useState(props.peer)
+	const [status, setStatus] = useState(EMPTY)
 
 	useEffect(() => {
+		if (status !== EMPTY) return
+		if (state.peerId) return
+		dispatch({ type: "setStatus", payload: CONNECTING })
+    setStatus(CONNECTING)
 
+		peer.on("close", console.log)
+		peer.on("error", console.log)
+		peer.on("data", (data) => dispatch({ type: "dataRecieved", payload: data }))
+
+		peer.on("open", (id) => {
+			dispatch({ type: "setPeer", payload: peer })
+			dispatch({ type: "setPeerId", payload: id })
+			dispatch({ type: "setStatus", payload: OPEN })
+      setStatus(OPEN)
+		})
+
+		peer.on("connection", (dataConnection) => {
+			console.log("dataConnection", dataConnection)
+			dispatch({ type: "addDataConnection", payload: dataConnection })
+      dataConnection.on("data", (data) => dispatch({ type: "dataRecieved", payload: data }))
+		})
 	}, [])
 
-  const connectToPeer = id => {
+	const connectToPeer = (id) => {
+		const connection = peer.connect(id)
 
-    const connection = state.peer.connect(id)
-    
-    dispatch({type: 'setConnection', payload: connection})
+		dispatch({ type: "setConnection", payload: connection })
 		connection.on("data", console.log)
 		connection.on("open", console.log)
 		connection.on("close", console.log)
 		connection.on("error", console.log)
 
-		connection.on("data", data => dispatch({type: 'dataRecieved', payload: data}))
-		connection.on("open", console.log)
+		connection.on("data", (data) =>
+			dispatch({ type: "dataRecieved", payload: data })
+		)
+		connection.on("connection", (id, p2) => {
+			console.log("openEvent", id)
+			dispatch({ type: "setConnectionID", payload: id })
+		})
 		connection.on("close", console.log)
 		connection.on("error", console.log)
+	}
 
-    console.log('connection: ', connection)
-    console.log('peer: ', state.peer)
-    dispatch({type: 'setConnection', payload: connection})
-    dispatch({type: 'setPeerID', payload: id})
-  }
-
-  // const createPeer = () =>{
-  //   const peer = new Peer()
-  // }
-
-  const sendData = (data) => {
-		state.connection.send("uplink established")
-  }
+	const sendData = (data) => {
+    if(state.connectionID){
+      state.connection.send( data )
+    }
+	}
 
 	return (
 		<RTCContext.Provider
@@ -84,7 +131,7 @@ const RTCProvider = (props) => {
 				...state,
 				dispatch,
 				sendData,
-        connectToPeer,
+				connectToPeer,
 			}}
 		>
 			{props.children}

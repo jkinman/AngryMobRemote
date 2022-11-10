@@ -14,19 +14,31 @@ const UplinkComponent = (props) => {
 	const { id } = props
 	const RTCState = useContext(RTCContext)
 	const deviceState = useContext(DeviceMetricsContext)
+    const sendDeviceDetails = () => {
+        RTCState.sendData( {...deviceState.deviceMotion, ...deviceState.deviceOrientation})
+        if( deviceState.deviceMotionAvailable) requestAnimationFrame( sendDeviceDetails )
+    }
+
+    useEffect(()=>{
+        if( deviceState.deviceMotionAvailable) sendDeviceDetails()
+    }, [deviceState.deviceMotionAvailable])
+	useEffect(() => {
+		if (id && RTCState.peerId) RTCState.connectToPeer(id)
+	}, [id, RTCState.peerId])
 
 	useEffect(() => {
-		RTCState.connectToPeer(id)
-		const qrLink = `${window.location.origin}/peer/${RTCState.peer.id}`
+		if (!RTCState.peerId) return
+		console.log(RTCState.peer)
+		const qrLink = `${window.location.origin}/peer/${RTCState.peerId}`
 
 		QRCode.toDataURL(
 			qrLink,
 			{
 				errorCorrectionLevel: "L",
-				version: 4,
+				version: 5,
 				type: "image/jpeg",
 				quality: 0.5,
-				margin: 0,
+				margin: 1,
 				color: {
 					dark: "#000000",
 					light: "#FFF",
@@ -39,12 +51,23 @@ const UplinkComponent = (props) => {
 				}
 			}
 		)
-	}, [RTCState.peer])
+	}, [RTCState.peerId])
 
 	return (
 		<div>
-			<ConnectionStatus connection={RTCState.connection} />
-			<img srcSet={qrUrl} />
+			<ConnectionStatus
+				// data={RTCState.data}
+				sendData={RTCState.sendData}
+				status={RTCState.status}
+				peerOpen={RTCState.peer.open}
+				peer={RTCState.peer}
+				connection={RTCState.connection}
+				connectionID={RTCState.connectionID}
+				dataConnections={[...RTCState.dataConnections].map(
+					([key, value]) => value
+				)}
+			/>
+			{!id && <img srcSet={qrUrl} />}
 		</div>
 	)
 }
