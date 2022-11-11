@@ -26,7 +26,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
 
 // custom
 import FxSW from "../modules/grfx/FxSW"
-import * as CameraTools from '../modules/DeviceCameraTools'
+import * as CameraTools from "../modules/DeviceCameraTools"
 
 function MainSphere({ material }) {
 	const main = useRef()
@@ -62,7 +62,6 @@ function MainSphere({ material }) {
 //     <></>
 //   )
 // }
-
 
 function Instances({ material }) {
 	// we use this array ref to store the spheres after creating them
@@ -105,10 +104,27 @@ function Instances({ material }) {
 	)
 }
 
-function Scene( props ) {
-  const deviceOrientation = props.deviceMotionData
+const BrassKnuckles = (props) => {
+	// const deviceOrientation = props.deviceMotionData
 	const gltf = useLoader(GLTFLoader, "/brass_knuckles/scene.gltf")
+	const myMesh = React.useRef()
+	// useFrame((state) => {
+	// 	if (deviceOrientation.alpha) {
+	// 		CameraTools.cameraRotate(deviceOrientation, myMesh.current)
+	// 	}
+	// })
+	return (
+		<primitive
+			name='BrassKnuckles'
+			ref={myMesh}
+			object={gltf.scene}
+			scale={[100, 100, 100]}
+		/>
+	)
+}
 
+function Scene(props) {
+	// const deviceOrientation = props.deviceMotionData
 	const bumpMap = useTexture("/bump.jpg")
 	const envMap = useCubeTexture(
 		["px.png", "nx.png", "py.png", "ny.png", "pz.png", "nz.png"],
@@ -116,18 +132,15 @@ function Scene( props ) {
 	)
 	// We use `useResource` to be able to delay rendering the spheres until the material is ready
 	const [material, set] = useState()
-  useFrame((state)=>{
-    if(deviceOrientation.alpha){
-      CameraTools.cameraRotate(deviceOrientation, state.camera)
-    }
-  })
+
+	// useFrame((state) => {
+	// 	if (deviceOrientation.alpha) {
+	// 		CameraTools.cameraRotate(deviceOrientation, state.camera)
+	// 	}
+	// })
 
 	return (
 		<>
-			<primitive
-				object={gltf.scene}
-				scale={[100, 100, 100]}
-			/>
 			<MeshDistortMaterial
 				ref={set}
 				envMap={envMap}
@@ -153,28 +166,33 @@ function Box(props) {
 	const [hovered, hover] = useState(false)
 	const [clicked, click] = useState(false)
 	// Subscribe this component to the render-loop, rotate the mesh every frame
-	useFrame((state, delta) => (ref.current.rotation.x += 0.01))
+	// useFrame((state, delta) => (ref.current.rotation.x += 0.01))
+	useFrame((state) => {
+		if (props.deviceMotionData.alpha) {
+			CameraTools.cameraRotate(props.deviceMotionData, ref.current)
+		}
+	})
+
 	// Return the view, these are regular Threejs elements expressed in JSX
 	return (
 		<mesh
-			{...props}
+			position={props.position}
 			ref={ref}
 			scale={clicked ? 1.5 : 1}
 			onClick={(event) => click(!clicked)}
 			onPointerOver={(event) => hover(true)}
 			onPointerOut={(event) => hover(false)}
 		>
-			<boxGeometry args={[1, 1, 1]} />
+			<boxGeometry args={[10, 20, 2]} />
 			<meshStandardMaterial color={hovered ? "hotpink" : "orange"} />
 		</mesh>
 	)
 }
 
-export default function AngryMob( props ) {
-
+export default function AngryMob(props) {
 	return (
 		<Canvas
-    className="threed-canvas"
+			className='threed-canvas'
 			// colorManagement
 			camera={{ fov: 50, position: [0, 0, 20] }}
 			gl={{
@@ -196,16 +214,16 @@ export default function AngryMob( props ) {
 				far={100}
 			/>
 			<Suspense fallback={<Html center>Loading.</Html>}>
-				<Scene deviceMotionData={props.deviceMotionData} />
-
+				{/* <Scene  /> */}
+				{/* <BrassKnuckles deviceMotionData={props.deviceMotionData} /> */}
 				<pointLight position={[10, 10, 10]} />
-				<Box position={[1.2, 2, 0]} />
-				<Cylinder args={[50, 50, 50, 32]}>
+				<Box position={[0, 0, -20]} deviceMotionData={props.deviceMotionData}/>
+				{/* <Cylinder args={[50, 50, 50, 32]}>
 					<meshBasicMaterial
 						color='green'
 						side={THREE.DoubleSide}
 					/>
-				</Cylinder>
+				</Cylinder> */}
 				{/* <Lights /> */}
 				<ambientLight intensity={0.1} />
 			</Suspense>
@@ -215,7 +233,7 @@ export default function AngryMob( props ) {
 				minPolarAngle={Math.PI / 2}
 				maxPolarAngle={Math.PI / 2}
 			/> */}
-			<Environment preset={"night"} />
+			{/* <Environment preset={"dawn"} /> */}
 			{/* https://github.com/pmndrs/drei/blob/master/src/helpers/environment-assets.ts */}
 
 			{/* <FxSW /> */}
@@ -235,7 +253,7 @@ export default function AngryMob( props ) {
 					height={300}
 					opacity={0.3}
 				/>
-				<Noise opacity={0.1} />
+				<Noise opacity={0.01} />
 				<Vignette
 					eskil={false}
 					offset={0.01}

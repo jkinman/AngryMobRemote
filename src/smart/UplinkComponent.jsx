@@ -1,13 +1,12 @@
 import React, { useEffect, useContext, useState } from "react"
 
 import QRCode from "qrcode"
+import RealtimelineGraph from '../dumb/RealtimeLineGraph'
 
 import { DeviceMetricsContext } from "../contexts/DeviceMetricsContext"
 import { RTCContext } from "../contexts/RTCContext"
 import ConnectionStatus from "../dumb/ConnectionStatus"
 import {useParams} from 'react-router-dom'
-
-let generatedQRDataURL
 
 const UplinkComponent = (props) => {
 	const [qrUrl, setQrUrl] = useState()
@@ -16,20 +15,22 @@ const UplinkComponent = (props) => {
 	const RTCState = useContext(RTCContext)
 	const deviceState = useContext(DeviceMetricsContext)
     
-    const sendDeviceDetails = (sendData) => {
-        console.log( 'sendDeviceDetails')
-        sendData( {...deviceState.deviceMotion, ...deviceState.deviceOrientation})
-        // if( deviceState.deviceMotionAvailable) requestRef.current = requestAnimationFrame( sendDeviceDetails )
+    const sendDeviceDetails = (RTCState, deviceState) => {
+        RTCState.sendData( {...deviceState.deviceMotion, ...deviceState.deviceOrientation})
+		requestRef.current = requestAnimationFrame( sendDeviceDetails )
     }
 
     useEffect(()=>{
         if( deviceState.deviceMotionAvailable ){
-            // requestRef.current = requestAnimationFrame( sendDeviceDetails )
-            setInterval( ()=>sendDeviceDetails(RTCState.sendData), 1000 / 24)
-            // requestRef.current = requestAnimationFrame( sendDeviceDetails )
+            requestRef.current = requestAnimationFrame( ()=>sendDeviceDetails(RTCState, deviceState) )
+            // setInterval( ()=>sendDeviceDetails(RTCState, deviceState), 1000 / 10)
+            // setInterval( ()=>sendDeviceDetails(RTCState.sendData), 1000 / 24)
+            // requestRef.current = requestAnimationFrame( ()=>{
+
+			// } )
         }
-        // return () => cancelAnimationFrame(requestRef.current)
-    }, [deviceState.deviceMotionAvailable, RTCState])
+        return () => cancelAnimationFrame(requestRef.current)
+    }, [deviceState.deviceMotionAvailable,deviceState, RTCState])
 
 	useEffect(() => {
 		if (id && RTCState.peerId) RTCState.connectToPeer(id)
@@ -37,9 +38,7 @@ const UplinkComponent = (props) => {
 
 	useEffect(() => {
 		if (!RTCState.peerId) return
-		console.log(RTCState.peer)
 		const qrLink = `${window.location.origin}/peer/${RTCState.peerId}`
-
 		QRCode.toDataURL(
 			qrLink,
 			{
@@ -64,7 +63,7 @@ const UplinkComponent = (props) => {
 
 	return (
 		<div>
-			<ConnectionStatus
+			{/* <ConnectionStatus
 				// data={RTCState.data}
 				sendData={RTCState.sendData}
 				status={RTCState.status}
@@ -75,8 +74,10 @@ const UplinkComponent = (props) => {
 				dataConnections={[...RTCState.dataConnections].map(
 					([key, value]) => value
 				)}
-			/>
-			{!id && <img srcSet={qrUrl} />}
+			/> */}
+			{/* <RealtimelineGraph deviceOrientation={RTCState.data} /> */}
+			
+			{!id && !RTCState.dataConnections.size && <img srcSet={qrUrl} />}
 		</div>
 	)
 }

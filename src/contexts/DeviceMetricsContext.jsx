@@ -5,8 +5,8 @@ const initialState = {
 		typeof DeviceMotionEvent.requestPermission === "function",
 	permissionStatus: false,
 	permissionGranted: false,
-	deviceOrientation: { alpha: 0, beta: 0, gamma: 0 },
-	deviceMotion: { x: 0, y: 0, z: 0 },
+	deviceOrientation: { alpha: 0, beta: 0, gamma: 0, timeStamp: 0 },
+	deviceMotion: { x: 0, y: 0, z: 0, timeStamp: 0 },
 	scrollY: window.scrollY,
 }
 
@@ -30,6 +30,7 @@ const reducer = (state, action) => {
 					alpha: action.payload.alpha, //z
 					beta: action.payload.beta, //x
 					gamma: action.payload.gamma, //y
+					timeStamp: action.timeStamp,
 				},
 			}
 
@@ -40,6 +41,7 @@ const reducer = (state, action) => {
 					x: action.payload.acceleration.x,
 					y: action.payload.acceleration.y,
 					z: action.payload.acceleration.z,
+					timeStamp: action.timeStamp,
 				},
 			}
 
