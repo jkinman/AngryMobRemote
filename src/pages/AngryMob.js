@@ -194,7 +194,7 @@ export default function AngryMob(props) {
 		<Canvas
 			className='threed-canvas'
 			// colorManagement
-			camera={{ fov: 50, position: [0, 0, 20] }}
+			camera={{ fov: 80, position: [0, 0, 5] }}
 			gl={{
 				powerPreference: "high-performance",
 				alpha: false,
@@ -205,14 +205,14 @@ export default function AngryMob(props) {
 		>
 			<color
 				attach='background'
-				args={["#050505"]}
+				args={["#fff"]}
 			/>
-			<fog
+			{/* <fog
 				color='#161616'
 				attach='fog'
 				near={8}
 				far={100}
-			/>
+			/> */}
 			<Suspense fallback={<Html center>Loading.</Html>}>
 				{/* <Scene  /> */}
 				{/* <BrassKnuckles deviceMotionData={props.deviceMotionData} /> */}
@@ -237,7 +237,7 @@ export default function AngryMob(props) {
 			{/* https://github.com/pmndrs/drei/blob/master/src/helpers/environment-assets.ts */}
 
 			{/* <FxSW /> */}
-			<EffectComposer
+			{/* <EffectComposer
 				multisampling={0}
 				disableNormalPass={true}
 			>
@@ -256,10 +256,10 @@ export default function AngryMob(props) {
 				<Noise opacity={0.01} />
 				<Vignette
 					eskil={false}
-					offset={0.01}
-					darkness={0.8}
+					offset={0.1}
+					darkness={0.5}
 				/>
-			</EffectComposer>
+			</EffectComposer> */}
 		</Canvas>
 	)
 }

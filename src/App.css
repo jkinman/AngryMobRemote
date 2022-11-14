@@ -8,9 +8,13 @@
 	width: 100vw;
 	height: 100vh;
 }
-.App-logo {
-	height: 40vmin;
-	pointer-events: none;
+
+.peerLayout {
+	width: 100%;
+}
+
+.qrCodeLink {
+	text-align: center;
 }
 
 @media (prefers-reduced-motion: no-preference) {

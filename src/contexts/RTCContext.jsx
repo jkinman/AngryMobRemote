@@ -74,6 +74,8 @@ const RTCContext = React.createContext()
 const RTCProvider = (props) => {
 	const [state, dispatch] = React.useReducer(reducer, initialState)
 	const [peer, setPeer] = useState(props.peer)
+	let dataCB = () => {}
+	// const [dataCB, setDataCB] = useState(()=>{})
 	const [status, setStatus] = useState(EMPTY)
 
 	useEffect(() => {
@@ -96,11 +98,18 @@ const RTCProvider = (props) => {
 		peer.on("connection", (dataConnection) => {
 			console.log("dataConnection", dataConnection)
 			dispatch({ type: "addDataConnection", payload: dataConnection })
-			dataConnection.on("data", (data) =>
-				dispatch({ type: "dataRecieved", payload: data })
-			)
+			dataConnection.on("data", dataCB)
+			// dataConnection.on("data", (data) =>
+			// 	dispatch({ type: "dataRecieved", payload: data })
+			// )
 		})
 	}, [])
+
+	const storeDataCallback = (cb) => {
+		dataCB = cb
+		state.dataConnections.forEach(function(value, key) {
+			value.on("data", cb)
+		})	}
 
 	const connectToPeer = (id) => {
 		const connection = peer.connect(id)
@@ -135,6 +144,7 @@ const RTCProvider = (props) => {
 				dispatch,
 				sendData,
 				connectToPeer,
+				storeDataCallback,
 			}}
 		>
 			{props.children}

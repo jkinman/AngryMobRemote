@@ -26,7 +26,7 @@ const UplinkComponent = (props) => {
 	// }
 	return (
 		<div>
-			{deviceState.deviceMotionAvailable ? (
+			{deviceState.isMobile ? (
 				<div>
 					{!deviceState.permissionGranted ? (
 						<button onClick={deviceState.enableDeviceOrientationCallback}>
@@ -40,7 +40,7 @@ const UplinkComponent = (props) => {
 					/> */}
 				</div>
 			) : (
-				<p>no accelerometer</p>
+				null
 			)}
 		</div>
 	)

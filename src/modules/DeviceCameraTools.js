@@ -19,15 +19,11 @@ export const cameraRotate = (obj, cam) => {
 	// another approach
 	// var gammaRotation = obj.gamma ? obj.gamma * (Math.PI / 600) : 0
 	// cam.rotation.y = gammaRotation
-    // console.log(gammaRotation)
-    // console.log(obj.gamma)
 	// return
 
 	let alpha = obj.alpha ? THREE.MathUtils.degToRad(obj.alpha) + alphaOffset : 0 // Z
 	let beta = obj.beta ? THREE.MathUtils.degToRad(obj.beta) : 0 // X'
 	let gamma = obj.gamma ? THREE.MathUtils.degToRad(obj.gamma) : 0 // Y''
-	// I LUCKED OUT AND EVERYTHING WORKS IF I MULTIPLY BETA BY -1
-	// beta = -beta;
 
 	// var orient = this.screenOrientation ? THREE.MathUtils.degToRad(this.screenOrientation) : 0; // O
 	const orient = 0

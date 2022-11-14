@@ -21,7 +21,7 @@ const UplinkComponent = (props) => {
     }
 
     useEffect(()=>{
-        if( deviceState.deviceMotionAvailable ){
+        if( deviceState.isMobile ){
             requestRef.current = requestAnimationFrame( ()=>sendDeviceDetails(RTCState, deviceState) )
             // setInterval( ()=>sendDeviceDetails(RTCState, deviceState), 1000 / 10)
             // setInterval( ()=>sendDeviceDetails(RTCState.sendData), 1000 / 24)
@@ -30,7 +30,7 @@ const UplinkComponent = (props) => {
 			// } )
         }
         return () => cancelAnimationFrame(requestRef.current)
-    }, [deviceState.deviceMotionAvailable,deviceState, RTCState])
+    }, [deviceState.isMobile,deviceState, RTCState])
 
 	useEffect(() => {
 		if (id && RTCState.peerId) RTCState.connectToPeer(id)
@@ -77,7 +77,10 @@ const UplinkComponent = (props) => {
 			/> */}
 			{/* <RealtimelineGraph deviceOrientation={RTCState.data} /> */}
 			
-			{!id && !RTCState.dataConnections.size && <img srcSet={qrUrl} />}
+			{!id && !RTCState.dataConnections.size && <div className="qrCodeLink">
+				<h5>SCAN FOR ENHANCED CONTROL</h5>
+				<img srcSet={qrUrl} />
+				</div>}
 		</div>
 	)
 }

@@ -1,8 +1,7 @@
 import React, { useState, useReducer, useEffect } from "react"
 
 const initialState = {
-	deviceMotionAvailable:
-		typeof DeviceMotionEvent.requestPermission === "function",
+	isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
 	permissionStatus: false,
 	permissionGranted: false,
 	deviceOrientation: { alpha: 0, beta: 0, gamma: 0, timeStamp: 0 },
@@ -72,7 +71,7 @@ const DeviceMetricsProvider = (props) => {
 	}
 
 	const enableDeviceOrientationCallback = () => {
-		if (typeof DeviceMotionEvent.requestPermission === "function") {
+		if (state.isMobile) {
 			// Handle iOS 13+ devices.
 			DeviceMotionEvent.requestPermission()
 				.then((state) => {
