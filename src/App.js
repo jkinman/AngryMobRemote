@@ -1,6 +1,7 @@
 import React, { useEffect, useContext } from "react"
 import "./App.css"
-import AngryMob from "./pages/AngryMob"
+// import AngryMob from "./pages/AngryMob"
+import Render3d from './dumb/Render3d'
 import MainLayout from "./pages/MainLayout"
 // contexts
 import { DeviceMetricsContext } from "./contexts/DeviceMetricsContext"
@@ -43,7 +44,8 @@ function App() {
 								<>
 									<UplinkComponent />
 									<DeviceMetrics />
-									<AngryMob deviceMotionData={RTCState.data} />
+									<Render3d storeDataCallback={RTCState.storeDataCallback} />
+									{/* <AngryMob deviceMotionData={RTCState.data} /> */}
 								</>
 							}
 						/>

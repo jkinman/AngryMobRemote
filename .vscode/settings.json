@@ -2,5 +2,6 @@
     "prettier.jsxSingleQuote": true,
     "prettier.semi": false,
     "prettier.singleAttributePerLine": true,
-    "prettier.useTabs": true
+    "prettier.useTabs": true,
+    "workbench.colorTheme": "LCARS"
 }
