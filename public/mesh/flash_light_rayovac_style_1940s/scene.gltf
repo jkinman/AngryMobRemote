@@ -1,0 +1,460 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 459,
+      "max": [
+        69.01776123046875,
+        68.71035766601563,
+        2.6627655029296875
+      ],
+      "min": [
+        -69.8816146850586,
+        -71.65568542480469,
+        -434.1379699707031
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 5508,
+      "componentType": 5126,
+      "count": 459,
+      "max": [
+        0.9825689196586609,
+        0.9987807273864746,
+        0.9997145533561707
+      ],
+      "min": [
+        -0.980975866317749,
+        -0.9996240139007568,
+        -0.9831572771072388
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 459,
+      "max": [
+        0.9999997615814209,
+        0.9836470484733582,
+        0.999534547328949,
+        1.0
+      ],
+      "min": [
+        -0.9987630248069763,
+        -0.9824767112731934,
+        -0.9999780654907227,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 459,
+      "max": [
+        0.9389283657073975,
+        0.974767804145813
+      ],
+      "min": [
+        0.01521233469247818,
+        0.017099810764193535
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 3672,
+      "componentType": 5126,
+      "count": 459,
+      "max": [
+        0.9389283657073975,
+        0.974767804145813
+      ],
+      "min": [
+        0.01521233469247818,
+        0.017099810764193535
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 7344,
+      "componentType": 5126,
+      "count": 459,
+      "max": [
+        0.9389283657073975,
+        0.974767804145813
+      ],
+      "min": [
+        0.01521233469247818,
+        0.017099810764193535
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 1851,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 11016,
+      "componentType": 5126,
+      "count": 15,
+      "max": [
+        61.16112518310547,
+        61.24397277832031,
+        0.0015711784362792969
+      ],
+      "min": [
+        -62.002620697021484,
+        -63.22831726074219,
+        0.001543283462524414
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 11196,
+      "componentType": 5126,
+      "count": 15,
+      "max": [
+        1.0135175898540183e-06,
+        1.5127030792427831e-06,
+        1.0
+      ],
+      "min": [
+        -9.851154345597024e-07,
+        -1.6564961242693244e-06,
+        1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 11016,
+      "componentType": 5126,
+      "count": 15,
+      "max": [
+        0.9225996732711792,
+        0.6510422229766846
+      ],
+      "min": [
+        0.666627824306488,
+        0.3950536847114563
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 11136,
+      "componentType": 5126,
+      "count": 15,
+      "max": [
+        0.9225996732711792,
+        0.6510422229766846
+      ],
+      "min": [
+        0.666627824306488,
+        0.3950536847114563
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 7404,
+      "componentType": 5125,
+      "count": 39,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Wayne Tannian (https://sketchfab.com/inkdropfalls)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/flash-light-rayovac-style-1940s-cd8f49022da04835a309824029acce1c",
+      "title": "Flash Light RayOVac Style 1940s"
+    },
+    "generator": "Sketchfab-12.67.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 7560,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 11256,
+      "byteOffset": 7560,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 11376,
+      "byteOffset": 18816,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 7344,
+      "byteOffset": 30192,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 37536,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/RayOVac_Flashlight_handle_Mat_baseColor.jpeg"
+    },
+    {
+      "uri": "textures/RayOVac_Flashlight_handle_Mat_normal.jpeg"
+    },
+    {
+      "uri": "textures/RayOVac_Flashlight_Glass_baseColor.png"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "RayOVac_Flashlight_handle_Mat",
+      "normalTexture": {
+        "index": 1
+      },
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.59,
+          0.59,
+          0.59,
+          1.0
+        ],
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.6
+      }
+    },
+    {
+      "alphaMode": "BLEND",
+      "doubleSided": true,
+      "emissiveFactor": [
+        1.0,
+        1.0,
+        0.6885910793298711
+      ],
+      "name": "RayOVac_Flashlight_Glass",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          1.0,
+          1.0,
+          1.0,
+          0.31
+        ],
+        "baseColorTexture": {
+          "index": 2
+        },
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.6
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "RayOVac Flashlight Mesh_RayOVac Flashlight handle Mat_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3,
+            "TEXCOORD_1": 4,
+            "TEXCOORD_2": 5
+          },
+          "indices": 6,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "RayOVac Flashlight Mesh_RayOVac Flashlight Glass_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 8,
+            "POSITION": 7,
+            "TEXCOORD_0": 9,
+            "TEXCOORD_1": 10
+          },
+          "indices": 11,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -4.440892098500626e-16,
+        1.0,
+        0.0,
+        0.0,
+        -1.0,
+        -4.440892098500626e-16,
+        0.0,
+        0.0,
+        -1.3130350752269687e-07,
+        -4.448343276977539,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "a17ec83b936646089f9994dc80cba6e5.fbx"
+    },
+    {
+      "children": [
+        3
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4
+      ],
+      "matrix": [
+        0.06992997229099274,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.1393039387406709e-08,
+        0.06992997229099181,
+        0.0,
+        0.0,
+        -0.06992997229099181,
+        -1.1393039387406709e-08,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "RayOVac Flashlight Mesh"
+    },
+    {
+      "children": [
+        5,
+        6
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        -0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.4319361746311188,
+        1.472670316696167,
+        215.7375946044922,
+        1.0
+      ],
+      "name": "Object_4"
+    },
+    {
+      "mesh": 0,
+      "name": "RayOVac Flashlight Mesh_RayOVac Flashlight handle Mat_0"
+    },
+    {
+      "mesh": 1,
+      "name": "RayOVac Flashlight Mesh_RayOVac Flashlight Glass_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    }
+  ]
+}

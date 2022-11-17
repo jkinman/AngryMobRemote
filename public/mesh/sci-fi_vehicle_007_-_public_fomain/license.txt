@@ -1,0 +1,11 @@
+Model Information:
+* title:	Sci-fi Vehicle 007 - public fomain
+* source:	https://sketchfab.com/3d-models/sci-fi-vehicle-007-public-fomain-5368ffca3bf84b19988c291fade4f3a2
+* author:	Unity Fan youtube channel (https://sketchfab.com/unityfan777)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Sci-fi Vehicle 007 - public fomain" (https://sketchfab.com/3d-models/sci-fi-vehicle-007-public-fomain-5368ffca3bf84b19988c291fade4f3a2) by Unity Fan youtube channel (https://sketchfab.com/unityfan777) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
