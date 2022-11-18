@@ -9,10 +9,12 @@ import UplinkComponent from "./smart/UplinkComponent"
 import DeviceMetrics from "./smart/DeviceMetrics"
 import { RTCContext } from "./contexts/RTCContext"
 
-import { Routes, Route, useParams, BrowserRouter } from "react-router-dom"
+import { Routes, Route, useParams, BrowserRouter, useLocation } from "react-router-dom"
 
 function App() {
 	let { id } = useParams()
+	// const { search } = useLocation()
+	// console.log(search, search)
 	const RTCState = useContext(RTCContext)
 
 	return (

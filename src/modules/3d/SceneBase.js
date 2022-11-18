@@ -98,8 +98,8 @@ class SceneBase {
 
 		AssetLoader.loadScifiVehicle().then((car) => {
 			this.car = car
-    car.rotateY(Math.PI)
-      this.scene.add(car)
+			car.rotateY(Math.PI)
+			this.scene.add(car)
 		})
 
 		const dLight = new THREE.DirectionalLight()
@@ -108,7 +108,7 @@ class SceneBase {
 		const axesHelper = new THREE.AxesHelper(10)
 		this.scene.add(axesHelper)
 
-    this.scene.add(this.makeGround())
+		this.scene.add(this.makeGround())
 		// this.enableCameraControls()
 	}
 
@@ -116,8 +116,8 @@ class SceneBase {
 		// let geometry = new THREE.PlaneGeometry(2000, 2000, 256, 256)
 		// let material = new THREE.MeshLambertMaterial({ color: 0x3c3951 })
 		// let terrain = new THREE.Mesh(geometry, material)
-    
-    const geometry = new THREE.PlaneGeometry(250, 250, 100, 100)
+
+		const geometry = new THREE.PlaneGeometry(250, 250, 100, 100)
 		const wireframe = new THREE.WireframeGeometry(geometry)
 		const terrain = new THREE.LineSegments(wireframe)
 		terrain.rotation.x = -Math.PI / 2
@@ -147,6 +147,7 @@ class SceneBase {
 			// if (this.mobile) CameraTools.cameraRotate(this.data, this.mobile)
 			// CameraTools.cameraRotate(this.data, this.cube)
 			CameraTools.cameraRotate(this.data, this.camera)
+			// CameraTools.cameraRotate(this.data, this.car)
 			// if( this.cameraModel)
 			// CameraTools.cameraRotate(this.data, this.cameraModel)
 		}
@@ -177,8 +178,8 @@ class SceneBase {
 	}
 
 	makePointLight() {
-		const plight = new THREE.PointLight(0xffffff, 5, 100)
-		plight.position.set(10, 20, 20)
+		const plight = new THREE.PointLight(0xffffff, 10, 100)
+		plight.position.set(0, 5, 20)
 		return plight
 	}
 	wireframeSphere() {
