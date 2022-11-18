@@ -28,10 +28,22 @@ const UplinkComponent = (props) => {
 		<div>
 			{deviceState.isMobile ? (
 				<div>
+					<h5>Remote Uplink</h5>
 					{!deviceState.permissionGranted ? (
-						<button onClick={deviceState.enableDeviceOrientationCallback}>
-							enable device metrics
-						</button>
+						<div
+							style={{
+								margin: "1",
+								display: "flex",
+								flexDirection: "column",
+							}}
+						>
+							<button
+								className='cyberpunk2077 purple'
+								onClick={deviceState.enableDeviceOrientationCallback}
+							>
+								enable device metrics
+							</button>
+						</div>
 					) : null}
 					{/* <AccelerometerDisplay
 						deviceMotion={deviceState.deviceMotion}
@@ -39,9 +51,7 @@ const UplinkComponent = (props) => {
 						permissionStatus={deviceState.permissionStatus}
 					/> */}
 				</div>
-			) : (
-				null
-			)}
+			) : null}
 		</div>
 	)
 }

@@ -1,0 +1,18 @@
+.wrapper {
+	position: absolute;
+	width: 100vw;
+	height: 25vh;
+	bottom: 0vh;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	animation: pulse 2s ease 0s infinite;
+	.qrCodeLink {
+		width: 102px;
+		height: 102px;
+		img {
+			width: 100px;
+			height: 100px;
+		}
+	}
+}

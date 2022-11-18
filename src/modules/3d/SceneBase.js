@@ -36,7 +36,7 @@ class SceneBase {
 			0.1,
 			1000
 		)
-		this.camera.position.set(0, 5, 10)
+		this.camera.position.set(0, 4, 6)
 		this.camera.lookAt(0, 0, 0)
 
 		this.renderer = new THREE.WebGLRenderer({
@@ -109,7 +109,7 @@ class SceneBase {
 		this.scene.add(axesHelper)
 
     this.scene.add(this.makeGround())
-		this.enableCameraControls()
+		// this.enableCameraControls()
 	}
 
 	makeGround() {
@@ -146,11 +146,11 @@ class SceneBase {
 			// if (this.d20) CameraTools.cameraRotate(this.data, this.d20)
 			// if (this.mobile) CameraTools.cameraRotate(this.data, this.mobile)
 			// CameraTools.cameraRotate(this.data, this.cube)
-			// CameraTools.cameraRotate(this.data, this.camera)
+			CameraTools.cameraRotate(this.data, this.camera)
 			// if( this.cameraModel)
 			// CameraTools.cameraRotate(this.data, this.cameraModel)
 		}
-		if (this.controls) this.controls.update()
+		// if (this.controls) this.controls.update()
 
 		// TWEEN.update();
 		// if( this.stats ) this.stats.update();

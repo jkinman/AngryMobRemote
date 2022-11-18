@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from "react"
-import "./App.css"
+import "./style/App.scss"
 // import AngryMob from "./pages/AngryMob"
-import Render3d from './dumb/Render3d'
+import Render3d from "./dumb/Render3d"
 import MainLayout from "./pages/MainLayout"
 // contexts
 import { DeviceMetricsContext } from "./contexts/DeviceMetricsContext"
@@ -19,25 +19,24 @@ function App() {
 		<div>
 			<BrowserRouter>
 				<Routes>
-					<Route element={<MainLayout />}>
-						<Route
-							path='/test'
-							element={
-								<>
-									<h1>TEST ROUTE</h1>
-								</>
-							}
-						/>
-						<Route
-							path='/peer/:id'
-							element={
-								<>
-									<p>peer route</p>
-									<DeviceMetrics />
-									<UplinkComponent />
-								</>
-							}
-						/>
+					<Route
+						path='/test'
+						element={
+							<>
+								<h1>TEST ROUTE</h1>
+							</>
+						}
+					/>
+					<Route
+						path='/peer/:id'
+						element={
+							<>
+								<UplinkComponent />
+								<DeviceMetrics />
+							</>
+						}
+					/>
+					<Route element={<MainLayout connected={RTCState.peerConnection}/>}>
 						<Route
 							path='/'
 							element={
@@ -45,7 +44,6 @@ function App() {
 									<UplinkComponent />
 									<DeviceMetrics />
 									<Render3d storeDataCallback={RTCState.storeDataCallback} />
-									{/* <AngryMob deviceMotionData={RTCState.data} /> */}
 								</>
 							}
 						/>

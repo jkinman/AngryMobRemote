@@ -1,36 +1,42 @@
 import React, { useEffect, useContext, useState } from "react"
-
+import "./UplinkComponent.scss"
+import theme from "../style/_vars.scss"
 import QRCode from "qrcode"
-import RealtimelineGraph from '../dumb/RealtimeLineGraph'
+import RealtimelineGraph from "../dumb/RealtimeLineGraph"
 
 import { DeviceMetricsContext } from "../contexts/DeviceMetricsContext"
 import { RTCContext } from "../contexts/RTCContext"
 import ConnectionStatus from "../dumb/ConnectionStatus"
-import {useParams} from 'react-router-dom'
+import { useParams } from "react-router-dom"
 
 const UplinkComponent = (props) => {
 	const [qrUrl, setQrUrl] = useState()
 	let { id } = useParams()
-    const requestRef = React.useRef()
+	const requestRef = React.useRef()
 	const RTCState = useContext(RTCContext)
 	const deviceState = useContext(DeviceMetricsContext)
-    
-    const sendDeviceDetails = (RTCState, deviceState) => {
-        RTCState.sendData( {...deviceState.deviceMotion, ...deviceState.deviceOrientation})
-		requestRef.current = requestAnimationFrame( sendDeviceDetails )
-    }
 
-    useEffect(()=>{
-        if( deviceState.isMobile ){
-            requestRef.current = requestAnimationFrame( ()=>sendDeviceDetails(RTCState, deviceState) )
-            // setInterval( ()=>sendDeviceDetails(RTCState, deviceState), 1000 / 10)
-            // setInterval( ()=>sendDeviceDetails(RTCState.sendData), 1000 / 24)
-            // requestRef.current = requestAnimationFrame( ()=>{
+	const sendDeviceDetails = (RTCState, deviceState) => {
+		RTCState.sendData({
+			...deviceState.deviceMotion,
+			...deviceState.deviceOrientation,
+		})
+		requestRef.current = requestAnimationFrame(sendDeviceDetails)
+	}
+
+	useEffect(() => {
+		if (deviceState.isMobile) {
+			requestRef.current = requestAnimationFrame(() =>
+				sendDeviceDetails(RTCState, deviceState)
+			)
+			// setInterval( ()=>sendDeviceDetails(RTCState, deviceState), 1000 / 10)
+			// setInterval( ()=>sendDeviceDetails(RTCState.sendData), 1000 / 24)
+			// requestRef.current = requestAnimationFrame( ()=>{
 
 			// } )
-        }
-        return () => cancelAnimationFrame(requestRef.current)
-    }, [deviceState.isMobile,deviceState, RTCState])
+		}
+		return () => cancelAnimationFrame(requestRef.current)
+	}, [deviceState.isMobile, deviceState, RTCState])
 
 	useEffect(() => {
 		if (id && RTCState.peerId) RTCState.connectToPeer(id)
@@ -48,8 +54,8 @@ const UplinkComponent = (props) => {
 				quality: 0.5,
 				margin: 1,
 				color: {
-					dark: "#000000",
-					light: "#FFF",
+					dark: theme.themeColour1,
+					light: theme.themeColour3,
 				},
 			},
 			(err, url) => {
@@ -76,11 +82,23 @@ const UplinkComponent = (props) => {
 				)}
 			/> */}
 			{/* <RealtimelineGraph deviceOrientation={RTCState.data} /> */}
-			
-			{!id && !RTCState.dataConnections.size && <div className="qrCodeLink">
-				<h5>SCAN FOR ENHANCED CONTROL</h5>
-				<img width="100px" srcSet={qrUrl} />
-				</div>}
+
+			{!id && !RTCState.peerConnection && (
+				<div className='wrapper'>
+					<h5>uplink access point</h5>
+					<div className='qrCodeLink'>
+						<div className='box-container-3d'>
+							<div>
+								<img
+									width='100px'
+									srcSet={qrUrl}
+									className='qr-uplink'
+								/>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	)
 }

@@ -1,0 +1,19 @@
+.mainBanner {
+	width: 100vw;
+	// position: absolute;
+
+	.logo {
+		// height: 25vh;
+		flex-direction: column;
+		align-items: center;
+		top: 0px;
+		display: flex;
+		img {
+			transition: width 1s ease-in-out;
+			&.shrink {
+				width: 10vw;
+			}
+			width: 25vw;
+		}
+	}
+}
