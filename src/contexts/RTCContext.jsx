@@ -84,9 +84,17 @@ const RTCProvider = (props) => {
 		dispatch({ type: "setStatus", payload: CONNECTING })
 		setStatus(CONNECTING)
 
-		peer.on("close", console.log)
-		peer.on("error", console.log)
-		peer.on("data", (data) => dispatch({ type: "dataRecieved", payload: data }))
+		peer.on("close", (p)=>{debugger})
+		peer.on("error", (p)=>{debugger})
+		peer.on("disconnected", (p)=>{debugger})
+		// peer.on("error", console.log )
+		// peer.on('disconnected', (event) => {
+		// 	console.log('peer disconnected', event)
+		// 	// itterate over the open connections
+		// 	state.dataConnections.forEach((key, value) => {
+		// 		console.log('error', value)
+		// 	})	
+		// } )
 
 		peer.on("open", (id) => {
 			dispatch({ type: "setPeer", payload: peer })
@@ -99,6 +107,24 @@ const RTCProvider = (props) => {
 			console.log("dataConnection", dataConnection)
 			dispatch({ type: "addDataConnection", payload: dataConnection })
 			dataConnection.on("data", dataCB)
+			dataConnection.on("close", (p)=>{debugger}) // was triggered on moble page refresh
+			dataConnection.on("error", (p)=>{debugger})
+			dataConnection.on("disconnected", (p)=>{debugger})
+	
+			// dataConnection.on('disconnected', (event) => {
+			// 	console.log('dataCon disconnected', event)
+			// 	// itterate over the open connections
+			// 	state.dataConnections.forEach((key, value) => {
+			// 		console.log('error', value)
+			// 	})	
+			// } )
+			// dataConnection.on('error', (event) => {
+			// 	console.log('dataCon error', event)
+			// 	// itterate over the open connections
+			// 	state.dataConnections.forEach((key, value) => {
+			// 		console.log('error', value)
+			// 	})	
+			// } )
 			// dataConnection.on("data", (data) =>
 			// 	dispatch({ type: "dataRecieved", payload: data })
 			// )

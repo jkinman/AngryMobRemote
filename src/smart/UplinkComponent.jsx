@@ -79,7 +79,7 @@ const UplinkComponent = (props) => {
 			
 			{!id && !RTCState.dataConnections.size && <div className="qrCodeLink">
 				<h5>SCAN FOR ENHANCED CONTROL</h5>
-				<img srcSet={qrUrl} />
+				<img width="100px" srcSet={qrUrl} />
 				</div>}
 		</div>
 	)
