@@ -1,6 +1,8 @@
 @use './vars';
 @use './animations';
 @use './cyberpunkbutton';
+@use './lcars';
+@import './lcars-nemesis-blue.css';
 
 body {
 	background-color: black;
