@@ -48,7 +48,7 @@ class SceneBase {
 			1000
 		)
 		this.camera.position.set(0, 0.04, 0.05)
-		this.camera.lookAt(0, 0.04, 0)
+		this.camera.lookAt(0, 10.1, 0)
 
 		this.renderer = new THREE.WebGLRenderer({
 			powerPreference: "high-performance",

@@ -17,8 +17,8 @@ export const makeVaporwaveScene = (gui) => {
 	// Plane
 	const parameters = {
 		displacementScale: 0.4,
-		metalness: 0.7,
-		roughness: 0.8,
+		metalness: 0.87,
+		roughness: 0.35,
 	}
 
 	const geometry = new THREE.PlaneGeometry(1, 2, 24, 24)
