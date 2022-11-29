@@ -11,6 +11,7 @@
     "@testing-library/user-event": "^13.5.0",
     "delaunator": "^5.0.0",
     "leva": "^0.9.34",
+    "lil-gui": "^0.17.0",
     "peerjs": "^1.4.7",
     "postprocessing": "^6.29.1",
     "qrcode": "^1.5.1",

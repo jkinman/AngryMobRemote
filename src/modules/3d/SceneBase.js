@@ -1,20 +1,20 @@
 import * as THREE from "three"
 import * as CameraTools from "../DeviceCameraTools"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
+import * as dat from "lil-gui"
 
-import {
-	BloomEffect,
-	EffectComposer,
-	EffectPass,
-	RenderPass,
-	DepthOfFieldEffect,
-} from "postprocessing" //https://pmndrs.github.io/postprocessing/public/docs/class/src/effects/DepthEffect.js~DepthEffect.html
-// import { Interaction } from 'three.interaction';
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js"
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js"
+import { GammaCorrectionShader } from "three/examples/jsm/shaders/GammaCorrectionShader.js"
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js"
+import { RGBShiftShader } from "three/examples/jsm/shaders/RGBShiftShader.js"
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js"
+
 import theme from "../../style/_vars.scss"
 
 import * as AssetLoader from "./AssetLoaders"
+import * as VaporwaveGenerator from "./Vaporwave"
 
-import Terrain from './Terrain'
 // consts
 const TEXTURE_SIZE = 1024
 const TEXTURE_HEIGHT = TEXTURE_SIZE
@@ -23,30 +23,32 @@ const TEXTURE_WIDTH = TEXTURE_SIZE
 
 class SceneBase {
 	constructor() {
-		this.cubeClicked = false
+		this.gui = new dat.GUI()
+
 		this.baseClock = new THREE.Clock()
 		this.data = {}
 		const SCREEN_WIDTH = window.innerWidth
 		const SCREEN_HEIGHT = window.innerHeight
 
 		// Scene
+		// fog colour theme.themeColour3
 		this.scene = new THREE.Scene()
-		this.scene.fog = new THREE.Fog(theme.themeColour5, 2, 80)
+		this.scene.fog = new THREE.Fog('#000000', 0, 1)
 		// this.scene.background = new THREE.CubeTextureLoader()
 		// 	.setPath("cube/")
 		// 	.load(["px.png", "nx.png", "py.png", "ny.png", "pz.png", "nz.png"])
-		this.scene.background = new THREE.CubeTextureLoader()
-			.setPath("synthwave-cube-night/")
-			.load(["1.png", "3.png", "5.png", "6.png", "4.png", "2.png"])
+		// this.scene.background = new THREE.CubeTextureLoader()
+		// 	.setPath("synthwave-cube-night/")
+		// 	.load(["1.png", "3.png", "5.png", "6.png", "4.png", "2.png"])
 		// Camera setup
 		this.camera = new THREE.PerspectiveCamera(
-			60,
+			100,
 			window.innerWidth / window.innerHeight,
 			0.01,
-			10000
+			1000
 		)
-		this.camera.position.set(0, 6, 6)
-		this.camera.lookAt(0, 0, 0)
+		this.camera.position.set(0, 0.04, 0.05)
+		this.camera.lookAt(0, 0.04, 0)
 
 		this.renderer = new THREE.WebGLRenderer({
 			powerPreference: "high-performance",
@@ -72,32 +74,6 @@ class SceneBase {
 		requestAnimationFrame(() => this.renderLoop())
 		window.addEventListener("resize", () => this.resize(), false)
 
-		const light = new THREE.AmbientLight(0x404040, 0.8) // soft white light
-		this.scene.add(light)
-
-		const geometry = new THREE.BoxGeometry(10, 20, 2)
-		const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 })
-		this.cube = new THREE.Mesh(geometry, material)
-		// this.cube.on('click', () => this.cubeClicked = ! this.cubeClicked);
-		// this.scene.add(this.cube)
-
-		const pointLight = this.makePointLight()
-		const pointLightHelper = new THREE.PointLightHelper(pointLight, 5)
-		this.scene.add(pointLight)
-		this.scene.add(pointLightHelper)
-
-		// this.scene.add(this.makePointLight())
-		// this.scene.add(this.wireframeSphere())
-
-		this.composer = new EffectComposer(this.renderer)
-		this.composer.addPass(new RenderPass(this.scene, this.camera))
-		// this.composer.addPass(
-		// 	new EffectPass(this.camera, new DepthOfFieldEffect({}))
-		// )
-		this.composer.addPass(
-			new EffectPass(this.camera, new BloomEffect({ intensity: 1 }))
-		)
-
 		// this.loadD20()
 		// this.loadMobile()
 		// this.loadCamera()
@@ -109,74 +85,74 @@ class SceneBase {
 
 		AssetLoader.loadScifiVehicle().then((car) => {
 			this.car = car
+			this.car.scale.set(0.01, 0.01, 0.01)
 			car.rotateY(Math.PI)
 			this.scene.add(car)
 		})
 
-		const dLight = new THREE.DirectionalLight()
-		this.scene.add(dLight)
+		// const dLight = new THREE.DirectionalLight()
+		// this.scene.add(dLight)
 
-		const axesHelper = new THREE.AxesHelper(10)
-		this.scene.add(axesHelper)
+		// const axesHelper = new THREE.AxesHelper(10)
+		// this.scene.add(axesHelper)
 
-		this.scene.add(this.makeGround())
-		this.scene.add(this.makeSun())
-
-		this.scene.add(Terrain.generateGeometry())
+		// this.scene.add(this.makeGround())
+		// this.scene.add(this.makeSun())
+		this.scene.add(VaporwaveGenerator.makeVaporwaveScene(this.gui))
+		// store the planes
+		this.plane = this.scene.getObjectByName("vaporWaveGround1")
+		this.plane2 = this.scene.getObjectByName("vaporWaveGround2")
+		VaporwaveGenerator.addVaporwaveLights(this.scene, this.gui)
 		this.enableCameraControls()
+		this.setUpVaporwavePost(this.gui, this.renderer)
+		VaporwaveGenerator.addCameraGui(this.gui, this.camera)
 	}
 
-	makeSun() {
-		const geometry = new THREE.SphereGeometry(250, 4, 4)
-		const material = new THREE.MeshBasicMaterial({ color: 0xffff00 })
-		const sphere = new THREE.Mesh(geometry, material)
-		sphere.position.set(0, 0, -1000)
-		return sphere
-	}
-	makeGround() {
-		const texture = new THREE.TextureLoader().load(
-			"textures/ground-blue-tile.jpg"
-		)
+	setUpVaporwavePost(gui, renderer) {
+		const sizes = {
+			width: window.innerWidth,
+			height: window.innerHeight,
+		}
+		// Post-processing
+		this.effectComposer = new EffectComposer(renderer)
+		this.effectComposer.setSize(sizes.width, sizes.height)
+		this.effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
-		texture.wrapS = THREE.RepeatWrapping
-		texture.wrapT = THREE.RepeatWrapping
-		texture.repeat.set(100, 100)
+		const renderPass = new RenderPass(this.scene, this.camera)
+		this.effectComposer.addPass(renderPass)
 
-		this.groundTexture = texture
-		// immediately use the texture for material creation
-		const material = new THREE.MeshBasicMaterial({ map: texture })
-		let geometry = new THREE.PlaneGeometry(100, 100, 1, 1)
-		let terrain = new THREE.Mesh(geometry, material)
-		terrain.rotation.x = -Math.PI / 2
-		return terrain
+		const rgbShiftPass = new ShaderPass(RGBShiftShader)
+		rgbShiftPass.uniforms["amount"].value = 0.001
+		gui
+			.add(rgbShiftPass.uniforms["amount"], "value")
+			.min(0)
+			.max(0.01)
+			.step(0.00001)
+			.name("RGBShift intensity")
+		this.effectComposer.addPass(rgbShiftPass)
+		const gammaCorrectionPass = new ShaderPass(GammaCorrectionShader)
+		this.effectComposer.addPass(gammaCorrectionPass)
 
-		// const geometry = new THREE.PlaneGeometry(250, 250, 100, 100)
-		// const wireframe = new THREE.WireframeGeometry(geometry)
-		// const terrain = new THREE.LineSegments(wireframe)
-		// terrain.rotation.x = -Math.PI / 2
-		// terrain.position.set(0, 0, 50)
-		// terrain.material.depthTest = true
-		// terrain.material.opacity = 1
-		// terrain.material.transparent = false
-		// terrain.material.color.setHex(0xffffff)
+		var bloomParams = {
+			strength: 0.6,
+		}
 
-		// const geometry2 = new THREE.PlaneGeometry(250, 250, 100, 100)
-		// const material = new THREE.MeshBasicMaterial({ color: 0x000000 })
-		// const terrain2 = new THREE.Mesh(geometry2, material)
-		// terrain2.rotation.x = -Math.PI / 2
-		// terrain2.position.set(0, 0, 55)
-		// terrain2.material.depthTest = true
-		// terrain2.material.opacity = 1
-		// terrain2.material.transparent = false
+		const bloomPass = new UnrealBloomPass()
+		bloomPass.strength = bloomParams.strength
 
-		// const group = new THREE.Object3D()
-		// group.add(terrain2)
-		// group.add(terrain)
-		// return group
+		gui
+			.add(bloomParams, "strength", 0.0, 3.0)
+			.onChange((value) => {
+				bloomPass.strength = Number(value)
+			})
+			.name("Bloom Strength")
+
+		this.effectComposer.addPass(bloomPass)
 	}
 
 	enableCameraControls() {
 		this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+		this.controls.enableDamping = true
 		this.controls.update()
 	}
 
@@ -186,7 +162,12 @@ class SceneBase {
 	}
 
 	renderLoop() {
-		let delta = this.baseClock.getDelta()
+		const delta = this.baseClock.getDelta()
+		const elapsedTime = this.baseClock.getElapsedTime()
+		// Update plane position
+		this.plane.position.z = (elapsedTime * 0.15) % 2
+		this.plane2.position.z = ((elapsedTime * 0.15) % 2) - 2
+
 		if (this.groundTexture) {
 			// debugger
 			const offset = this.groundTexture.offset
@@ -203,8 +184,9 @@ class SceneBase {
 			// CameraTools.cameraRotate(this.data, this.car)
 			// if( this.cameraModel)
 			// CameraTools.cameraRotate(this.data, this.cameraModel)
+		} else {
+			if (this.controls) this.controls.update()
 		}
-		if (this.controls) this.controls.update()
 
 		// TWEEN.update();
 		// if( this.stats ) this.stats.update();
@@ -218,7 +200,8 @@ class SceneBase {
 
 		// console.log(this.data)
 		// this.renderer.render(this.scene, this.camera)
-		this.composer.render()
+		this.effectComposer.render()
+
 		// }
 
 		// update shader unis
@@ -250,6 +233,8 @@ class SceneBase {
 	resize() {
 		this.renderer.setPixelRatio(window.devicePixelRatio)
 		this.renderer.setSize(window.innerWidth, window.innerHeight)
+		this.effectComposer.setSize(window.innerWidth, window.innerHeight)
+		this.effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 		this.camera.aspect = window.innerWidth / window.innerHeight
 		this.camera.updateProjectionMatrix()
 	}
