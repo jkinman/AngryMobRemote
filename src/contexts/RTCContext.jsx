@@ -95,10 +95,10 @@ const RTCProvider = (props) => {
 			debugger
 		})
 		peer.on("error", (p) => {
-			debugger
+			dispatch({ type: "disconnection", payload: p })
 		})
 		peer.on("disconnected", (p) => {
-			debugger
+			dispatch({ type: "disconnection", payload: p })
 		})
 		// peer.on("error", console.log )
 		// peer.on('disconnected', (event) => {

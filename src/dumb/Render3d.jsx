@@ -5,7 +5,6 @@ let threedScene
 
 export const Render3d = (props) => {
     const {storeDataCallback} = props
-
 	React.useEffect(()=>{
         console.log(SceneBase)
         threedScene = new SceneBase()
