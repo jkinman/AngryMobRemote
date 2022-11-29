@@ -14,8 +14,7 @@ import theme from "../../style/_vars.scss"
 
 import * as AssetLoader from "./AssetLoaders"
 
-import Land from './Land'
-
+import Terrain from './Terrain'
 // consts
 const TEXTURE_SIZE = 1024
 const TEXTURE_HEIGHT = TEXTURE_SIZE
@@ -123,7 +122,7 @@ class SceneBase {
 		this.scene.add(this.makeGround())
 		this.scene.add(this.makeSun())
 
-		this.land = new Land()
+		this.scene.add(Terrain.generateGeometry())
 		this.enableCameraControls()
 	}
 
