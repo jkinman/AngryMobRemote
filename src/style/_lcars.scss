@@ -1,16 +1,49 @@
-@use './vars';
+@use "./vars";
 // LCARS (pronounced elkarz) is an acronym for Library Computer Access/Retrieval System, and was the fictional computer operating system on many Star Trek incarnations.right-frame-top {
-.right-frame-top, .top-corner-bg, .top-corner {
-    // flex: 1 1;
-    background-color: #1c2a7c54;
+
+.wrap {
+	padding: 0 0px 0 20px;
 }
 
-.left-frame, .left-frame-top{
-    width: 10vw;
-    min-width: 10vw;
+// .hop {
+// font-size: 1vw;
+// }
+
+.right-frame-top,
+.top-corner-bg,
+.top-corner {
+	// flex: 1 1;
+	background-color: #1c2a7c54;
+	// filter: blur(10px);
 }
 
+// .top-corner {
+// 	-webkit-mask-image: url(#mask);
+// 	mask-image: url(#mask);
+// }
+.left-frame,
+.left-frame-top {
+	width: 10vw;
+	min-width: 10vw;
+}
 
-.right-frame, .content {
-    background-color: unset;
+.right-frame,
+.content {
+	background-color: transparent;
+	user-select: none;
+	pointer-events: none;
+}
+
+.lcars-header-container {
+	height: 14vh;
+}
+.lcars-body-container {
+	height: 82vh;
+	overflow: hidden;
+}
+.data-cascade-button-group {
+	padding: 8px;
+}
+.bar-panel {
+	min-height: 22px;
 }

@@ -87,7 +87,8 @@ const UplinkComponent = (props) => {
 				<div className='wrapper'>
 					<h5>uplink access point</h5>
 					<div className='qrCodeLink'>
-						<div className='box-container-3d'>
+						<div className=''>
+						{/* <div className='box-container-3d'> */}
 							<div>
 								<img
 									width='100px'

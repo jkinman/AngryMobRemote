@@ -1,5 +1,12 @@
 import * as THREE from "three"
 import theme from "../../style/_vars.scss"
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js"
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js"
+import { GammaCorrectionShader } from "three/examples/jsm/shaders/GammaCorrectionShader.js"
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js"
+import { RGBShiftShader } from "three/examples/jsm/shaders/RGBShiftShader.js"
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js"
+import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass"
 
 export const makeVaporwaveScene = (gui) => {
 	// Textures
@@ -59,7 +66,71 @@ export const makeVaporwaveScene = (gui) => {
 
 	return group
 }
+export const setUpVaporwavePost = (gui, renderer, camera, scene) => {
+	const sizes = {
+		width: window.innerWidth,
+		height: window.innerHeight,
+	}
+	// Post-processing
+	const effectComposer = new EffectComposer(renderer)
+	effectComposer.setSize(sizes.width, sizes.height)
+	effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
+	const renderPass = new RenderPass(scene, camera)
+	effectComposer.addPass(renderPass)
+
+	const folder = gui.addFolder("post")
+
+	const rgbShiftPass = new ShaderPass(RGBShiftShader)
+	rgbShiftPass.uniforms["amount"].value = 0.001
+	folder
+		.add(rgbShiftPass.uniforms["amount"], "value")
+		.min(0)
+		.max(0.01)
+		.step(0.00001)
+		.name("RGBShift intensity")
+	effectComposer.addPass(rgbShiftPass)
+	const gammaCorrectionPass = new ShaderPass(GammaCorrectionShader)
+	effectComposer.addPass(gammaCorrectionPass)
+
+	var bloomParams = {
+		strength: 0.6,
+	}
+
+	const bloomPass = new UnrealBloomPass()
+	bloomPass.strength = bloomParams.strength
+
+	folder
+		.add(bloomParams, "strength", 0.0, 3.0)
+		.onChange((value) => {
+			bloomPass.strength = Number(value)
+		})
+		.name("Bloom Strength")
+
+	effectComposer.addPass(bloomPass)
+
+	const filmPass = new FilmPass(
+		0.75, // noise intensity
+		0.16, // scanline intensity
+		800, // scanline count
+		false // grayscale
+	)
+
+	folder.add(filmPass.uniforms.grayscale, "value").name("grayscale")
+	folder
+		.add(filmPass.uniforms.nIntensity, "value", 0, 1)
+		.name("noise intensity")
+	folder
+		.add(filmPass.uniforms.sIntensity, "value", 0, 1)
+		.name("scanline intensity")
+	folder
+		.add(filmPass.uniforms.sCount, "value", 0, 1000)
+		.name("scanline count")
+	folder.close()
+
+	effectComposer.addPass(filmPass)
+	return effectComposer
+}
 export const addVaporwaveLights = (scene, gui) => {
 	const ambientLight = new THREE.AmbientLight(theme.themeColour1, 10)
 	scene.add(ambientLight)

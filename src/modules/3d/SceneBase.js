@@ -9,6 +9,7 @@ import { GammaCorrectionShader } from "three/examples/jsm/shaders/GammaCorrectio
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js"
 import { RGBShiftShader } from "three/examples/jsm/shaders/RGBShiftShader.js"
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js"
+import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass"
 
 import theme from "../../style/_vars.scss"
 
@@ -51,11 +52,14 @@ class SceneBase {
 		this.camera.lookAt(0, 10.1, 0)
 
 		this.renderer = new THREE.WebGLRenderer({
+			// powerPreference: "low-power",
 			powerPreference: "high-performance",
 			antialias: false,
 			stencil: false,
 			depth: false,
 		})
+		// this.renderer.autoClear = true
+		// this.renderer.autoClearColor = true
 		this.renderer.shadowMap.enabled = true
 		this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
 		this.renderer.setPixelRatio(window.devicePixelRatio)
@@ -63,10 +67,11 @@ class SceneBase {
 		// this.renderer.setClearColor(0xffffff, 0)
 		// this.interaction = new Interaction(this.renderer, this.scene, this.camera);
 
-		this.renderer.shadowMap.enabled = true
 		// add renderer to DOM
-		const el = document.createElement("div")
+		const el = document.getElementById("threed-canvas")
+		// const el = document.createElement('div')
 		document.body.appendChild(el)
+		// el.id = "threed-canvas"
 		el.className = "threed-canvas"
 		el.appendChild(this.renderer.domElement)
 
@@ -104,50 +109,8 @@ class SceneBase {
 		this.plane2 = this.scene.getObjectByName("vaporWaveGround2")
 		VaporwaveGenerator.addVaporwaveLights(this.scene, this.gui)
 		this.enableCameraControls()
-		this.setUpVaporwavePost(this.gui, this.renderer)
+		this.effectComposer = VaporwaveGenerator.setUpVaporwavePost(this.gui, this.renderer, this.camera, this.scene)
 		VaporwaveGenerator.addCameraGui(this.gui, this.camera)
-	}
-
-	setUpVaporwavePost(gui, renderer) {
-		const sizes = {
-			width: window.innerWidth,
-			height: window.innerHeight,
-		}
-		// Post-processing
-		this.effectComposer = new EffectComposer(renderer)
-		this.effectComposer.setSize(sizes.width, sizes.height)
-		this.effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-
-		const renderPass = new RenderPass(this.scene, this.camera)
-		this.effectComposer.addPass(renderPass)
-
-		const rgbShiftPass = new ShaderPass(RGBShiftShader)
-		rgbShiftPass.uniforms["amount"].value = 0.001
-		gui
-			.add(rgbShiftPass.uniforms["amount"], "value")
-			.min(0)
-			.max(0.01)
-			.step(0.00001)
-			.name("RGBShift intensity")
-		this.effectComposer.addPass(rgbShiftPass)
-		const gammaCorrectionPass = new ShaderPass(GammaCorrectionShader)
-		this.effectComposer.addPass(gammaCorrectionPass)
-
-		var bloomParams = {
-			strength: 0.6,
-		}
-
-		const bloomPass = new UnrealBloomPass()
-		bloomPass.strength = bloomParams.strength
-
-		gui
-			.add(bloomParams, "strength", 0.0, 3.0)
-			.onChange((value) => {
-				bloomPass.strength = Number(value)
-			})
-			.name("Bloom Strength")
-
-		this.effectComposer.addPass(bloomPass)
 	}
 
 	enableCameraControls() {
@@ -200,7 +163,8 @@ class SceneBase {
 
 		// console.log(this.data)
 		// this.renderer.render(this.scene, this.camera)
-		this.effectComposer.render()
+		if(this.effectComposer)this.effectComposer.render()
+		else this.renderer.render(this.scene, this.camera)
 
 		// }
 
