@@ -25,6 +25,7 @@ const TEXTURE_WIDTH = TEXTURE_SIZE
 class SceneBase {
 	constructor() {
 		this.gui = new dat.GUI()
+		this.gui.close()
 
 		this.baseClock = new THREE.Clock()
 		this.data = {}
@@ -34,21 +35,36 @@ class SceneBase {
 		// Scene
 		// fog colour theme.themeColour3
 		this.scene = new THREE.Scene()
-		this.scene.fog = new THREE.Fog('#000000', 0, 1)
-		// this.scene.background = new THREE.CubeTextureLoader()
-		// 	.setPath("cube/")
+		// this.scene.fog = new THREE.Fog('#000000', 0, 1)
+		this.scene.fog = new THREE.Fog(theme.themeColour5, 0.6, 1.6)
+		
+		const loader = new THREE.CubeTextureLoader();
+		loader.setPath("textures/images/")
+		
+		const textureCube = loader.load( [
+			'px.png', 'nx.png',
+			'py.png', 'ny.png',
+			'pz.png', 'nz.png'
+		] );
+		textureCube.generateMipmaps = false;
+		textureCube.wrapS = textureCube.wrapT = THREE.ClampToEdgeWrapping;
+		textureCube.minFilter = THREE.LinearFilter
+		textureCube.encoding = THREE.sRGBEncoding
+		this.scene.background = textureCube
+		// new THREE.CubeTextureLoader()
+		// 	.setPath("textures/images/")
 		// 	.load(["px.png", "nx.png", "py.png", "ny.png", "pz.png", "nz.png"])
 		// this.scene.background = new THREE.CubeTextureLoader()
-		// 	.setPath("synthwave-cube-night/")
-		// 	.load(["1.png", "3.png", "5.png", "6.png", "4.png", "2.png"])
+		// 	.setPath("textures/images/")
+		// 	.load(["1.png", "2.png", "3.png", "4.png", "5.png", "6.png"])
 		// Camera setup
 		this.camera = new THREE.PerspectiveCamera(
-			100,
+			110,
 			window.innerWidth / window.innerHeight,
 			0.01,
 			1000
 		)
-		this.camera.position.set(0, 0.04, 0.05)
+		this.camera.position.set(0, 0.02, 0.047)
 		this.camera.lookAt(0, 10.1, 0)
 
 		this.renderer = new THREE.WebGLRenderer({
@@ -103,11 +119,11 @@ class SceneBase {
 
 		// this.scene.add(this.makeGround())
 		// this.scene.add(this.makeSun())
-		this.scene.add(VaporwaveGenerator.makeVaporwaveScene(this.gui))
+		this.scene.add(VaporwaveGenerator.makeVaporwaveScene(this.gui.addFolder("terrain")))
 		// store the planes
 		this.plane = this.scene.getObjectByName("vaporWaveGround1")
 		this.plane2 = this.scene.getObjectByName("vaporWaveGround2")
-		VaporwaveGenerator.addVaporwaveLights(this.scene, this.gui)
+		VaporwaveGenerator.addVaporwaveLights(this.scene, this.gui.addFolder("lights"))
 		this.enableCameraControls()
 		this.effectComposer = VaporwaveGenerator.setUpVaporwavePost(this.gui, this.renderer, this.camera, this.scene)
 		VaporwaveGenerator.addCameraGui(this.gui, this.camera)

@@ -11,9 +11,9 @@ export const MainLayout = (props) => {
 		<div className="main-app-layout">
 			<LcarsHeader />
 			<LcarsMid />
-			<div className='mainBanner'>
+			{/* <div className='mainBanner'>
 				<Outlet />
-			</div>
+			</div> */}
 		</div>
 	)
 }

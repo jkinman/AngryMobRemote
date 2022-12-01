@@ -10,13 +10,28 @@
 // }
 body {
 	// background-color: rgba(0,0,0,0);
-	background-color: transparent;
+	pointer-events: none;
+	background-color: black;
 	width: 100vw;
 	overflow: hidden;
 	height: 100vh;
 	padding: 0;
 }
+button,
+a,
+.button {
+	pointer-events: all !important;
+}
 
+.infobox {
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+.lil-gui {
+	pointer-events: all;
+}
 .App {
 	text-align: center;
 }

@@ -7,6 +7,8 @@ import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js"
 import { RGBShiftShader } from "three/examples/jsm/shaders/RGBShiftShader.js"
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js"
 import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass"
+// import { BokehPass } from "three/examples/jsm/postprocessing/BokehPass"
+// import { SSAOPass } from "three/examples/jsm/postprocessing/SSAOPass"
 
 export const makeVaporwaveScene = (gui) => {
 	// Textures
@@ -23,9 +25,9 @@ export const makeVaporwaveScene = (gui) => {
 
 	// Plane
 	const parameters = {
-		displacementScale: 0.4,
-		metalness: 0.87,
-		roughness: 0.35,
+		displacementScale: 0.55,
+		metalness: 0.7,
+		roughness: 0.5,
 	}
 
 	const geometry = new THREE.PlaneGeometry(1, 2, 24, 24)
@@ -45,9 +47,9 @@ export const makeVaporwaveScene = (gui) => {
 	plane.rotation.x = -Math.PI * 0.5
 	plane2.rotation.x = -Math.PI * 0.5
 
-	plane.position.y = 0.0
+	plane.position.y = -0.02
 	plane.position.z = 0.15
-	plane2.position.y = 0.0
+	plane2.position.y = -0.02
 	plane2.position.z = -1.85
 
 	const group = new THREE.Object3D()
@@ -81,6 +83,12 @@ export const setUpVaporwavePost = (gui, renderer, camera, scene) => {
 
 	const folder = gui.addFolder("post")
 
+	// const bokehPass = new BokehPass(scene, camera, {focus:0.02,aspect:camera.aspect, aperture : 0.025, maxblur : 1.0})
+	// effectComposer.addPass(bokehPass)
+
+	// const sSAOPass = new SSAOPass(scene, camera, sizes.width, sizes.height)
+	// effectComposer.addPass(sSAOPass)
+
 	const rgbShiftPass = new ShaderPass(RGBShiftShader)
 	rgbShiftPass.uniforms["amount"].value = 0.001
 	folder
@@ -94,7 +102,7 @@ export const setUpVaporwavePost = (gui, renderer, camera, scene) => {
 	effectComposer.addPass(gammaCorrectionPass)
 
 	var bloomParams = {
-		strength: 0.6,
+		strength: 0.3,
 	}
 
 	const bloomPass = new UnrealBloomPass()
@@ -110,9 +118,9 @@ export const setUpVaporwavePost = (gui, renderer, camera, scene) => {
 	effectComposer.addPass(bloomPass)
 
 	const filmPass = new FilmPass(
-		0.75, // noise intensity
-		0.16, // scanline intensity
-		800, // scanline count
+		0.25, // noise intensity
+		0.34, // scanline intensity
+		900, // scanline count
 		false // grayscale
 	)
 
@@ -142,7 +150,7 @@ export const addVaporwaveLights = (scene, gui) => {
 		.name("AmbientLight intensity")
 	gui.addColor(ambientLight, "color").name("AmbientLight color")
 
-	const spotlight = new THREE.SpotLight(theme.themeColour3, 20, 25, Math.PI * 0.1, 0.25)
+	const spotlight = new THREE.SpotLight(theme.themeColour4, 20, 25, Math.PI * 0.1, 0.25)
 	spotlight.position.set(0.5, 0.75, 2.1)
 	spotlight.target.position.x = -0.25
 	spotlight.target.position.y = 0.25
@@ -150,7 +158,7 @@ export const addVaporwaveLights = (scene, gui) => {
 	scene.add(spotlight)
 	scene.add(spotlight.target)
 
-	const spotlight2 = new THREE.SpotLight(theme.themeColour3, 20, 25, Math.PI * 0.1, 0.25)
+	const spotlight2 = new THREE.SpotLight(theme.themeColour2, 20, 25, Math.PI * 0.1, 0.25)
 	spotlight2.position.set(-0.5, 0.75, 2.1)
 	spotlight2.target.position.x = 0.25
 	spotlight2.target.position.y = 0.25
@@ -228,13 +236,27 @@ export const addCameraGui = (gui, camera) => {
         .step(0.1)
         .onChange(() => camera.updateProjectionMatrix())
         .name("Camera Far")
-    gui
+		gui
         .add(camera, "fov")
         .min(0)
         .max(180)
         .step(0.1)
         .onChange(() => camera.updateProjectionMatrix())
         .name("Camera FOV")
+		gui
+        .add(camera.position, "x")
+        .min(0)
+        .max(4)
+        .step(0.001)
+        .onChange(() => camera.updateProjectionMatrix())
+        .name("Camera X")
+		gui
+        .add(camera.position, "y")
+        .min(0)
+        .max(4)
+        .step(0.001)
+        .onChange(() => camera.updateProjectionMatrix())
+        .name("Camera Y")
 }
 export const makeSun = () => {
     const geometry = new THREE.SphereGeometry(250, 4, 4)

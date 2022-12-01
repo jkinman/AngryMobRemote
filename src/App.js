@@ -9,7 +9,13 @@ import UplinkComponent from "./smart/UplinkComponent"
 import DeviceMetrics from "./smart/DeviceMetrics"
 import { RTCContext } from "./contexts/RTCContext"
 
-import { Routes, Route, useParams, BrowserRouter, useLocation } from "react-router-dom"
+import {
+	Routes,
+	Route,
+	useParams,
+	BrowserRouter,
+	useLocation,
+} from "react-router-dom"
 
 function App() {
 	let { id } = useParams()
@@ -38,12 +44,23 @@ function App() {
 							</>
 						}
 					/>
-					<Route element={<MainLayout connected={RTCState.peerConnection}/>}>
+					<Route element={<MainLayout connected={RTCState.peerConnection} />}>
 						<Route
 							path='/'
 							element={
 								<>
 									<UplinkComponent />
+									{/* <h2>Joel Kinman</h2> */}
+									<div className='infobox'>
+										<p>
+											Connect a mobile device by scanning the uplink access
+											point.
+										</p>
+										<p>
+											This creates a peer to peer communication socket via
+											WebRTC.
+										</p>
+									</div>
 									<DeviceMetrics />
 									<Render3d storeDataCallback={RTCState.storeDataCallback} />
 								</>

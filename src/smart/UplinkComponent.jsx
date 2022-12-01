@@ -85,7 +85,7 @@ const UplinkComponent = (props) => {
 
 			{!id && !RTCState.peerConnection && (
 				<div className='wrapper'>
-					<h5>uplink access point</h5>
+					{/* <h5>uplink access point</h5> */}
 					<div className='qrCodeLink'>
 						<div className=''>
 						{/* <div className='box-container-3d'> */}

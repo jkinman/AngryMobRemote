@@ -1,7 +1,7 @@
 import React, { useState, useReducer, useEffect } from "react"
 
 const initialState = {
-	isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+	isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && DeviceMotionEvent.requestPermission,
 	permissionStatus: false,
 	permissionGranted: false,
 	deviceOrientation: { alpha: 0, beta: 0, gamma: 0, timeStamp: 0 },

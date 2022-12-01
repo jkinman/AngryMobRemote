@@ -1,4 +1,5 @@
 import React from "react"
+import { Outlet } from "react-router-dom"
 
 export const LcarsMid = (props) => {
 	return (
@@ -48,8 +49,7 @@ export const LcarsMid = (props) => {
 					<div className='corner'></div>
 				</div>
 				<div className='content'>
-					<h2>Joel Kinman </h2>
-					<p>This is a tech demo combining WebGL and realtime peer to peer commication of web broswers using WebRTC.</p>
+					<Outlet />
 					{/* <div className='lcars-text-bar the-end'>
 						<span>hello world</span>
 					</div> */}
