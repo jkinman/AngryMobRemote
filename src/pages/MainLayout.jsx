@@ -6,14 +6,11 @@ import LcarsHeader from "../dumb/LcarsHeader"
 import LcarsMid from "../dumb/LcarsMid"
 
 export const MainLayout = (props) => {
-	// const imgClass =
+	const {children} = props
 	return (
 		<div className="main-app-layout">
 			<LcarsHeader />
-			<LcarsMid />
-			{/* <div className='mainBanner'>
-				<Outlet />
-			</div> */}
+			<LcarsMid children={props.children} />
 		</div>
 	)
 }

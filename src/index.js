@@ -15,6 +15,7 @@ import {
 // contexts
 import DeviceMetricsProvider from "./contexts/DeviceMetricsContext"
 import RTCProvider from "./contexts/RTCContext"
+import AppProvider from "./contexts/AppContext"
 
 const peerConnection = new Peer()
 // App Routes
@@ -32,15 +33,15 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(
 	// <React.StrictMode>
+	<BrowserRouter>
 		<DeviceMetricsProvider>
-			<RTCProvider peer={peerConnection}>
-				<App />
-				{/* <RouterProvider
-					router={router}
-				/> */}
-       
-			</RTCProvider>
+			<AppProvider>
+				<RTCProvider peer={peerConnection}>
+					<App />
+				</RTCProvider>
+			</AppProvider>
 		</DeviceMetricsProvider>
+	</BrowserRouter>
 	// </React.StrictMode>
 )
 

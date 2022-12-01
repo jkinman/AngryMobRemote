@@ -8,6 +8,7 @@ import { DeviceMetricsContext } from "./contexts/DeviceMetricsContext"
 import UplinkComponent from "./smart/UplinkComponent"
 import DeviceMetrics from "./smart/DeviceMetrics"
 import { RTCContext } from "./contexts/RTCContext"
+import { AppContext } from "./contexts/AppContext"
 
 import {
 	Routes,
@@ -15,60 +16,36 @@ import {
 	useParams,
 	BrowserRouter,
 	useLocation,
+	useSearchParams,
 } from "react-router-dom"
 
 function App() {
-	let { id } = useParams()
-	// const { search } = useLocation()
-	// console.log(search, search)
+	const [searchParams] = useSearchParams()
 	const RTCState = useContext(RTCContext)
+	const AppState = useContext(AppContext)
+	useEffect(() => {
+		AppState.setPeerId(searchParams.get("id"))
+	}, [])
 
 	return (
 		<div>
-			<BrowserRouter>
-				<Routes>
-					<Route
-						path='/test'
-						element={
-							<>
-								<h1>TEST ROUTE</h1>
-							</>
-						}
-					/>
-					<Route
-						path='/peer/:id'
-						element={
-							<>
-								<UplinkComponent />
-								<DeviceMetrics />
-							</>
-						}
-					/>
-					<Route element={<MainLayout connected={RTCState.peerConnection} />}>
-						<Route
-							path='/'
-							element={
-								<>
-									<UplinkComponent />
-									{/* <h2>Joel Kinman</h2> */}
-									<div className='infobox'>
-										<p>
-											Connect a mobile device by scanning the uplink access
-											point.
-										</p>
-										<p>
-											This creates a peer to peer communication socket via
-											WebRTC.
-										</p>
-									</div>
-									<DeviceMetrics />
-									<Render3d storeDataCallback={RTCState.storeDataCallback} />
-								</>
-							}
-						/>
-					</Route>
-				</Routes>
-			</BrowserRouter>
+			{AppState.isRemote && (
+				<>
+					<UplinkComponent />
+					<DeviceMetrics />
+				</>
+			)}
+
+			<MainLayout connected={RTCState.peerConnection}>
+				<UplinkComponent />
+				{/* <h2>Joel Kinman</h2> */}
+				<div className='infobox'>
+					<p>Connect a mobile device by scanning the uplink access point.</p>
+					<p>This creates a peer to peer communication socket via WebRTC.</p>
+				</div>
+			</MainLayout>
+			<DeviceMetrics />
+			<Render3d storeDataCallback={RTCState.storeDataCallback} />
 		</div>
 	)
 }
