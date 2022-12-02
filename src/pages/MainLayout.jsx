@@ -6,10 +6,10 @@ import LcarsHeader from "../dumb/LcarsHeader"
 import LcarsMid from "../dumb/LcarsMid"
 
 export const MainLayout = (props) => {
-	const {children, leftMid} = props
+	const {children, leftMid, cvHandler} = props
 	return (
 		<div className="main-app-layout">
-			<LcarsHeader />
+			<LcarsHeader aboutHandler={props.aboutHandler} cvHandler={cvHandler} />
 			<LcarsMid children={props.children} leftMid={leftMid}/>
 		</div>
 	)

@@ -14,6 +14,7 @@ const initialState = {
 	isClient: false,
 	RTCId: false,
 	showAbout: false,
+	showCV: false,
 	show3DControls: false,
 	loading: false,
 	preloadProgress: false,
@@ -46,6 +47,17 @@ const reducer = (state, action) => {
 				show3DControls: action.payload,
 			}
 
+		case "setShowAbout":
+			return {
+				...state,
+				showAbout: action.payload,
+			}
+		case "setShowCV":
+			return {
+				...state,
+				showCV: action.payload,
+			}
+
 			return state
 		default:
 			return state
@@ -58,8 +70,12 @@ const AppProvider = (props) => {
 	const [state, dispatch] = React.useReducer(reducer, initialState)
 
 	const toggleAbout = (param) => {
-		const show = param ? param : ! state.showAbout
+		const show = param ? param : !state.showAbout
 		dispatch({ type: "setShowAbout", payload: show })
+	}
+	const toggleCV = (param) => {
+		const show = param ? param : !state.showCV
+		dispatch({ type: "setShowCV", payload: show })
 	}
 
 	const setRTCId = (id) => dispatch({ type: "setRTCId", payload: id })
@@ -76,6 +92,7 @@ const AppProvider = (props) => {
 				setShow3DControls,
 				setIsClient,
 				toggleAbout,
+				toggleCV,
 			}}
 		>
 			{props.children}

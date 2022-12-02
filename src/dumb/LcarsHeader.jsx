@@ -4,15 +4,6 @@ export const LcarsHeader = (props) => {
 	const {aboutHandler, cvHandler} = props
 	return (
 		<div className='wrap lcars-header-container'>
-			{/* <svg width="0" height="0" viewBox="0 0 400 300"> */}
-			{/* <defs>
-    <mask id="mask">
-      <rect fill="#000000" x="0" y="0" width="400" height="300"></rect>
-      <circle fill="#FFFFFF" cx="150" cy="150" r="100" />
-      <circle fill="#FFFFFF" cx="50" cy="50" r="150" />
-    </mask>
-  </defs>
-</svg> */}
 			<div className='scroll-top'>
 				<a
 					id='scroll-top'

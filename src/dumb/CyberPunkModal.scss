@@ -1,0 +1,54 @@
+@use "../style/vars";
+@import "../style/cyberpunkdialog";
+
+.modal {
+	.cyberpunk {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		align-content: center;
+		position: absolute;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0, 0, 0, 0.5);
+		font-family: vars.$paragraph-font;
+		color: white;
+		h1,
+		h2 {
+			font-family: vars.$lcars-font;
+			color: vars.$theme-colour1;
+			text-shadow: none;
+			font-size: 2em;
+		}
+		h2 {
+			font-size: 1em;
+		}
+		p,
+		ul,
+		span {
+			font-family: vars.$paragraph-font;
+			font-size: 0.75em;
+		}
+		.container {
+			width: 75vw;
+			max-width: 800px;
+            max-height: 90vh;
+            // overflow: scroll;
+			padding: 25px;
+			margin-top: 10vh;
+			margin-bottom: 10vh;
+			background-color: vars.$theme-colour4;
+            .resume{
+                height: 70vh;
+            }
+			.close {
+				display: flex;
+				flex-direction: row;
+				align-content: flex-start;
+				justify-content: center;
+			}
+		}
+	}
+}

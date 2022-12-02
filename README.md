@@ -1,9 +1,14 @@
+# Joel Kinman Static Web Tech Demo (WebGL / WebRTC)
+### Welcome. I'm Joel Kinman I made this tech demo to prove an idea I had combining WebRTC and WebGL while knocking the dust off my matrix math and quaternion skills. 
 
-## Joel Kinman Tech Demo (WebGL / WebRTC)
-### Welcome. I'm Joel Kinman I made this tech demo to learn WebRTC and practice WebGL while knocking the dust off my matrix math and quaternion skills. 
-This app connects the orientation of a mobile phone to the camera in the 3D scene. Some underutilized tech IMO. 
+## A few things to note:
+- This demo is completly static, there is no server side code running. 
+- All communication is done peer to peer. 
+- All graphics are rendered in realtime. 
 
-I dropped them into a Synthwave / Vaporwave edge runner scene I made for fun because it looks pretty RAD!
+After linking a mobile device by scanning the QR code the device's orientation is linked to the scene's camera.
+
+I dropped the tech into a Synthwave / Vaporwave edge runner scene I made cus it looks DOPE!
 
 **WebRTC** is a real-time communication for the web. It allows browsers to communicate peer to peer with no need for a server (the exception of a peer to peer match maker)
 All code, assets and geometry generted by me except the car model I downloaded from sketchfab (credit below)

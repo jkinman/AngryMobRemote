@@ -189,43 +189,47 @@ const RTCProvider = (props) => {
 		}
 	}
 
-	// const getQRLink = (light, dark) => {
-	// 	const qrLink = `${window.location.origin}?id=${state.peerId}`
-	// 	return QRCode.toDataURL(
-	// 		qrLink,
-	// 		{
-	// 			errorCorrectionLevel: "L",
-	// 			version: 5,
-	// 			type: "image/jpeg",
-	// 			quality: 0.5,
-	// 			margin: 1,
-	// 			color: {
-	// 				light,
-	// 				dark,
-	// 				// light: theme.themeColour1,
-	// 				// light: "#25f",
-	// 				// dark: "#f83",
-	// 				// dark: theme.themeColour1,
-	// 			},
-	// 		},
-	// 		(err, url) => {
-	// 			if (err) console.error(err)
-	// 			else {
-	// 				return url
-	// 			}
-	// 		}
-	// 	)
-	// }
+	const updateState = (data) => {
+		if (state.connection?.connectionId && state.status === CONNECTED) {
+			// console.log(data)
+			state.connection.send(data)
+		}
+
+	}
+	const getQRLink = (light, dark) => {
+		const qrLink = `${window.location.origin}?id=${state.peerId}`
+		return QRCode.toDataURL(
+			qrLink,
+			{
+				errorCorrectionLevel: "L",
+				version: 5,
+				type: "image/jpeg",
+				quality: 0.5,
+				margin: 1,
+				color: {
+					light,
+					dark,
+				},
+			},
+			(err, url) => {
+				if (err) console.error(err)
+				else {
+					return url
+				}
+			}
+		)
+	}
 
 	return (
 		<RTCContext.Provider
 			value={{
 				...state,
 				dispatch,
+				getQRLink,
 				sendData,
 				connectToPeer,
 				storeDataCallback,
-				// getQRLink,
+				updateState,
 			}}
 		>
 			{props.children}

@@ -9,10 +9,10 @@ import { AppContext } from "../contexts/AppContext"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faNetworkWired } from "@fortawesome/free-solid-svg-icons"
-import CyberLoadingAnim from '../dumb/CyberLoadingAnim'
+import CyberLoadingAnim from "../dumb/CyberLoadingAnim"
 
 const UplinkComponent = (props) => {
-	const {deviceState} = props
+	const { deviceState } = props
 	const [qrUrl, setQrUrl] = useState()
 	const requestRef = React.useRef()
 	const RTCState = useContext(RTCContext)
@@ -20,14 +20,22 @@ const UplinkComponent = (props) => {
 	const AppState = useContext(AppContext)
 	const sendDeviceDetails = (RTCState, deviceState) => {
 		// console.log(deviceState)
-		if(deviceState){
-		RTCState.sendData({
-			...deviceState.deviceMotion,
-			...deviceState.deviceOrientation,
-		})
-	}
+		if (deviceState) {
+			RTCState.sendData({
+				...deviceState.deviceMotion,
+				...deviceState.deviceOrientation,
+			})
+		}
 		requestRef.current = requestAnimationFrame(sendDeviceDetails)
 	}
+
+	useEffect(() => {
+		if (deviceState) {
+			RTCState.updateState({
+				...AppState.state,
+			})
+		}
+	}, [])
 
 	useEffect(() => {
 		if (deviceState && deviceState.isMobile) {
@@ -36,7 +44,7 @@ const UplinkComponent = (props) => {
 			)
 		}
 		return () => cancelAnimationFrame(requestRef.current)
-	}, [ deviceState, RTCState])
+	}, [deviceState, RTCState])
 
 	useEffect(() => {
 		if (AppState.RTCId && RTCState.peerId)
