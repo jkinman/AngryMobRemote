@@ -6,16 +6,16 @@ import RealtimelineGraph from "../dumb/RealtimeLineGraph"
 
 import { DeviceMetricsContext } from "../contexts/DeviceMetricsContext"
 import { RTCContext } from "../contexts/RTCContext"
+import { AppContext } from "../contexts/AppContext"
 import ConnectionStatus from "../dumb/ConnectionStatus"
 import { useParams } from "react-router-dom"
 
 const UplinkComponent = (props) => {
 	const [qrUrl, setQrUrl] = useState()
-	let { id } = useParams()
 	const requestRef = React.useRef()
 	const RTCState = useContext(RTCContext)
 	const deviceState = useContext(DeviceMetricsContext)
-
+	const AppState = useContext(AppContext)
 	const sendDeviceDetails = (RTCState, deviceState) => {
 		RTCState.sendData({
 			...deviceState.deviceMotion,
@@ -29,22 +29,17 @@ const UplinkComponent = (props) => {
 			requestRef.current = requestAnimationFrame(() =>
 				sendDeviceDetails(RTCState, deviceState)
 			)
-			// setInterval( ()=>sendDeviceDetails(RTCState, deviceState), 1000 / 10)
-			// setInterval( ()=>sendDeviceDetails(RTCState.sendData), 1000 / 24)
-			// requestRef.current = requestAnimationFrame( ()=>{
-
-			// } )
 		}
 		return () => cancelAnimationFrame(requestRef.current)
 	}, [deviceState.isMobile, deviceState, RTCState])
 
 	useEffect(() => {
-		if (id && RTCState.peerId) RTCState.connectToPeer(id)
-	}, [id, RTCState.peerId])
+		if (AppContext.peerId && RTCState.peerId) RTCState.connectToPeer(AppContext.peerId)
+	}, [AppContext.peerId, RTCState.peerId])
 
 	useEffect(() => {
 		if (!RTCState.peerId) return
-		const qrLink = `${window.location.origin}/peer/${RTCState.peerId}`
+		const qrLink = `${window.location.origin}?id=${RTCState.peerId}`
 		QRCode.toDataURL(
 			qrLink,
 			{
@@ -54,8 +49,10 @@ const UplinkComponent = (props) => {
 				quality: 0.5,
 				margin: 1,
 				color: {
+					light: theme.themeColour1,
+					light: "#25f",
+					dark: '#f83',
 					dark: theme.themeColour1,
-					light: theme.themeColour3,
 				},
 			},
 			(err, url) => {
@@ -68,39 +65,18 @@ const UplinkComponent = (props) => {
 	}, [RTCState.peerId])
 
 	return (
-		<div>
-			{/* <ConnectionStatus
-				// data={RTCState.data}
-				sendData={RTCState.sendData}
-				status={RTCState.status}
-				peerOpen={RTCState.peer.open}
-				peer={RTCState.peer}
-				connection={RTCState.connection}
-				connectionID={RTCState.connectionId}
-				dataConnections={[...RTCState.dataConnections].map(
-					([key, value]) => value
-				)}
-			/> */}
-			{/* <RealtimelineGraph deviceOrientation={RTCState.data} /> */}
 
-			{!id && !RTCState.peerConnection && (
-				<div className='wrapper'>
-					{/* <h5>uplink access point</h5> */}
+		<div className='uplink'>
+			{!AppContext.peerId && !RTCState.peerConnection && (
 					<div className='qrCodeLink'>
-						<div className=''>
-						{/* <div className='box-container-3d'> */}
-							<div>
-								<img
-									width='100px'
-									srcSet={qrUrl}
-									className='qr-uplink'
-								/>
-							</div>
-						</div>
+					<img
+						srcSet={qrUrl}
+						className='qr-uplink'
+					/>
 					</div>
-				</div>
 			)}
-		</div>
+			</div>
+
 	)
 }
 

@@ -19,16 +19,6 @@ import AppProvider from "./contexts/AppContext"
 
 const peerConnection = new Peer()
 // App Routes
-const router = createBrowserRouter([
-	{
-		path: "/",
-		element: <App />,
-	},
-	{
-		path: "/peer/:id",
-		element: <App />,
-	},
-])
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(

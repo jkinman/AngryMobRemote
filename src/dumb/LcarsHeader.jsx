@@ -1,6 +1,7 @@
 import React from "react"
 
 export const LcarsHeader = (props) => {
+	const {aboutHandler, cvHandler} = props
 	return (
 		<div className='wrap lcars-header-container'>
 			{/* <svg width="0" height="0" viewBox="0 0 400 300"> */}
@@ -34,7 +35,7 @@ export const LcarsHeader = (props) => {
 							className='button'
 							id='top-left'
 						>
-							<a href=''>about</a>
+							<a href='#' onClick={aboutHandler}>about</a>
 						</div>
 					</div>
 					<div className='button-col'>
@@ -42,7 +43,7 @@ export const LcarsHeader = (props) => {
 							className='button'
 							id='top-right'
 						>
-							<a href=''>cv</a>
+							<a href='#' onClick={cvHandler}>cv</a>
 						</div>
 					</div>
 

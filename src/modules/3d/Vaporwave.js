@@ -68,6 +68,7 @@ export const makeVaporwaveScene = (gui) => {
 
 	return group
 }
+
 export const setUpVaporwavePost = (gui, renderer, camera, scene) => {
 	const sizes = {
 		width: window.innerWidth,

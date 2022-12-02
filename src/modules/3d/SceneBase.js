@@ -23,9 +23,15 @@ const TEXTURE_WIDTH = TEXTURE_SIZE
 // let renderer, this.scene, camera, this.baseClock
 
 class SceneBase {
-	constructor() {
+	constructor(props = {}) {
 		this.gui = new dat.GUI()
 		this.gui.close()
+
+		if (props.showControls) {
+			this.gui.show()
+		} else {
+			this.gui.hide()
+		}
 
 		this.baseClock = new THREE.Clock()
 		this.data = {}
@@ -37,17 +43,20 @@ class SceneBase {
 		this.scene = new THREE.Scene()
 		// this.scene.fog = new THREE.Fog('#000000', 0, 1)
 		this.scene.fog = new THREE.Fog(theme.themeColour5, 0.6, 1.6)
-		
-		const loader = new THREE.CubeTextureLoader();
+
+		const loader = new THREE.CubeTextureLoader()
 		loader.setPath("textures/images/")
-		
-		const textureCube = loader.load( [
-			'px.png', 'nx.png',
-			'py.png', 'ny.png',
-			'pz.png', 'nz.png'
-		] );
-		textureCube.generateMipmaps = false;
-		textureCube.wrapS = textureCube.wrapT = THREE.ClampToEdgeWrapping;
+
+		const textureCube = loader.load([
+			"px.png",
+			"nx.png",
+			"py.png",
+			"ny.png",
+			"pz.png",
+			"nz.png",
+		])
+		textureCube.generateMipmaps = false
+		textureCube.wrapS = textureCube.wrapT = THREE.ClampToEdgeWrapping
 		textureCube.minFilter = THREE.LinearFilter
 		textureCube.encoding = THREE.sRGBEncoding
 		this.scene.background = textureCube
@@ -119,14 +128,28 @@ class SceneBase {
 
 		// this.scene.add(this.makeGround())
 		// this.scene.add(this.makeSun())
-		this.scene.add(VaporwaveGenerator.makeVaporwaveScene(this.gui.addFolder("terrain")))
+		this.scene.add(
+			VaporwaveGenerator.makeVaporwaveScene(this.gui.addFolder("terrain"))
+		)
 		// store the planes
 		this.plane = this.scene.getObjectByName("vaporWaveGround1")
 		this.plane2 = this.scene.getObjectByName("vaporWaveGround2")
-		VaporwaveGenerator.addVaporwaveLights(this.scene, this.gui.addFolder("lights"))
+		VaporwaveGenerator.addVaporwaveLights(
+			this.scene,
+			this.gui.addFolder("lights")
+		)
 		this.enableCameraControls()
-		this.effectComposer = VaporwaveGenerator.setUpVaporwavePost(this.gui, this.renderer, this.camera, this.scene)
+		this.effectComposer = VaporwaveGenerator.setUpVaporwavePost(
+			this.gui,
+			this.renderer,
+			this.camera,
+			this.scene
+		)
 		VaporwaveGenerator.addCameraGui(this.gui, this.camera)
+	}
+
+	dimScene(dim) {
+
 	}
 
 	enableCameraControls() {
@@ -179,7 +202,7 @@ class SceneBase {
 
 		// console.log(this.data)
 		// this.renderer.render(this.scene, this.camera)
-		if(this.effectComposer)this.effectComposer.render()
+		if (this.effectComposer) this.effectComposer.render()
 		else this.renderer.render(this.scene, this.camera)
 
 		// }

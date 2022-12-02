@@ -24,8 +24,15 @@ function App() {
 	const RTCState = useContext(RTCContext)
 	const AppState = useContext(AppContext)
 	useEffect(() => {
-		AppState.setPeerId(searchParams.get("id"))
-	}, [])
+		let params = new URL(document.location).searchParams
+		if (params.has("id")) {
+			AppState.setPeerId(params.get("id"))
+		} else {
+			AppState.setIsClient(true)
+		}
+		if (params.has("controls"))
+			AppState.setShow3DControls(params.get("controls"))
+	}, [document.location])
 
 	return (
 		<div>
@@ -36,16 +43,19 @@ function App() {
 				</>
 			)}
 
-			<MainLayout connected={RTCState.peerConnection}>
-				<UplinkComponent />
-				{/* <h2>Joel Kinman</h2> */}
-				<div className='infobox'>
+			{AppState.isClient && (
+				<>
+					<MainLayout connected={RTCState.peerConnection} aboutHandler={()=>{ AppContext.toggleAbout()}}>
+						{/* <h2>Joel Kinman</h2> */}
+						{/* <div className='infobox'>
 					<p>Connect a mobile device by scanning the uplink access point.</p>
 					<p>This creates a peer to peer communication socket via WebRTC.</p>
-				</div>
-			</MainLayout>
-			<DeviceMetrics />
-			<Render3d storeDataCallback={RTCState.storeDataCallback} />
+				</div> */}
+					</MainLayout>
+					<Render3d storeDataCallback={RTCState.storeDataCallback} showControls={AppState.show3DControls} dimScene={AppState.showAbout}/>
+				</>
+			)}
+			{/* <DeviceMetrics /> */}
 		</div>
 	)
 }
