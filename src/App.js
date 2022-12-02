@@ -3,6 +3,7 @@ import "./style/App.scss"
 // import AngryMob from "./pages/AngryMob"
 import Render3d from "./dumb/Render3d"
 import MainLayout from "./pages/MainLayout"
+import ControllerLayout from "./pages/ControllerLayout"
 // contexts
 import { DeviceMetricsContext } from "./contexts/DeviceMetricsContext"
 import UplinkComponent from "./smart/UplinkComponent"
@@ -18,6 +19,7 @@ import {
 	useLocation,
 	useSearchParams,
 } from "react-router-dom"
+import ConnectionStatus from "./dumb/ConnectionStatus"
 
 function App() {
 	const [searchParams] = useSearchParams()
@@ -26,7 +28,7 @@ function App() {
 	useEffect(() => {
 		let params = new URL(document.location).searchParams
 		if (params.has("id")) {
-			AppState.setPeerId(params.get("id"))
+			AppState.setRTCId(params.get("id"))
 		} else {
 			AppState.setIsClient(true)
 		}
@@ -36,23 +38,35 @@ function App() {
 
 	return (
 		<div>
+			{/* This is the remote display */}
 			{AppState.isRemote && (
-				<>
-					<UplinkComponent />
+				<ControllerLayout showQR={false} RTCId={AppState.RTCId} leftTop={<ConnectionStatus {...RTCState}/>}>
 					<DeviceMetrics />
-				</>
+					<UplinkComponent />
+				</ControllerLayout>
 			)}
 
+			{/* This is the 3D client scene */}
 			{AppState.isClient && (
 				<>
-					<MainLayout connected={RTCState.peerConnection} aboutHandler={()=>{ AppContext.toggleAbout()}}>
+					<MainLayout
+						leftMid={<ConnectionStatus {...RTCState}/>}
+						connected={RTCState.peerConnection}
+						aboutHandler={() => {
+							AppContext.toggleAbout()
+						}}
+					>
 						{/* <h2>Joel Kinman</h2> */}
 						{/* <div className='infobox'>
 					<p>Connect a mobile device by scanning the uplink access point.</p>
 					<p>This creates a peer to peer communication socket via WebRTC.</p>
 				</div> */}
 					</MainLayout>
-					<Render3d storeDataCallback={RTCState.storeDataCallback} showControls={AppState.show3DControls} dimScene={AppState.showAbout}/>
+					<Render3d
+						storeDataCallback={RTCState.storeDataCallback}
+						showControls={AppState.show3DControls}
+						dimScene={AppState.showAbout}
+					/>
 				</>
 			)}
 			{/* <DeviceMetrics /> */}

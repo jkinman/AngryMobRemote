@@ -1,8 +1,10 @@
 import React, { useState, useReducer, useEffect } from "react"
+import QRCode from "qrcode"
 
 const EMPTY = "UNINITIALIZED"
 const CONNECTING = "CONNECTING"
 const OPEN = "OPEN"
+const CONNECTED = "CONNECTED"
 
 const initialState = {
 	status: EMPTY,
@@ -58,6 +60,7 @@ const reducer = (state, action) => {
 			console.log("setConnectionId", action.payload)
 			return {
 				...state,
+				status: CONNECTED,
 				connectionId: action.payload,
 			}
 		case "setPeerId":
@@ -118,6 +121,7 @@ const RTCProvider = (props) => {
 
 		peer.on("connection", (dataConnection) => {
 			console.log("dataConnection", dataConnection)
+			dispatch({ type: "setStatus", payload: CONNECTED })
 			dispatch({ type: "addDataConnection", payload: dataConnection })
 			dataConnection.on("data", dataCB)
 			dataConnection.on("close", (p) => {
@@ -146,7 +150,9 @@ const RTCProvider = (props) => {
 		// connection.on("data", console.log)
 		// connection.on("open", console.log)
 		connection.on("close", console.log)
-		connection.on("error", (p) => dispatch({ type: "disconnection", payload: p }))
+		connection.on("error", (p) =>
+			dispatch({ type: "disconnection", payload: p })
+		)
 
 		connection.on("data", (data) =>
 			dispatch({ type: "dataRecieved", payload: data })
@@ -154,7 +160,9 @@ const RTCProvider = (props) => {
 		connection.on("open", () => {
 			dispatch({ type: "setConnectionId", payload: connection.connectionId })
 		})
-		connection.on("close", (p) => dispatch({ type: "disconnection", payload: p }))
+		connection.on("close", (p) =>
+			dispatch({ type: "disconnection", payload: p })
+		)
 		connection.on("error", console.log)
 	}
 
@@ -165,6 +173,34 @@ const RTCProvider = (props) => {
 		}
 	}
 
+	const getQRLink = (light, dark) => {
+		const qrLink = `${window.location.origin}?id=${state.peerId}`
+		return QRCode.toDataURL(
+			qrLink,
+			{
+				errorCorrectionLevel: "L",
+				version: 5,
+				type: "image/jpeg",
+				quality: 0.5,
+				margin: 1,
+				color: {
+					light,
+					dark
+					// light: theme.themeColour1,
+					// light: "#25f",
+					// dark: "#f83",
+					// dark: theme.themeColour1,
+				},
+			},
+			(err, url) => {
+				if (err) console.error(err)
+				else {
+					return(url)
+				}
+			}
+		)
+	}
+
 	return (
 		<RTCContext.Provider
 			value={{
@@ -173,6 +209,7 @@ const RTCProvider = (props) => {
 				sendData,
 				connectToPeer,
 				storeDataCallback,
+				getQRLink,
 			}}
 		>
 			{props.children}

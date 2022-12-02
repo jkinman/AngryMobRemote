@@ -25,11 +25,11 @@ root.render(
 	// <React.StrictMode>
 	<BrowserRouter>
 		<DeviceMetricsProvider>
-			<AppProvider>
-				<RTCProvider peer={peerConnection}>
+			<RTCProvider peer={peerConnection}>
+				<AppProvider>
 					<App />
-				</RTCProvider>
-			</AppProvider>
+				</AppProvider>
+			</RTCProvider>
 		</DeviceMetricsProvider>
 	</BrowserRouter>
 	// </React.StrictMode>

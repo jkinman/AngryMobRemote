@@ -16,6 +16,7 @@ export const LcarsMid = (props) => {
 						02<span className="hop">- UPLINK ACCESS POINT</span>
 					</div>
 					<div className='panel-4'>
+						{props.leftMid}
 					03<span className='hop'>-111968</span>
 					</div>
 					<div className='panel-5'>

@@ -1,15 +1,18 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
-
+import React from "react"
+import "./MainLayout.scss"
+import { Outlet } from "react-router-dom"
+import jkLogo from "../img/jk-cyberpunk.png"
+import LcarsHeader from "../dumb/LcarsHeader"
+import LcarsMid from "../dumb/LcarsMid"
 
 export const MainLayout = (props) => {
-
-    return(
-        <div className="controllerLayout">
-            <h2 style={{textAlign:'center'}}>Web RTC Controller</h2>
-            <Outlet />
-        </div>
-    )
+	const {children, RTCId} = props
+	return (
+		<div className="controller-app-layout">
+			<LcarsHeader />
+			<LcarsMid children={props.children} />
+		</div>
+	)
 }
 
 export default MainLayout

@@ -12,7 +12,7 @@ const NavState = makeEnum(["begin", "preload", "welcome", "vaporwave"])
 const initialState = {
 	isRemote: false,
 	isClient: false,
-	peerId: false,
+	RTCId: false,
 	showAbout: false,
 	show3DControls: false,
 	loading: false,
@@ -25,10 +25,10 @@ const reducer = (state, action) => {
 		case "initializeState":
 			return initialState
 
-		case "setPeerId":
+		case "setRTCId":
 			return {
 				...state,
-				peerId: action.payload,
+				RTCId: action.payload,
 				isClient: false,
 				isRemote: true,
 			}
@@ -61,8 +61,8 @@ const AppProvider = (props) => {
 		const show = param ? param : ! state.showAbout
 		dispatch({ type: "setShowAbout", payload: show })
 	}
-	
-	const setPeerId = (id) => dispatch({ type: "setPeerId", payload: id })
+
+	const setRTCId = (id) => dispatch({ type: "setRTCId", payload: id })
 	const setIsClient = (val) => dispatch({ type: "setIsClient", payload: val })
 	const setShow3DControls = (val) =>
 		dispatch({ type: "setShow3DControls", payload: val })
@@ -72,7 +72,7 @@ const AppProvider = (props) => {
 			value={{
 				...state,
 				dispatch,
-				setPeerId,
+				setRTCId,
 				setShow3DControls,
 				setIsClient,
 				toggleAbout,
