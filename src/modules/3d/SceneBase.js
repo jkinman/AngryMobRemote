@@ -159,7 +159,6 @@ class SceneBase {
 	}
 
 	updateData(data) {
-		// debugger
 		this.data = data
 	}
 

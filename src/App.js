@@ -40,7 +40,9 @@ function App() {
 		<div>
 			{/* This is the remote display */}
 			{AppState.isRemote && (
-				<ControllerLayout showQR={false} RTCId={AppState.RTCId} leftTop={<ConnectionStatus {...RTCState}/>}>
+				<ControllerLayout showQR={false} RTCId={AppState.RTCId} 
+				leftTop={<ConnectionStatus {...RTCState}/>}
+				>
 					<DeviceMetrics />
 					<UplinkComponent />
 				</ControllerLayout>
@@ -51,7 +53,8 @@ function App() {
 				<>
 					<MainLayout
 						leftMid={<ConnectionStatus {...RTCState}/>}
-						connected={RTCState.peerConnection}
+				leftTop={<ConnectionStatus {...RTCState}/>}
+				connected={RTCState.peerConnection}
 						aboutHandler={() => {
 							AppContext.toggleAbout()
 						}}

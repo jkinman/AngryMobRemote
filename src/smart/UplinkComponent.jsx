@@ -7,6 +7,10 @@ import { DeviceMetricsContext } from "../contexts/DeviceMetricsContext"
 import { RTCContext } from "../contexts/RTCContext"
 import { AppContext } from "../contexts/AppContext"
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faNetworkWired } from "@fortawesome/free-solid-svg-icons"
+import CyberLoadingAnim from '../dumb/CyberLoadingAnim'
+
 const UplinkComponent = (props) => {
 	const [qrUrl, setQrUrl] = useState()
 	const requestRef = React.useRef()
@@ -31,7 +35,8 @@ const UplinkComponent = (props) => {
 	}, [deviceState.isMobile, deviceState, RTCState])
 
 	useEffect(() => {
-		if (AppState.RTCId && RTCState.peerId) RTCState.connectToPeer(AppState.RTCId)
+		if (AppState.RTCId && RTCState.peerId)
+			RTCState.connectToPeer(AppState.RTCId)
 	}, [AppState.RTCId, RTCState.peerId])
 
 	useEffect(() => {
@@ -73,6 +78,7 @@ const UplinkComponent = (props) => {
 					</a>
 				</div>
 			)}
+			{RTCState.peerConnection && <CyberLoadingAnim />}
 		</div>
 	)
 }

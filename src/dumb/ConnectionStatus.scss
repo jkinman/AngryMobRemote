@@ -1,5 +1,13 @@
-.connection-status{
-    .small {
-        font-size: 12px;
-    }
+@use "../style/animations";
+
+.connection-status {
+	.small {
+		font-size: 12px;
+	}
+	.broadcast-icon {
+        width: 25px;
+    height: 25px;
+    color: white;
+		animation: pulseOpacity 1s infinite ease-in-out;
+	}
 }
