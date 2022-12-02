@@ -24,13 +24,13 @@ const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(
 	// <React.StrictMode>
 	<BrowserRouter>
-		<DeviceMetricsProvider>
-			<RTCProvider peer={peerConnection}>
-				<AppProvider>
+		<RTCProvider peer={peerConnection}>
+			<AppProvider>
+				<DeviceMetricsProvider>
 					<App />
-				</AppProvider>
-			</RTCProvider>
-		</DeviceMetricsProvider>
+				</DeviceMetricsProvider>
+			</AppProvider>
+		</RTCProvider>
 	</BrowserRouter>
 	// </React.StrictMode>
 )

@@ -148,9 +148,7 @@ class SceneBase {
 		VaporwaveGenerator.addCameraGui(this.gui, this.camera)
 	}
 
-	dimScene(dim) {
-
-	}
+	dimScene(dim) {}
 
 	enableCameraControls() {
 		this.controls = new OrbitControls(this.camera, this.renderer.domElement)
@@ -177,7 +175,7 @@ class SceneBase {
 			this.groundTexture.offset.set(...offset)
 			// this.groundTexture.needsUpdate.set(true)
 		}
-		if (this.data.beta) {
+		if (this.data?.beta) {
 			// if (this.d20) CameraTools.cameraRotate(this.data, this.d20)
 			// if (this.mobile) CameraTools.cameraRotate(this.data, this.mobile)
 			// CameraTools.cameraRotate(this.data, this.cube)

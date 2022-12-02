@@ -16,6 +16,7 @@ const initialState = {
 	peerId: false,
 	connectionId: false,
 	peerConnection: false,
+	dataHandler: false,
 }
 
 const reducer = (state, action) => {
@@ -33,6 +34,11 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				status: action.payload,
+			}
+		case "setDataHandler":
+			return {
+				...state,
+				dataHandler: action.payload,
 			}
 
 		case "dataRecieved":
@@ -122,8 +128,11 @@ const RTCProvider = (props) => {
 		peer.on("connection", (dataConnection) => {
 			console.log("dataConnection", dataConnection)
 			dispatch({ type: "setStatus", payload: CONNECTED })
+			setStatus(CONNECTED)
+
 			dispatch({ type: "addDataConnection", payload: dataConnection })
-			dataConnection.on("data", dataCB)
+			// dataConnection.on("data", dataCB)
+			dataConnection.on("data", (data) => dataIncoming(data))
 			dataConnection.on("close", (p) => {
 				dispatch({ type: "disconnection", payload: p })
 			}) // was triggered on moble page refresh
@@ -136,10 +145,17 @@ const RTCProvider = (props) => {
 		})
 	}, [])
 
+	const dataIncoming = (data) => {
+		dataCB(data) 
+		// state.dataHandler(data)
+	}
 	const storeDataCallback = (cb) => {
+		// setDataCB(cb)
 		dataCB = cb
+		dispatch({type:'setDataHandler', payload:cb})
+		// debugger
 		state.dataConnections.forEach(function (value, key) {
-			value.on("data", cb)
+			value.on("data", dataIncoming)
 		})
 	}
 
@@ -167,39 +183,39 @@ const RTCProvider = (props) => {
 	}
 
 	const sendData = (data) => {
-		// console.log(state)
-		if (state.connection?.connectionId) {
+		if (state.connection?.connectionId && state.status === CONNECTED) {
+			// console.log(data)
 			state.connection.send(data)
 		}
 	}
 
-	const getQRLink = (light, dark) => {
-		const qrLink = `${window.location.origin}?id=${state.peerId}`
-		return QRCode.toDataURL(
-			qrLink,
-			{
-				errorCorrectionLevel: "L",
-				version: 5,
-				type: "image/jpeg",
-				quality: 0.5,
-				margin: 1,
-				color: {
-					light,
-					dark
-					// light: theme.themeColour1,
-					// light: "#25f",
-					// dark: "#f83",
-					// dark: theme.themeColour1,
-				},
-			},
-			(err, url) => {
-				if (err) console.error(err)
-				else {
-					return(url)
-				}
-			}
-		)
-	}
+	// const getQRLink = (light, dark) => {
+	// 	const qrLink = `${window.location.origin}?id=${state.peerId}`
+	// 	return QRCode.toDataURL(
+	// 		qrLink,
+	// 		{
+	// 			errorCorrectionLevel: "L",
+	// 			version: 5,
+	// 			type: "image/jpeg",
+	// 			quality: 0.5,
+	// 			margin: 1,
+	// 			color: {
+	// 				light,
+	// 				dark,
+	// 				// light: theme.themeColour1,
+	// 				// light: "#25f",
+	// 				// dark: "#f83",
+	// 				// dark: theme.themeColour1,
+	// 			},
+	// 		},
+	// 		(err, url) => {
+	// 			if (err) console.error(err)
+	// 			else {
+	// 				return url
+	// 			}
+	// 		}
+	// 	)
+	// }
 
 	return (
 		<RTCContext.Provider
@@ -209,7 +225,7 @@ const RTCProvider = (props) => {
 				sendData,
 				connectToPeer,
 				storeDataCallback,
-				getQRLink,
+				// getQRLink,
 			}}
 		>
 			{props.children}

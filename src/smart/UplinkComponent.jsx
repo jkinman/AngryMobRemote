@@ -3,7 +3,7 @@ import "./UplinkComponent.scss"
 import theme from "../style/_vars.scss"
 import QRCode from "qrcode"
 
-import { DeviceMetricsContext } from "../contexts/DeviceMetricsContext"
+// import { DeviceMetricsContext } from "../contexts/DeviceMetricsContext"
 import { RTCContext } from "../contexts/RTCContext"
 import { AppContext } from "../contexts/AppContext"
 
@@ -12,27 +12,31 @@ import { faNetworkWired } from "@fortawesome/free-solid-svg-icons"
 import CyberLoadingAnim from '../dumb/CyberLoadingAnim'
 
 const UplinkComponent = (props) => {
+	const {deviceState} = props
 	const [qrUrl, setQrUrl] = useState()
 	const requestRef = React.useRef()
 	const RTCState = useContext(RTCContext)
-	const deviceState = useContext(DeviceMetricsContext)
+	// const deviceState = useContext(DeviceMetricsContext)
 	const AppState = useContext(AppContext)
 	const sendDeviceDetails = (RTCState, deviceState) => {
+		// console.log(deviceState)
+		if(deviceState){
 		RTCState.sendData({
 			...deviceState.deviceMotion,
 			...deviceState.deviceOrientation,
 		})
+	}
 		requestRef.current = requestAnimationFrame(sendDeviceDetails)
 	}
 
 	useEffect(() => {
-		if (deviceState.isMobile) {
+		if (deviceState && deviceState.isMobile) {
 			requestRef.current = requestAnimationFrame(() =>
 				sendDeviceDetails(RTCState, deviceState)
 			)
 		}
 		return () => cancelAnimationFrame(requestRef.current)
-	}, [deviceState.isMobile, deviceState, RTCState])
+	}, [ deviceState, RTCState])
 
 	useEffect(() => {
 		if (AppState.RTCId && RTCState.peerId)

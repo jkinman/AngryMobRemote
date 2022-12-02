@@ -24,6 +24,7 @@ import ConnectionStatus from "./dumb/ConnectionStatus"
 function App() {
 	const [searchParams] = useSearchParams()
 	const RTCState = useContext(RTCContext)
+	const DeviceState = useContext(DeviceMetricsContext)
 	const AppState = useContext(AppContext)
 	useEffect(() => {
 		let params = new URL(document.location).searchParams
@@ -40,21 +41,23 @@ function App() {
 		<div>
 			{/* This is the remote display */}
 			{AppState.isRemote && (
-				<ControllerLayout showQR={false} RTCId={AppState.RTCId} 
-				leftTop={<ConnectionStatus {...RTCState}/>}
+				<ControllerLayout
+					showQR={false}
+					RTCId={AppState.RTCId}
+					leftTop={<ConnectionStatus {...RTCState} />}
 				>
 					<DeviceMetrics />
-					<UplinkComponent />
+					<UplinkComponent deviceState={DeviceState} />
 				</ControllerLayout>
 			)}
 
 			{/* This is the 3D client scene */}
-			{AppState.isClient && (
+			{AppState.isClient && 
 				<>
 					<MainLayout
-						leftMid={<ConnectionStatus {...RTCState}/>}
-				leftTop={<ConnectionStatus {...RTCState}/>}
-				connected={RTCState.peerConnection}
+						leftMid={<ConnectionStatus {...RTCState} />}
+						// leftTop={<ConnectionStatus {...RTCState} />}
+						connected={RTCState.peerConnection}
 						aboutHandler={() => {
 							AppContext.toggleAbout()
 						}}
@@ -65,13 +68,15 @@ function App() {
 					<p>This creates a peer to peer communication socket via WebRTC.</p>
 				</div> */}
 					</MainLayout>
-					<Render3d
-						storeDataCallback={RTCState.storeDataCallback}
-						showControls={AppState.show3DControls}
-						dimScene={AppState.showAbout}
-					/>
 				</>
-			)}
+			}
+			<Render3d
+				RTCState={RTCState}
+				isClient={AppState.isClient}
+				storeDataCallback={RTCState.storeDataCallback}
+				showControls={AppState.show3DControls}
+				dimScene={AppState.showAbout}
+			/>
 			{/* <DeviceMetrics /> */}
 		</div>
 	)
