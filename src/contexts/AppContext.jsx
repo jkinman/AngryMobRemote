@@ -15,6 +15,7 @@ const initialState = {
 	RTCId: false,
 	showAbout: false,
 	showCV: false,
+	showIntro: true,
 	show3DControls: false,
 	loading: false,
 	preloadProgress: false,
@@ -25,6 +26,13 @@ const reducer = (state, action) => {
 	switch (action.type) {
 		case "initializeState":
 			return initialState
+		case "stateTransfer":
+			return {
+				...state,
+				// ...action.payload
+				showAbout: action.payload.showAbout,
+				showCV: action.payload.showCV,
+			}
 
 		case "setRTCId":
 			return {
@@ -52,11 +60,20 @@ const reducer = (state, action) => {
 				...state,
 				showAbout: action.payload,
 				showCV: false,
+				showIntro: false,
+			}
+		case "setShowIntro":
+			return {
+				...state,
+				showIntro: action.payload,
+				showCV: false,
+				showAbout: false,
 			}
 		case "setShowCV":
 			return {
 				...state,
 				showAbout: false,
+				showIntro: false,
 				showCV: action.payload,
 			}
 
@@ -79,11 +96,21 @@ const AppProvider = (props) => {
 		const show = param ? param : !state.showCV
 		dispatch({ type: "setShowCV", payload: show })
 	}
+	const toggleIntro = (param) => {
+		const show = param ? param : !state.showIntro
+		dispatch({ type: "setShowIntro", payload: show })
+	}
 
 	const setRTCId = (id) => dispatch({ type: "setRTCId", payload: id })
 	const setIsClient = (val) => dispatch({ type: "setIsClient", payload: val })
 	const setShow3DControls = (val) =>
 		dispatch({ type: "setShow3DControls", payload: val })
+	const stateTransfer = (data) => {
+		console.log(data)
+		if (data) {
+			dispatch({ type: "stateTransfer", payload: data })
+		}
+	}
 
 	return (
 		<AppContext.Provider
@@ -95,6 +122,8 @@ const AppProvider = (props) => {
 				setIsClient,
 				toggleAbout,
 				toggleCV,
+				toggleIntro,
+				stateTransfer,
 			}}
 		>
 			{props.children}

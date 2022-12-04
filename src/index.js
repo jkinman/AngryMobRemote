@@ -15,7 +15,7 @@ import {
 // contexts
 import DeviceMetricsProvider from "./contexts/DeviceMetricsContext"
 import RTCProvider from "./contexts/RTCContext"
-import AppProvider from "./contexts/AppContext"
+import AppProvider, { AppContext } from "./contexts/AppContext"
 
 const peerConnection = new Peer()
 // App Routes
@@ -24,13 +24,22 @@ const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(
 	// <React.StrictMode>
 	<BrowserRouter>
-		<RTCProvider peer={peerConnection}>
-			<AppProvider>
-				<DeviceMetricsProvider>
-					<App />
-				</DeviceMetricsProvider>
-			</AppProvider>
-		</RTCProvider>
+		<AppProvider>
+			<AppContext.Consumer>
+				{(AppState) => (
+					<RTCProvider
+						value={{
+							peer: peerConnection,
+							stateTransferHandler: AppState.stateTransfer,
+						}}
+					>
+						<DeviceMetricsProvider>
+							<App />
+						</DeviceMetricsProvider>
+					</RTCProvider>
+				)}
+			</AppContext.Consumer>
+		</AppProvider>
 	</BrowserRouter>
 	// </React.StrictMode>
 )

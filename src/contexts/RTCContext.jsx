@@ -25,6 +25,12 @@ const reducer = (state, action) => {
 		case "initializeState":
 			return initialState
 
+		case "setStateTransferHandler":
+			return {
+				...state,
+				stateTransferHandler: action.payload,
+			}
+
 		case "setConnection":
 			return {
 				...state,
@@ -89,7 +95,9 @@ const RTCContext = React.createContext()
 
 const RTCProvider = (props) => {
 	const [state, dispatch] = React.useReducer(reducer, initialState)
-	const [peer, setPeer] = useState(props.peer)
+	const [peer, setPeer] = useState(props.value.peer)
+	// const [stateTransferHandler, setStateTransferHandler] = useState((data)=>props.value.stateTransferHandler(data))
+	const stateTransferHandler = props.value.stateTransferHandler
 	let dataCB = () => {}
 	// const [dataCB, setDataCB] = useState(()=>{})
 	const [status, setStatus] = useState(EMPTY)
@@ -146,13 +154,13 @@ const RTCProvider = (props) => {
 	}, [])
 
 	const dataIncoming = (data) => {
-		dataCB(data) 
-		// state.dataHandler(data)
+		if (data.data) dataCB(data)
+		if (data.state && stateTransferHandler)  stateTransferHandler( data.state )
 	}
 	const storeDataCallback = (cb) => {
 		// setDataCB(cb)
 		dataCB = cb
-		dispatch({type:'setDataHandler', payload:cb})
+		dispatch({ type: "setDataHandler", payload: cb })
 		// debugger
 		state.dataConnections.forEach(function (value, key) {
 			value.on("data", dataIncoming)
@@ -194,8 +202,10 @@ const RTCProvider = (props) => {
 			// console.log(data)
 			state.connection.send(data)
 		}
-
 	}
+	// const setStateTransferHandler= (handler) => {
+	// 	dispatch({type:'setStateTransferHandler', payload:handler})
+	// }
 	const getQRLink = (light, dark) => {
 		const qrLink = `${window.location.origin}?id=${state.peerId}`
 		return QRCode.toDataURL(

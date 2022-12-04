@@ -9,7 +9,7 @@ export const MainLayout = (props) => {
 	const {children, RTCId} = props
 	return (
 		<div className="controller-app-layout">
-			<LcarsHeader />
+			<LcarsHeader aboutHandler={props.aboutHandler} cvHandler={props.cvHandler} />
 			<LcarsMid children={props.children} />
 		</div>
 	)

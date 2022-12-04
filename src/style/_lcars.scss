@@ -5,6 +5,10 @@
 	padding: 0 0px 0 20px;
 }
 
+.button a {
+	font-size: 1rem;
+}
+
 .button-col {
 	border-left: 15px solid transparent;
 }
@@ -33,7 +37,7 @@
 .top-corner-bg,
 .top-corner {
 	// flex: 1 1;
-	background-color: #1c2a7c54;
+	background-color: #1c2a7cbe;
 	// filter: blur(10px);
 }
 
@@ -79,16 +83,18 @@
 	user-select: none;
 	pointer-events: none;
 	height: 100%;
+	padding-right: 5px;
 }
 .right-frame-top {
 	.banner {
+		padding-right:12px;
 		.source {
 			color: vars.$theme-colour1;
 		}
 	}
 	@media only screen and (max-width: 500px) {
 		.banner {
-			padding: 10px 10px 10px 3px;
+			padding: 10px 15px 10px 3px;
 		}
 	}
 }

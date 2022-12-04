@@ -10,7 +10,6 @@ export const CyberpunkModal = (props) => {
 				<div className='modal'>
 					<div className='cyberpunk'>
 						<div className='container cyberpunk2077'>
-
 							<div className='content'>
 								{children ? (
 									children
@@ -20,14 +19,14 @@ export const CyberpunkModal = (props) => {
 										<p>modal body</p>
 									</>
 								)}
-                                							<div className='close'>
-								<button
-									className='cyberpunk2077 green'
-									onClick={() => close()}
-								>
-									close
-								</button>
-							</div>
+								<div className='close'>
+									<button
+										className='cyberpunk2077 green'
+										onClick={() => close()}
+									>
+										close
+									</button>
+								</div>
 							</div>
 						</div>
 					</div>

@@ -25,25 +25,31 @@ const TEXTURE_WIDTH = TEXTURE_SIZE
 
 class SceneBase {
 	constructor(props = {}) {
-		
+		this.mounted = false
+		this.baseClock = new THREE.Clock()
+		this.data = {}
+		this.showControls = props.showControls
+	}
+
+	startUp() {
+		if (this.mounted) console.error("trying to mount scene multiple times")
+		this.mounted = true
 		// add FPS and gui
 		this.stats = new Stats()
 		this.stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
 		const elfps = document.getElementById("fps")
 		this.stats.dom.className = "fps"
-		this.stats.dom.style = ''
+		this.stats.dom.style = ""
 		elfps.appendChild(this.stats.dom)
 		this.gui = new dat.GUI()
 		this.gui.close()
 
-		if (props.showControls) {
+		if (this.showControls) {
 			this.gui.show()
 		} else {
 			this.gui.hide()
 		}
 
-		this.baseClock = new THREE.Clock()
-		this.data = {}
 		const SCREEN_WIDTH = window.innerWidth
 		const SCREEN_HEIGHT = window.innerHeight
 
@@ -98,14 +104,10 @@ class SceneBase {
 		this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
 		this.renderer.setPixelRatio(window.devicePixelRatio)
 		this.renderer.setSize(window.innerWidth, window.innerHeight)
-		// this.renderer.setClearColor(0xffffff, 0)
-		// this.interaction = new Interaction(this.renderer, this.scene, this.camera);
 
 		// add renderer to DOM
 		const el = document.getElementById("threed-canvas")
-		// const el = document.createElement('div')
 		document.body.appendChild(el)
-		// el.id = "threed-canvas"
 		el.className = "threed-canvas"
 		el.appendChild(this.renderer.domElement)
 
@@ -129,14 +131,6 @@ class SceneBase {
 			this.scene.add(car)
 		})
 
-		// const dLight = new THREE.DirectionalLight()
-		// this.scene.add(dLight)
-
-		// const axesHelper = new THREE.AxesHelper(10)
-		// this.scene.add(axesHelper)
-
-		// this.scene.add(this.makeGround())
-		// this.scene.add(this.makeSun())
 		this.scene.add(
 			VaporwaveGenerator.makeVaporwaveScene(this.gui.addFolder("terrain"))
 		)

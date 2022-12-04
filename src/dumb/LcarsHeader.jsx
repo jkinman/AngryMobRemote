@@ -46,6 +46,10 @@ export const LcarsHeader = (props) => {
 						>
 							<a
 								href='#'
+								// onClick={()=>{
+								// 	console.log(aboutHandler)
+								// 	debugger
+								// 	}}
 								onClick={aboutHandler}
 							>
 								about

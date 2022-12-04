@@ -3,12 +3,9 @@ import "./UplinkComponent.scss"
 import theme from "../style/_vars.scss"
 import QRCode from "qrcode"
 
-// import { DeviceMetricsContext } from "../contexts/DeviceMetricsContext"
 import { RTCContext } from "../contexts/RTCContext"
 import { AppContext } from "../contexts/AppContext"
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faNetworkWired } from "@fortawesome/free-solid-svg-icons"
 import CyberLoadingAnim from "../dumb/CyberLoadingAnim"
 
 const UplinkComponent = (props) => {
@@ -22,20 +19,23 @@ const UplinkComponent = (props) => {
 		// console.log(deviceState)
 		if (deviceState) {
 			RTCState.sendData({
-				...deviceState.deviceMotion,
-				...deviceState.deviceOrientation,
+				data: {
+					...deviceState.deviceMotion,
+					...deviceState.deviceOrientation,
+				},
 			})
 		}
 		requestRef.current = requestAnimationFrame(sendDeviceDetails)
 	}
 
 	useEffect(() => {
-		if (deviceState) {
-			RTCState.updateState({
-				...AppState.state,
-			})
-		}
-	}, [])
+		console.log({
+			state: { showAbout: AppState.showAbout, showCV: AppState.showCV },
+		})
+		RTCState.sendData({
+			state: { showAbout: AppState.showAbout, showCV: AppState.showCV },
+		})
+	}, [AppState.showAbout, AppState.showCV])
 
 	useEffect(() => {
 		if (deviceState && deviceState.isMobile) {

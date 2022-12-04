@@ -1,7 +1,6 @@
 $base-colour: #fff;
 $secondary-clour: #a020f0;
 
-
 // cyberpunk palette https://www.color-hex.com/color-palette/14887
 $theme-colour1: #00ff9f;
 $theme-colour2: #00b8ff;
@@ -9,11 +8,11 @@ $theme-colour3: #001eff;
 $theme-colour4: #bd00ff;
 $theme-colour5: #d600ff;
 :export {
-    themeColour1: $theme-colour1;
-    themeColour2: $theme-colour2;
-    themeColour3: $theme-colour3;
-    themeColour4: $theme-colour4;
-    themeColour5: $theme-colour5;
+	themeColour1: $theme-colour1;
+	themeColour2: $theme-colour2;
+	themeColour3: $theme-colour3;
+	themeColour4: $theme-colour4;
+	themeColour5: $theme-colour5;
 }
 // fonts
 $tech-font: "Orbitron", sans-serif;
@@ -23,11 +22,15 @@ $lcars-font: "Antonio", "Arial Narrow", "Avenir Next Condensed", sans-serif;
 p {
 	font-family: $paragraph-font;
 	color: $base-colour;
+    font-size: 1rem;
 }
 
 h1 {
 	margin: 0;
-	font-size: 8em;
+	font-size: 4em;
+	@media only screen and (max-width: 500px) {
+		font-size: 3em;
+	}
 	padding: 0;
 	color: white;
 	text-shadow: 0 0.1em 20px rgba(0, 0, 0, 1), 0.05em -0.03em 0 rgba(0, 0, 0, 1),
@@ -52,41 +55,46 @@ h5 {
 	color: $theme-colour1;
 }
 
-
 // effects
 :root {
-    // font-size : clamp(1rem, 1vw, 5vw);
-    --shadow-dimension: 10px;
-    --blue: #001eff;
-  }
-  .box-container-3d {
-      position: relative;
-      width: 100%;
-      background-color: #001eff;
-    //   margin: 10vh auto;
-   }
-  .box-container-3d>div {
-      border: 2px solid var(--blue);
-    //   padding: 1rem 2rem;
-  }
-  .box-container-3d>div:after, .box-container-3d>div:before {
-      content: '';
-      background-color: var(--blue);
-      position: absolute;
-  }
-  .box-container-3d>div:before {
-      width: calc(var(--shadow-dimension) + 1px);
-      height: calc(100% +  100px + 1px);
-      left: calc(var(--shadow-dimension) * -1);
-      transform: skewy(-45deg);
-      top: calc(0.5*var(--shadow-dimension));
-      clip-path: polygon(0% 0%, 100% 0%, 100% calc(100% - 100px - 2px + var(--shadow-dimension)), 0% calc(100% - 100px - 2px));
-  }
-  .box-container-3d>div:after {
-      width: calc(100% + 100px);
-      height: calc(var(--shadow-dimension) + 1px);
-      left: calc(-0.5*var(--shadow-dimension) - 100px);
-      bottom: 1px;
-      transform: translateY(100%) skewx(-45deg);
-      clip-path: polygon(100px 0%, 100% 0%, 100% 100%, calc(100px + 1px) 100%);
-  }
+	// font-size : clamp(1rem, 1vw, 5vw);
+	--shadow-dimension: 10px;
+	--blue: #001eff;
+}
+.box-container-3d {
+	position: relative;
+	width: 100%;
+	background-color: #001eff;
+	//   margin: 10vh auto;
+}
+.box-container-3d > div {
+	border: 2px solid var(--blue);
+	//   padding: 1rem 2rem;
+}
+.box-container-3d > div:after,
+.box-container-3d > div:before {
+	content: "";
+	background-color: var(--blue);
+	position: absolute;
+}
+.box-container-3d > div:before {
+	width: calc(var(--shadow-dimension) + 1px);
+	height: calc(100% + 100px + 1px);
+	left: calc(var(--shadow-dimension) * -1);
+	transform: skewy(-45deg);
+	top: calc(0.5 * var(--shadow-dimension));
+	clip-path: polygon(
+		0% 0%,
+		100% 0%,
+		100% calc(100% - 100px - 2px + var(--shadow-dimension)),
+		0% calc(100% - 100px - 2px)
+	);
+}
+.box-container-3d > div:after {
+	width: calc(100% + 100px);
+	height: calc(var(--shadow-dimension) + 1px);
+	left: calc(-0.5 * var(--shadow-dimension) - 100px);
+	bottom: 1px;
+	transform: translateY(100%) skewx(-45deg);
+	clip-path: polygon(100px 0%, 100% 0%, 100% 100%, calc(100px + 1px) 100%);
+}
