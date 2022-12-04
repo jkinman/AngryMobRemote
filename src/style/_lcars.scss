@@ -81,9 +81,14 @@
 	height: 100%;
 }
 .right-frame-top {
-	.banner{
-		.source{
+	.banner {
+		.source {
 			color: vars.$theme-colour1;
+		}
+	}
+	@media only screen and (max-width: 500px) {
+		.banner {
+			padding: 10px 10px 10px 3px;
 		}
 	}
 }
