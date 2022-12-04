@@ -2,7 +2,7 @@
 @import "../style/cyberpunkdialog";
 
 .modal {
-    z-index: 2000;
+	z-index: 2000;
 	pointer-events: all;
 	a {
 		color: vars.$theme-colour1;
@@ -27,6 +27,7 @@
 			color: vars.$theme-colour1;
 			text-shadow: none;
 			font-size: 2rem;
+			margin-bottom: 15px;
 		}
 		h2 {
 			font-size: 1rem;
@@ -35,11 +36,12 @@
 		ul,
 		span {
 			font-family: vars.$paragraph-font;
-            text-transform: none;
-            @media only screen and (max-width: 500px) {
-                font-size: 0.75em;
-            }
-                font-size: 1em;
+			text-transform: none;
+			@media only screen and (max-width: 500px) {
+				font-size: 0.6rem;
+			}
+			font-size: 0.75rem;
+			line-height: 0.75rem;
 		}
 		.container {
 			pointer-events: all;

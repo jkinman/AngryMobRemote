@@ -109,7 +109,7 @@ function App() {
 				close={AppState.toggleIntro}
 			>
 				<>
-					<h1>introduction</h1>
+					<h1>Intro</h1>
 					<h2>3D Scene</h2>
 					<p>You can orbit the camera by clicking and dragging your mouse or finger anywhere on the scene</p>
 					<p>scrolling will change the camera zoom</p>

@@ -109,7 +109,7 @@ const RTCProvider = (props) => {
 		setStatus(CONNECTING)
 
 		peer.on("close", (p) => {
-			debugger
+			// debugger
 		})
 		peer.on("error", (p) => {
 			dispatch({ type: "disconnection", payload: p })
@@ -154,7 +154,7 @@ const RTCProvider = (props) => {
 	}, [])
 
 	const dataIncoming = (data) => {
-		if (data.data) dataCB(data)
+		if (data.data) dataCB(data.data)
 		if (data.state && stateTransferHandler)  stateTransferHandler( data.state )
 	}
 	const storeDataCallback = (cb) => {

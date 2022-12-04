@@ -2,8 +2,9 @@ import React, { useEffect, useContext } from "react"
 
 import { DeviceMetricsContext } from "../contexts/DeviceMetricsContext"
 import AccelerometerDisplay from "../dumb/AccelerometerDisplay"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faVideo } from "@fortawesome/free-solid-svg-icons"
 
-let connection
 
 const UplinkComponent = (props) => {
 	const deviceState = useContext(DeviceMetricsContext)
@@ -37,12 +38,16 @@ const UplinkComponent = (props) => {
 								flexDirection: "column",
 							}}
 						>
+{/* <FontAwesomeIcon icon={faVideo} onClick={deviceState.enableDeviceOrientationCallback} /> */}
+{!deviceState.permissionStatus && 
+
 							<button
 								className='cyberpunk2077 purple'
 								onClick={deviceState.enableDeviceOrientationCallback}
 							>
 								enable device metrics
 							</button>
+							}
 						</div>
 					) : null}
 					{/* <AccelerometerDisplay
