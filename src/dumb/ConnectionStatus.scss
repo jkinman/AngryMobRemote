@@ -2,6 +2,9 @@
 
 .connection-status {
     @media only screen and (max-width: 500px){
+        h5{
+            font-size: 10px;
+        }
         .small{
             display: none
         }
