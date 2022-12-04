@@ -42,6 +42,12 @@ a,
 .fps {
    right: 0 !important;
    bottom: 0 !important;
+   position: fixed;
+   // top: 0px;
+   // left: 0px;
+   cursor: pointer;
+   opacity: 0.9;
+   z-index: 10000;
 }
 .App {
 	text-align: center;

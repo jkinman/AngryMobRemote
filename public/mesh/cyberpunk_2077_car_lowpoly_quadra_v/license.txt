@@ -1,0 +1,11 @@
+Model Information:
+* title:	Cyberpunk 2077 Car lowpoly (Quadra V)
+* source:	https://sketchfab.com/3d-models/cyberpunk-2077-car-lowpoly-quadra-v-53100ea6422e4a3b8899e5d74f216a6f
+* author:	DFS studio (https://sketchfab.com/DFS_studio)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Cyberpunk 2077 Car lowpoly (Quadra V)" (https://sketchfab.com/3d-models/cyberpunk-2077-car-lowpoly-quadra-v-53100ea6422e4a3b8899e5d74f216a6f) by DFS studio (https://sketchfab.com/DFS_studio) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

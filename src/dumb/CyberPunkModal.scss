@@ -2,6 +2,7 @@
 @import "../style/cyberpunkdialog";
 
 .modal {
+    z-index: 2000;
 	pointer-events: all;
 	a {
 		color: vars.$theme-colour1;

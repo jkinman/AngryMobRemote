@@ -25,11 +25,11 @@ const TEXTURE_WIDTH = TEXTURE_SIZE
 
 class SceneBase {
 	constructor(props = {}) {
+		
+		// add FPS and gui
 		this.stats = new Stats()
 		this.stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
-
 		const elfps = document.getElementById("fps")
-		// const el = document.createElement('div')
 		this.stats.dom.className = "fps"
 		this.stats.dom.style = ''
 		elfps.appendChild(this.stats.dom)
