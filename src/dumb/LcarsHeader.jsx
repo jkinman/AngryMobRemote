@@ -1,7 +1,9 @@
 import React from "react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCodeBranch } from "@fortawesome/free-solid-svg-icons"
 
 export const LcarsHeader = (props) => {
-	const {aboutHandler, cvHandler} = props
+	const { aboutHandler, cvHandler } = props
 	return (
 		<div className='wrap lcars-header-container'>
 			<div className='scroll-top'>
@@ -17,16 +19,37 @@ export const LcarsHeader = (props) => {
 					01<span className='hop'>-NAV</span>
 				</div>
 			</div>
-			<div id="icars-top" className='right-frame-top'>
-				{/* <div className='banner'>LCARS &#149; Online</div> */}
-
+			<div
+				id='icars-top'
+				className='right-frame-top'
+			>
+				<div className='banner'>
+					<a
+						target='_blank'
+						href='https://www.linkedin.com/in/jkinman/'
+					>
+						JOEL Kinman
+					</a>{" "}
+					<a
+						target='_blank'
+						href='https://github.com/jkinman/AngryMobRemote'
+						className='source'
+					>
+						git repo <FontAwesomeIcon icon={faCodeBranch} />
+					</a>
+				</div>
 				<div className='data-cascade-button-group'>
 					<div className='button-col'>
 						<div
 							className='button'
 							id='top-left'
 						>
-							<a href='#' onClick={aboutHandler}>about</a>
+							<a
+								href='#'
+								onClick={aboutHandler}
+							>
+								about
+							</a>
 						</div>
 					</div>
 					<div className='button-col'>
@@ -34,7 +57,12 @@ export const LcarsHeader = (props) => {
 							className='button'
 							id='top-right'
 						>
-							<a href='#' onClick={cvHandler}>cv</a>
+							<a
+								href='#'
+								onClick={cvHandler}
+							>
+								cv
+							</a>
 						</div>
 					</div>
 
@@ -65,8 +93,8 @@ export const LcarsHeader = (props) => {
 					</div>
 				</div>
 				{/* <div className='top-corner-bg'> */}
-					{/* TODO: fix the fucking interior rounded corners */}
-					{/* <div className='top-corner'></div> */}
+				{/* TODO: fix the fucking interior rounded corners */}
+				{/* <div className='top-corner'></div> */}
 				{/* </div> */}
 				<div className='bar-panel'>
 					<div className='bar-1'></div>

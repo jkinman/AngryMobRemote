@@ -7,9 +7,10 @@ export const loadGltf = (path) => {
         loader.load(path, resolve)
     })
 }
-
+// cyberpunk_de_lorean_car_model
 export const loadScifiVehicle = () => {
      return loadGltf(
+        // "mesh/cyberpunk_de_lorean_car_modeln/scene.gltf"
         "mesh/sci-fi_vehicle_007_-_public_fomain/scene.gltf"
     ).then(
         (gltf) => {

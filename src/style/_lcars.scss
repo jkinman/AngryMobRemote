@@ -25,8 +25,8 @@
 
 // colour overrides
 .panel-4 {
-// background-color: vars.$theme-colour4;
-    padding: 40px 10px 15px 0;
+	// background-color: vars.$theme-colour4;
+	padding: 40px 10px 15px 0;
 }
 
 .right-frame-top,
@@ -38,30 +38,30 @@
 }
 
 .lcars-text-bar {
- span {
-	position: absolute;
-    top: 0px;
-    background-color: #000;
-    height: 32px;
-    overflow: visible;
-    padding: 0 10px;
-    font-size: 1.5rem;
-    line-height: 27px;
-    text-transform: uppercase;
-    color: #fa0;
- }
-}
-@media only screen and (max-width: 600px){
-.lcars-text-bar {
 	span {
-    position: absolute;
-    top: 0px;
-    height: 24px;
-    padding: 0 5px;
-	font-size: 1.23rem;
-    line-height: 20px;
+		position: absolute;
+		top: 0px;
+		background-color: #000;
+		height: 32px;
+		overflow: visible;
+		padding: 0 10px;
+		font-size: 1.5rem;
+		line-height: 27px;
+		text-transform: uppercase;
+		color: #fa0;
+	}
 }
-}
+@media only screen and (max-width: 600px) {
+	.lcars-text-bar {
+		span {
+			position: absolute;
+			top: 0px;
+			height: 24px;
+			padding: 0 5px;
+			font-size: 1.23rem;
+			line-height: 20px;
+		}
+	}
 }
 .top-corner {
 	-webkit-mask-image: url(#mask);
@@ -79,6 +79,13 @@
 	user-select: none;
 	pointer-events: none;
 	height: 100%;
+}
+.right-frame-top {
+	.banner{
+		.source{
+			color: vars.$theme-colour1;
+		}
+	}
 }
 
 .lcars-header-container {

@@ -1,7 +1,12 @@
 @use "../style/animations";
 
 .connection-status {
-	.small {
+    @media only screen and (max-width: 500px){
+        .small{
+            display: none
+        }
+    }
+        .small {
 		font-size: 12px;
 	}
 	.broadcast-icon {

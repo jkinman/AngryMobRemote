@@ -51,10 +51,12 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				showAbout: action.payload,
+				showCV: false,
 			}
 		case "setShowCV":
 			return {
 				...state,
+				showAbout: false,
 				showCV: action.payload,
 			}
 

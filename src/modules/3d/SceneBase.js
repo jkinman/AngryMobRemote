@@ -2,6 +2,7 @@ import * as THREE from "three"
 import * as CameraTools from "../DeviceCameraTools"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 import * as dat from "lil-gui"
+import Stats from "stats.js"
 
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js"
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js"
@@ -24,6 +25,14 @@ const TEXTURE_WIDTH = TEXTURE_SIZE
 
 class SceneBase {
 	constructor(props = {}) {
+		this.stats = new Stats()
+		this.stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
+
+		const elfps = document.getElementById("fps")
+		// const el = document.createElement('div')
+		this.stats.dom.className = "fps"
+		this.stats.dom.style = ''
+		elfps.appendChild(this.stats.dom)
 		this.gui = new dat.GUI()
 		this.gui.close()
 
@@ -161,6 +170,7 @@ class SceneBase {
 	}
 
 	renderLoop() {
+		this.stats.begin()
 		const delta = this.baseClock.getDelta()
 		const elapsedTime = this.baseClock.getElapsedTime()
 		// Update plane position
@@ -209,7 +219,7 @@ class SceneBase {
 		//   this.bufferShaderMaterial.uniforms[ 'iGlobalTime' ].value = (Date.now() - this.start) / 1000;
 		//   this.bufferShaderMaterial.uniforms[ 't' ].value = (Date.now() - this.start) / 1000;
 		// }
-
+		this.stats.end()
 		requestAnimationFrame(() => this.renderLoop())
 	}
 

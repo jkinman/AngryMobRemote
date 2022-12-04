@@ -4,6 +4,8 @@ import "./style/App.scss"
 import Render3d from "./dumb/Render3d"
 import MainLayout from "./pages/MainLayout"
 import ControllerLayout from "./pages/ControllerLayout"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFileArrowDown } from '@fortawesome/free-solid-svg-icons'
 
 // contexts
 import { DeviceMetricsContext } from "./contexts/DeviceMetricsContext"
@@ -69,17 +71,17 @@ function App() {
 				close={AppState.toggleCV}
 			>
 				<>
-					<h1>My resume</h1>
+					<h1><a target="_blank" href='./Joel Kinman resume.pdf'>save pdf <FontAwesomeIcon icon={faFileArrowDown} /></a></h1>
 					<div className="resume">
 					<object
 						data='./Joel Kinman resume.pdf'
 						type='application/pdf'
-						width='100%'
-						height='100%'
+						width='90%'
+						height='90%'
 					>
 						<p>
 							Your web browser doesn't have a PDF plugin.
-							<a href='./Joel Kinman resume.pdf'>click here to download the PDF file.</a>
+							<a href='./Joel Kinman resume.pdf'>click here to download the PDF file. <FontAwesomeIcon icon={faFileArrowDown} /></a>
 						</p>
 					</object>
 					</div>
@@ -120,7 +122,6 @@ function App() {
 				RTCState={RTCState}
 				isClient={AppState.isClient}
 				storeDataCallback={RTCState.storeDataCallback}
-				x
 				showControls={AppState.show3DControls}
 				dimScene={AppState.showAbout}
 			/>
