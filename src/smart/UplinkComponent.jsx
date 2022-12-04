@@ -29,9 +29,6 @@ const UplinkComponent = (props) => {
 	}
 
 	useEffect(() => {
-		console.log({
-			state: { showAbout: AppState.showAbout, showCV: AppState.showCV },
-		})
 		RTCState.sendData({
 			state: { showAbout: AppState.showAbout, showCV: AppState.showCV },
 		})
@@ -82,7 +79,10 @@ const UplinkComponent = (props) => {
 		<div className='uplink'>
 			{!AppState.RTCId && !RTCState.peerConnection && (
 				<div className='qrCodeLink'>
-					<a href={`${window.location.origin}?id=${RTCState.peerId}`}>
+					<a
+						target='_blank'
+						href={`${window.location.origin}?id=${RTCState.peerId}`}
+					>
 						<img
 							srcSet={qrUrl}
 							className='qr-uplink'

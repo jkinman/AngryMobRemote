@@ -28,10 +28,11 @@ class SceneBase {
 		this.mounted = false
 		this.baseClock = new THREE.Clock()
 		this.data = {}
-		this.showControls = props.showControls
+		// debugger
+		this.setShowControls(props.showControls)
 	}
 
-	startUp() {
+	startUp(props = {}) {
 		if (this.mounted) console.error("trying to mount scene multiple times")
 		this.mounted = true
 		// add FPS and gui
@@ -43,12 +44,7 @@ class SceneBase {
 		elfps.appendChild(this.stats.dom)
 		this.gui = new dat.GUI()
 		this.gui.close()
-
-		if (this.showControls) {
-			this.gui.show()
-		} else {
-			this.gui.hide()
-		}
+		this.setShowControls(this.showControls)
 
 		const SCREEN_WIDTH = window.innerWidth
 		const SCREEN_HEIGHT = window.innerHeight
@@ -75,12 +71,7 @@ class SceneBase {
 		textureCube.minFilter = THREE.LinearFilter
 		textureCube.encoding = THREE.sRGBEncoding
 		this.scene.background = textureCube
-		// new THREE.CubeTextureLoader()
-		// 	.setPath("textures/images/")
-		// 	.load(["px.png", "nx.png", "py.png", "ny.png", "pz.png", "nz.png"])
-		// this.scene.background = new THREE.CubeTextureLoader()
-		// 	.setPath("textures/images/")
-		// 	.load(["1.png", "2.png", "3.png", "4.png", "5.png", "6.png"])
+
 		// Camera setup
 		this.camera = new THREE.PerspectiveCamera(
 			110,
@@ -141,6 +132,7 @@ class SceneBase {
 			this.scene,
 			this.gui.addFolder("lights")
 		)
+
 		this.enableCameraControls()
 		this.effectComposer = VaporwaveGenerator.setUpVaporwavePost(
 			this.gui,
@@ -149,8 +141,21 @@ class SceneBase {
 			this.scene
 		)
 		VaporwaveGenerator.addCameraGui(this.gui, this.camera)
+
+		// this.makeObject()
+		
 	}
 
+	setShowControls(show) {
+		this.showControls = show
+		if (this.gui) {
+			if (this.showControls) {
+				this.gui.show()
+			} else {
+				this.gui.hide()
+			}
+		}
+	}
 	dimScene(dim) {}
 
 	enableCameraControls() {

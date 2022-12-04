@@ -110,7 +110,7 @@ export const setUpVaporwavePost = (gui, renderer, camera, scene) => {
 	bloomPass.strength = bloomParams.strength
 
 	folder
-		.add(bloomParams, "strength", 0.0, 3.0)
+		.add(bloomParams, "strength", 0.0, 6.0)
 		.onChange((value) => {
 			bloomPass.strength = Number(value)
 		})
@@ -119,7 +119,7 @@ export const setUpVaporwavePost = (gui, renderer, camera, scene) => {
 	effectComposer.addPass(bloomPass)
 
 	const filmPass = new FilmPass(
-		0.25, // noise intensity
+		0.35, // noise intensity
 		0.34, // scanline intensity
 		900, // scanline count
 		false // grayscale
@@ -151,7 +151,7 @@ export const addVaporwaveLights = (scene, gui) => {
 		.name("AmbientLight intensity")
 	gui.addColor(ambientLight, "color").name("AmbientLight color")
 
-	const spotlight = new THREE.SpotLight(theme.themeColour4, 20, 25, Math.PI * 0.1, 0.25)
+	const spotlight = new THREE.SpotLight(theme.themeColour4, 6, 25, Math.PI * 0.1, 0.25)
 	spotlight.position.set(0.5, 0.75, 2.1)
 	spotlight.target.position.x = -0.25
 	spotlight.target.position.y = 0.25
@@ -159,7 +159,7 @@ export const addVaporwaveLights = (scene, gui) => {
 	scene.add(spotlight)
 	scene.add(spotlight.target)
 
-	const spotlight2 = new THREE.SpotLight(theme.themeColour2, 20, 25, Math.PI * 0.1, 0.25)
+	const spotlight2 = new THREE.SpotLight(theme.themeColour2, 6, 25, Math.PI * 0.1, 0.25)
 	spotlight2.position.set(-0.5, 0.75, 2.1)
 	spotlight2.target.position.x = 0.25
 	spotlight2.target.position.y = 0.25

@@ -5,7 +5,6 @@ import AccelerometerDisplay from "../dumb/AccelerometerDisplay"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faVideo } from "@fortawesome/free-solid-svg-icons"
 
-
 const UplinkComponent = (props) => {
 	const deviceState = useContext(DeviceMetricsContext)
 
@@ -38,16 +37,18 @@ const UplinkComponent = (props) => {
 								flexDirection: "column",
 							}}
 						>
-{/* <FontAwesomeIcon icon={faVideo} onClick={deviceState.enableDeviceOrientationCallback} /> */}
-{!deviceState.permissionStatus && 
-
-							<button
-								className='cyberpunk2077 purple'
-								onClick={deviceState.enableDeviceOrientationCallback}
-							>
-								enable device metrics
-							</button>
-							}
+							{/* <FontAwesomeIcon icon={faVideo} onClick={deviceState.enableDeviceOrientationCallback} /> */}
+							{!deviceState.permissionStatus && (
+								<>
+								<h1>You need to allow the site to access your accelerometor by clicking the button below and selecting allow</h1>
+								<button
+									className='cyberpunk2077 purple'
+									onClick={deviceState.enableDeviceOrientationCallback}
+								>
+									enable device metrics
+								</button>
+								</>
+							)}
 						</div>
 					) : null}
 					{/* <AccelerometerDisplay
