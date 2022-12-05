@@ -6,7 +6,7 @@ import MainLayout from "./pages/MainLayout"
 import ControllerLayout from "./pages/ControllerLayout"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFileArrowDown } from "@fortawesome/free-solid-svg-icons"
-
+import ComputerAndMobile from './img/laptop+mobile.png'
 // contexts
 import { DeviceMetricsContext } from "./contexts/DeviceMetricsContext"
 import { RTCContext } from "./contexts/RTCContext"
@@ -110,6 +110,8 @@ function App() {
 			>
 				<>
 					<h1>Intro</h1>
+					<p>This is optomized to be run on a computer with a mobile phone to link with</p>
+					<img src={ComputerAndMobile} width="250px"/>
 					<h2>3D Scene</h2>
 					<p>You can orbit the camera by clicking and dragging your mouse or finger anywhere on the scene</p>
 					<p>scrolling will change the camera zoom</p>
