@@ -49,8 +49,8 @@ function App() {
 					cvHandler={() => AppState.toggleCV()}
 			>
 				<h1>controller</h1>
-				<p>This is companion app controls aspects of the app's main module.</p><p>The orientation of your device's accelerometer should be linked the 3D scene's camera.</p>
 					<DeviceMetrics />
+				<p>This is companion app controls aspects of the app's main module.</p><p>The orientation of your device's accelerometer should be linked the 3D scene's camera.</p>
 					<UplinkComponent deviceState={DeviceState} />
 				</ControllerLayout>
 			)}
@@ -85,21 +85,18 @@ function App() {
 						Scan the uplink access point QR code on your mobile to unlock the
 						full demo.
 					</p>
-					<p>100% static React app zero server side code.</p>
 					<h2>tech details</h2>
 					<p>A few things to note:</p>
 					<ul>
 						<li>
-							This demo is completly static, there is no server side code
-							running
+							This demo is completly static, no server side code needed
 						</li>
 						<li>All communication is done peer to peer</li>
 						<li>All graphics are rendered in realtime</li>
 					</ul>
 					<span>
-						After linking a mobile device by scanning the QR code the device's
-						orientation is linked to the scene's camera. I dropped the tech into
-						a Synthwave / Vaporwave edge runner scene I coded cus it looks DOPE!
+						After linking, the 3D scene's camera is updated in realtime with the device's orientation. I dropped the tech into
+						this Vaporwave scene I coded for fun.
 					</span>
 				</>
 			</CyberpunkModal>
@@ -110,11 +107,10 @@ function App() {
 			>
 				<>
 					<h1>Intro</h1>
-					<p>This is optomized to be run on a computer with a mobile phone to link with</p>
-					<img src={ComputerAndMobile} width="250px"/>
+					<p>This is optimized to be run on a computer with a mobile phone companion.</p>
+					<img src={ComputerAndMobile} width="200px"/>
 					<h2>3D Scene</h2>
-					<p>You can orbit the camera by clicking and dragging your mouse or finger anywhere on the scene</p>
-					<p>scrolling will change the camera zoom</p>
+					<p>You can orbit the camera by clicking and dragging your mouse or finger anywhere on the scene, scrolling will change the camera zoom</p>
 					<h2>to unlock the controller</h2>
 					<span>
 						Scan the uplink access point QR code on your mobile to unlock the

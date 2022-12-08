@@ -53,7 +53,7 @@ class SceneBase {
 		// fog colour theme.themeColour3
 		this.scene = new THREE.Scene()
 		// this.scene.fog = new THREE.Fog('#000000', 0, 1)
-		this.scene.fog = new THREE.Fog(theme.themeColour5, 0.6, 1.6)
+		// this.scene.fog = new THREE.Fog(theme.themeColour5, 0.6, 1.6)
 
 		const loader = new THREE.CubeTextureLoader()
 		loader.setPath("textures/images/")
@@ -143,9 +143,25 @@ class SceneBase {
 		VaporwaveGenerator.addCameraGui(this.gui, this.camera)
 
 		// this.makeObject()
-		
+
 	}
 
+	// loadD20 () {
+	// 	const model = loadGltf("mesh/d20/scene.gltf").then(
+	// 		(gltf) => {
+	// 			const obj = gltf.scene
+	// 			obj.scale.set(0.3, 0.3, 0.3)
+	// 			obj.position.set(0, -30, -25)
+	// 			this.scene.add(obj)
+	// 			this.d20 = obj
+	// 		},
+	// 		console.log,
+	// 		(error) => {
+	// 			console.error(error)
+	// 		}
+	// 	)
+	// }
+	
 	setShowControls(show) {
 		this.showControls = show
 		if (this.gui) {
@@ -185,10 +201,10 @@ class SceneBase {
 			// this.groundTexture.needsUpdate.set(true)
 		}
 		if (this.data?.beta) {
-			// if (this.d20) CameraTools.cameraRotate(this.data, this.d20)
+			// if (this.d20) CameraTools.cameraRotate(this.data, this.d20())
 			// if (this.mobile) CameraTools.cameraRotate(this.data, this.mobile)
 			// CameraTools.cameraRotate(this.data, this.cube)
-			CameraTools.cameraRotate(this.data, this.camera)
+			// CameraTools.cameraRotate(this.data, this.camera)
 			// CameraTools.cameraRotate(this.data, this.car)
 			// if( this.cameraModel)
 			// CameraTools.cameraRotate(this.data, this.cameraModel)

@@ -28,19 +28,18 @@ const UplinkComponent = (props) => {
 		<div>
 			{deviceState.isMobile ? (
 				<div>
-					<h5>Remote Uplink</h5>
 					{!deviceState.permissionGranted ? (
 						<div
-							style={{
-								margin: "1",
-								display: "flex",
-								flexDirection: "column",
-							}}
+						style={{
+							margin: "1",
+							display: "flex",
+							flexDirection: "column",
+						}}
 						>
 							{/* <FontAwesomeIcon icon={faVideo} onClick={deviceState.enableDeviceOrientationCallback} /> */}
 							{!deviceState.permissionStatus && (
 								<>
-								<h1>You need to allow the site to access your accelerometor by clicking the button below and selecting allow</h1>
+								<p>You need to allow the site to access your accelerometor by clicking the button below and selecting allow</p>
 								<button
 									className='cyberpunk2077 purple'
 									onClick={deviceState.enableDeviceOrientationCallback}
