@@ -53,7 +53,7 @@ class SceneBase {
 		// fog colour theme.themeColour3
 		this.scene = new THREE.Scene()
 		// this.scene.fog = new THREE.Fog('#000000', 0, 1)
-		// this.scene.fog = new THREE.Fog(theme.themeColour5, 0.6, 1.6)
+		this.scene.fog = new THREE.Fog(theme.themeColour5, 0.6, 1.6)
 
 		const loader = new THREE.CubeTextureLoader()
 		loader.setPath("textures/images/")
@@ -204,7 +204,7 @@ class SceneBase {
 			// if (this.d20) CameraTools.cameraRotate(this.data, this.d20())
 			// if (this.mobile) CameraTools.cameraRotate(this.data, this.mobile)
 			// CameraTools.cameraRotate(this.data, this.cube)
-			// CameraTools.cameraRotate(this.data, this.camera)
+			CameraTools.cameraRotate(this.data, this.camera)
 			// CameraTools.cameraRotate(this.data, this.car)
 			// if( this.cameraModel)
 			// CameraTools.cameraRotate(this.data, this.cameraModel)
