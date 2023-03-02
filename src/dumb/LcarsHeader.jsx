@@ -61,10 +61,11 @@ export const LcarsHeader = (props) => {
 							className='button'
 							id='top-right'
 						>
-							<a
-								href='#'
-								onClick={cvHandler}
-							>
+					<a
+						target='_blank'
+						href='Joel Kinman resume.pdf'
+						className='source'
+					>
 								cv
 							</a>
 						</div>
