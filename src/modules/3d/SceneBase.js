@@ -177,6 +177,7 @@ class SceneBase {
 	enableCameraControls() {
 		this.controls = new OrbitControls(this.camera, this.renderer.domElement)
 		this.controls.enableDamping = true
+		this.controls.autoRotate = true
 		this.controls.update()
 	}
 
@@ -201,6 +202,8 @@ class SceneBase {
 			// this.groundTexture.needsUpdate.set(true)
 		}
 		if (this.data?.beta) {
+			this.controls.autoRotate = false
+
 			// if (this.d20) CameraTools.cameraRotate(this.data, this.d20())
 			// if (this.mobile) CameraTools.cameraRotate(this.data, this.mobile)
 			// CameraTools.cameraRotate(this.data, this.cube)
@@ -209,7 +212,11 @@ class SceneBase {
 			// if( this.cameraModel)
 			// CameraTools.cameraRotate(this.data, this.cameraModel)
 		} else {
-			if (this.controls) this.controls.update()
+			if (this.controls) {
+				this.controls.update()
+				this.controls.autoRotate = true
+			}
+
 		}
 
 		// TWEEN.update();
