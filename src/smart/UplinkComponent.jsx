@@ -16,7 +16,6 @@ const UplinkComponent = (props) => {
 	// const deviceState = useContext(DeviceMetricsContext)
 	const AppState = useContext(AppContext)
 	const sendDeviceDetails = (RTCState, deviceState) => {
-		// console.log(deviceState)
 		if (deviceState) {
 			RTCState.sendData({
 				data: {

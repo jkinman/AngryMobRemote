@@ -5,25 +5,9 @@ import AccelerometerDisplay from "../dumb/AccelerometerDisplay"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faVideo } from "@fortawesome/free-solid-svg-icons"
 
-const UplinkComponent = (props) => {
+const DeviceMetrics = (props) => {
 	const deviceState = useContext(DeviceMetricsContext)
 
-	// const fullscreenToggle = () => {
-	//   let de = document.documentElement;
-	//   if (de.requestFullscreen) { de.requestFullscreen(); }
-	//   else if (de.mozRequestFullScreen) { de.mozRequestFullScreen(); }
-	//   else if (de.webkitRequestFullscreen) { de.webkitRequestFullscreen(); }
-	//   else if (de.msRequestFullscreen) { de.msRequestFullscreen(); }
-
-	//   // (A2) THEN LOCK ORIENTATION
-	//   screen.orientation.lock('portrait-primary');
-	//    }
-
-	// const fullscreenToggle = () =>{
-
-	//   if( document.body.requestFullscreen ) document.body.requestFullscreen()
-	//   if( document.body.webkitRequestFullScreen ) document.body.webkitRequestFullScreen()
-	// }
 	return (
 		<div>
 			{deviceState.isMobile ? (
@@ -36,29 +20,36 @@ const UplinkComponent = (props) => {
 							flexDirection: "column",
 						}}
 						>
-							{/* <FontAwesomeIcon icon={faVideo} onClick={deviceState.enableDeviceOrientationCallback} /> */}
-							{!deviceState.permissionStatus && (
+							{deviceState.needsPermission ? (
 								<>
-								<p>You need to allow the site to access your accelerometor by clicking the button below and selecting allow</p>
-								<button
-									className='cyberpunk2077 purple'
-									onClick={deviceState.enableDeviceOrientationCallback}
-								>
-									enable device metrics
-								</button>
+									<p>You need to allow the site to access your accelerometer by clicking the button below and selecting allow</p>
+									<button
+										className='cyberpunk2077 purple'
+										onClick={deviceState.enableDeviceOrientationCallback}
+									>
+										enable device metrics
+									</button>
 								</>
+							) : (
+								<p>Connecting device sensors...</p>
 							)}
 						</div>
-					) : null}
-					{/* <AccelerometerDisplay
-						deviceMotion={deviceState.deviceMotion}
-						deviceOrientation={deviceState.deviceOrientation}
-						permissionStatus={deviceState.permissionStatus}
-					/> */}
+					) : (
+						<div style={{ margin: "1em" }}>
+							<p style={{ color: "green" }}>✓ Device sensors connected</p>
+							<AccelerometerDisplay
+								deviceMotion={deviceState.deviceMotion}
+								deviceOrientation={deviceState.deviceOrientation}
+								permissionStatus={deviceState.permissionStatus}
+							/>
+						</div>
+					)}
 				</div>
-			) : null}
+			) : (
+				<p>This feature requires a mobile device with motion sensors.</p>
+			)}
 		</div>
 	)
 }
 
-export default UplinkComponent
+export default DeviceMetrics

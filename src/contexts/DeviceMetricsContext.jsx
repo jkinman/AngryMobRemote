@@ -1,7 +1,13 @@
 import React, { useState, useReducer, useEffect } from "react"
 
+// Detect if device is mobile (works on both iOS and Android)
+const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+// Detect if platform requires explicit permission (iOS 13+ only)
+const needsPermission = typeof DeviceMotionEvent.requestPermission === 'function';
+
 const initialState = {
-	isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && DeviceMotionEvent.requestPermission,
+	isMobile: isMobileDevice,
+	needsPermission: needsPermission,
 	permissionStatus: false,
 	permissionGranted: false,
 	deviceOrientation: { alpha: 0, beta: 0, gamma: 0, timeStamp: 0 },
@@ -14,12 +20,12 @@ const reducer = (state, action) => {
 		case "initializeState":
 			return initialState
 
-		case "device/setPermissionStatus":
-			return {
-				...state,
-				permissionGranted: state === "granted",
-				permissionStatus: action.payload,
-			}
+	case "device/setPermissionStatus":
+		return {
+			...state,
+			permissionGranted: action.payload === "granted",
+			permissionStatus: action.payload,
+		}
 
 		case "device/setDeviceOrientation":
 			return {
@@ -71,22 +77,30 @@ const DeviceMetricsProvider = (props) => {
 	}
 
 	const enableDeviceOrientationCallback = () => {
-		if (state.isMobile) {
-			// Handle iOS 13+ devices.
-			DeviceMotionEvent.requestPermission()
-				.then((state) => {
-					dispatch({ type: "device/setPermissionStatus", payload: state })
-					if (state === "granted") {
+		if (state.needsPermission) {
+			// Handle iOS 13+ devices - request both motion and orientation permissions
+			Promise.all([
+				DeviceMotionEvent.requestPermission(),
+				typeof DeviceOrientationEvent.requestPermission === 'function' 
+					? DeviceOrientationEvent.requestPermission()
+					: Promise.resolve('granted')
+			])
+				.then(([motionState, orientationState]) => {
+					const granted = motionState === "granted" && orientationState === "granted";
+					dispatch({ type: "device/setPermissionStatus", payload: granted ? "granted" : "denied" })
+					if (granted) {
 						linkHandlers()
 					} else {
-						console.error("Request to access the orientation was rejected")
+						console.error("Request to access device sensors was rejected")
 					}
 				})
 				.catch((err) => {
-					console.error(err)
+					console.error("Error requesting device sensor permissions:", err)
+					dispatch({ type: "device/setPermissionStatus", payload: "denied" })
 				})
 		} else {
-			// Handle regular non iOS 13+ devices.
+			// Handle Android and other devices that don't require permission
+			dispatch({ type: "device/setPermissionStatus", payload: "granted" })
 			linkHandlers()
 		}
 	}

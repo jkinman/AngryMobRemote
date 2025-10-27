@@ -68,13 +68,12 @@ const reducer = (state, action) => {
 				),
 				peerConnection: true,
 			}
-		case "setConnectionId":
-			console.log("setConnectionId", action.payload)
-			return {
-				...state,
-				status: CONNECTED,
-				connectionId: action.payload,
-			}
+	case "setConnectionId":
+		return {
+			...state,
+			status: CONNECTED,
+			connectionId: action.payload,
+		}
 		case "setPeerId":
 			return {
 				...state,
@@ -133,10 +132,9 @@ const RTCProvider = (props) => {
 			setStatus(OPEN)
 		})
 
-		peer.on("connection", (dataConnection) => {
-			console.log("dataConnection", dataConnection)
-			dispatch({ type: "setStatus", payload: CONNECTED })
-			setStatus(CONNECTED)
+	peer.on("connection", (dataConnection) => {
+		dispatch({ type: "setStatus", payload: CONNECTED })
+		setStatus(CONNECTED)
 
 			dispatch({ type: "addDataConnection", payload: dataConnection })
 			// dataConnection.on("data", dataCB)
