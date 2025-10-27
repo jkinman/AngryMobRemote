@@ -1,0 +1,11 @@
+Model Information:
+* title:	D20
+* source:	https://sketchfab.com/3d-models/d20-38f5c3b1f7fa46ea840e91d05be96e5c
+* author:	Andough (https://sketchfab.com/andough)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "D20" (https://sketchfab.com/3d-models/d20-38f5c3b1f7fa46ea840e91d05be96e5c) by Andough (https://sketchfab.com/andough) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Street Light
+* source:	https://sketchfab.com/3d-models/street-light-da652638b6764a8cab7ff45b4071ba3e
+* author:	oshen  products (https://sketchfab.com/evinoshen1)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Street Light" (https://sketchfab.com/3d-models/street-light-da652638b6764a8cab7ff45b4071ba3e) by oshen  products (https://sketchfab.com/evinoshen1) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
