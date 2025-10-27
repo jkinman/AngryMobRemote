@@ -35,7 +35,7 @@ function App() {
 		}
 		if (params.has("controls"))
 			AppState.setShow3DControls(!!params.get("controls"))
-	}, [document.location])
+	}, [AppState])
 
 	return (
 		<div>

@@ -10,8 +10,8 @@ const AccelerometerDisplay = (props) => {
             <p>{JSON.stringify(permissionStatus)}</p>
             <h1>motion</h1> 
             <p>x:{deviceMotion.x}</p>
-            <p>y:{deviceMotion.x}</p>
-            <p>z:{deviceMotion.x}</p>
+            <p>y:{deviceMotion.y}</p>
+            <p>z:{deviceMotion.z}</p>
             <h1>orientation</h1> 
             <p>alpha:{deviceOrientation.alpha}</p>
             <p>beta :{deviceOrientation.beta}</p>

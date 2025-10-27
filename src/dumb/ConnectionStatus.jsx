@@ -19,7 +19,7 @@ const ConnectionStatus = (props) => {
                 {Array.isArray(peer.connections) && peer.connections.map(con => (<li key={con.connectionId}>{con.connectionId}</li>))}
             </ul> */
             <span className='small'>{peer.id}</span>
-            /* <ul>
+            {/* <ul>
                 {dataConnections.map(con => (<li key={con.connectionId}>{con.connectionId}</li>))}
             </ul> */}
         </div>
