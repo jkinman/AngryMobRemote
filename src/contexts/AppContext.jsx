@@ -106,7 +106,6 @@ const AppProvider = (props) => {
 	const setShow3DControls = (val) =>
 		dispatch({ type: "setShow3DControls", payload: val })
 	const stateTransfer = (data) => {
-		console.log(data)
 		if (data) {
 			dispatch({ type: "stateTransfer", payload: data })
 		}
