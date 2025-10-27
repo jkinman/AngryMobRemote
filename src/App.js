@@ -1,6 +1,5 @@
 import React, { useEffect } from "react"
 import "./style/App.scss"
-// import AngryMob from "./pages/AngryMob"
 import Render3d from "./dumb/Render3d"
 import MainLayout from "./pages/MainLayout"
 import ControllerLayout from "./pages/ControllerLayout"
@@ -57,15 +56,12 @@ function App() {
 
 			{/* This is the 3D client scene */}
 			{AppState.isClient && (
-				<>
-					<MainLayout
-						leftMid={<ConnectionStatus {...RTCState} />}
-						// leftTop={<ConnectionStatus {...RTCState} />}
-						connected={RTCState.peerConnection}
-						aboutHandler={() => {AppState.toggleAbout()}}
-						cvHandler={() => AppState.toggleCV()}
-					></MainLayout>
-				</>
+				<MainLayout
+					leftMid={<ConnectionStatus {...RTCState} />}
+					connected={RTCState.peerConnection}
+					aboutHandler={() => {AppState.toggleAbout()}}
+					cvHandler={() => AppState.toggleCV()}
+				></MainLayout>
 			)}
 			<Render3d
 				RTCState={RTCState}

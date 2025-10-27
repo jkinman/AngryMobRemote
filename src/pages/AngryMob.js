@@ -25,7 +25,6 @@ import { presetsObj } from "@react-three/drei/helpers/environment-assets"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
 
 // custom
-import FxSW from "../modules/grfx/FxSW"
 import * as CameraTools from "../modules/DeviceCameraTools"
 
 function MainSphere({ material }) {

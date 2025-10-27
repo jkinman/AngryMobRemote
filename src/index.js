@@ -14,7 +14,6 @@ import AppProvider from "./contexts/AppContext"
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(
-	// <React.StrictMode>
 	<BrowserRouter>
 		<AppProvider>
 			<RTCProvider>
@@ -24,7 +23,6 @@ root.render(
 			</RTCProvider>
 		</AppProvider>
 	</BrowserRouter>
-	// </React.StrictMode>
 )
 
 // If you want to start measuring performance in your app, pass a function

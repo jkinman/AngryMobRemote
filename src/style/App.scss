@@ -4,14 +4,13 @@
 @use "./lcars";
 @import "./lcars-nemesis-blue.css";
 
+// Note: body font-family is set by lcars-nemesis-blue.css (Antonio font)
+// Don't override it here or the LCARS header font will be lost
 body {
-	margin: 0;
-	padding: 0;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	user-select: none;
 	pointer-events: none;
-	background-color: black;
 	width: 100vw;
 	overflow: hidden;
 	height: 100vh;
@@ -37,6 +36,7 @@ body .button {
 	flex-direction: column;
 	height: 100%;
 }
+
 .lil-gui {
 	pointer-events: all;
 }

@@ -46,10 +46,6 @@ export const LcarsHeader = (props) => {
 						>
 							<a
 								href='#'
-								// onClick={()=>{
-								// 	console.log(aboutHandler)
-								// 	debugger
-								// 	}}
 								onClick={aboutHandler}
 							>
 								about
@@ -97,16 +93,10 @@ export const LcarsHeader = (props) => {
 						</div>
 					</div>
 				</div>
-				{/* <div className='top-corner-bg'> */}
-				{/* TODO: fix the fucking interior rounded corners */}
-				{/* <div className='top-corner'></div> */}
-				{/* </div> */}
 				<div className='bar-panel'>
 					<div className='bar-1'></div>
-					{/* <div className='bar-2'></div> */}
 					<div className='bar-3'></div>
 					<div className='bar-4'></div>
-					{/* <div className='bar-5'></div> */}
 				</div>
 			</div>
 		</div>
