@@ -20,11 +20,13 @@ function App() {
 	const RTCState = useRTC()
 	const DeviceState = useDeviceMetrics()
 	const AppState = useApp()
-	// Set up RTC state transfer handler
+	// Set up RTC state transfer handler (once on mount)
 	useEffect(() => {
 		RTCState.setStateTransferHandler(AppState.stateTransfer)
-	}, [RTCState, AppState.stateTransfer])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
+	// Parse URL parameters (once on mount)
 	useEffect(() => {
 		let params = new URL(document.location).searchParams
 		if (params.has("id")) {
@@ -34,7 +36,8 @@ function App() {
 		}
 		if (params.has("controls"))
 			AppState.setShow3DControls(!!params.get("controls"))
-	}, [AppState])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
 	return (
 		<div>
