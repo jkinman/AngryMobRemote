@@ -1,12 +1,9 @@
-import React, { useEffect, useContext } from "react"
-
-import { DeviceMetricsContext } from "../contexts/DeviceMetricsContext"
+import React from "react"
+import { useDeviceMetrics } from "../hooks"
 import AccelerometerDisplay from "../dumb/AccelerometerDisplay"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faVideo } from "@fortawesome/free-solid-svg-icons"
 
 const DeviceMetrics = (props) => {
-	const deviceState = useContext(DeviceMetricsContext)
+	const deviceState = useDeviceMetrics()
 
 	return (
 		<div>

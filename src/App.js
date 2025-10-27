@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react"
+import React, { useEffect } from "react"
 import "./style/App.scss"
 // import AngryMob from "./pages/AngryMob"
 import Render3d from "./dumb/Render3d"
@@ -7,25 +7,25 @@ import ControllerLayout from "./pages/ControllerLayout"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFileArrowDown } from "@fortawesome/free-solid-svg-icons"
 import ComputerAndMobile from './img/laptop+mobile.png'
-// contexts
-import { DeviceMetricsContext } from "./contexts/DeviceMetricsContext"
-import { RTCContext } from "./contexts/RTCContext"
-import { AppContext } from "./contexts/AppContext"
+
+// Custom hooks
+import { useApp, useRTC, useDeviceMetrics } from "./hooks"
 
 // components
 import UplinkComponent from "./smart/UplinkComponent"
 import DeviceMetrics from "./smart/DeviceMetrics"
 import CyberpunkModal from "./dumb/CyberPunkModal"
-
 import ConnectionStatus from "./dumb/ConnectionStatus"
 
 function App() {
-	const RTCState = useContext(RTCContext)
-	const DeviceState = useContext(DeviceMetricsContext)
-	const AppState = useContext(AppContext)
-	// useEffect(()=>{
-	// 	RTCState.setStateTransferHandler(AppState.stateTransfer)
-	// }, [ ])
+	const RTCState = useRTC()
+	const DeviceState = useDeviceMetrics()
+	const AppState = useApp()
+	// Set up RTC state transfer handler
+	useEffect(() => {
+		RTCState.setStateTransferHandler(AppState.stateTransfer)
+	}, [RTCState, AppState.stateTransfer])
+
 	useEffect(() => {
 		let params = new URL(document.location).searchParams
 		if (params.has("id")) {
@@ -108,7 +108,7 @@ function App() {
 				<>
 					<h1>Intro</h1>
 					<p>This is optimized to be run on a computer with a mobile phone companion.</p>
-					<img src={ComputerAndMobile} width="200px"/>
+					<img src={ComputerAndMobile} alt="Computer and mobile device" width="200px"/>
 					<h2>3D Scene</h2>
 					<p>You can orbit the camera by clicking and dragging your mouse or finger anywhere on the scene, scrolling will change the camera zoom</p>
 					<h2>to unlock the controller</h2>

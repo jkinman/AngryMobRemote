@@ -1,4 +1,5 @@
-import React, { useState, useReducer, useEffect } from "react"
+import React, { useState, useEffect } from "react"
+import { Peer } from "peerjs"
 import QRCode from "qrcode"
 
 const EMPTY = "UNINITIALIZED"
@@ -94,11 +95,9 @@ const RTCContext = React.createContext()
 
 const RTCProvider = (props) => {
 	const [state, dispatch] = React.useReducer(reducer, initialState)
-	const [peer, setPeer] = useState(props.value.peer)
-	// const [stateTransferHandler, setStateTransferHandler] = useState((data)=>props.value.stateTransferHandler(data))
-	const stateTransferHandler = props.value.stateTransferHandler
+	const [peer] = useState(() => new Peer())
+	const [stateTransferHandler, setStateTransferHandler] = useState(() => (data) => {})
 	let dataCB = () => {}
-	// const [dataCB, setDataCB] = useState(()=>{})
 	const [status, setStatus] = useState(EMPTY)
 
 	useEffect(() => {
@@ -238,6 +237,7 @@ const RTCProvider = (props) => {
 				connectToPeer,
 				storeDataCallback,
 				updateState,
+				setStateTransferHandler,
 			}}
 		>
 			{props.children}

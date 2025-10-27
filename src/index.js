@@ -3,42 +3,25 @@ import ReactDOM from "react-dom/client"
 import "./index.css"
 import App from "./App"
 import reportWebVitals from "./reportWebVitals"
-import { Peer } from "peerjs"
 
 // Router
-import {
-	createBrowserRouter,
-	RouterProvider,
-	BrowserRouter,
-} from "react-router-dom"
+import { BrowserRouter } from "react-router-dom"
 
 // contexts
 import DeviceMetricsProvider from "./contexts/DeviceMetricsContext"
 import RTCProvider from "./contexts/RTCContext"
-import AppProvider, { AppContext } from "./contexts/AppContext"
-
-const peerConnection = new Peer()
-// App Routes
+import AppProvider from "./contexts/AppContext"
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(
 	// <React.StrictMode>
 	<BrowserRouter>
 		<AppProvider>
-			<AppContext.Consumer>
-				{(AppState) => (
-					<RTCProvider
-						value={{
-							peer: peerConnection,
-							stateTransferHandler: AppState.stateTransfer,
-						}}
-					>
-						<DeviceMetricsProvider>
-							<App />
-						</DeviceMetricsProvider>
-					</RTCProvider>
-				)}
-			</AppContext.Consumer>
+			<RTCProvider>
+				<DeviceMetricsProvider>
+					<App />
+				</DeviceMetricsProvider>
+			</RTCProvider>
 		</AppProvider>
 	</BrowserRouter>
 	// </React.StrictMode>

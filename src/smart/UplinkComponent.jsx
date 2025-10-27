@@ -1,20 +1,17 @@
-import React, { useEffect, useContext, useState } from "react"
+import React, { useEffect, useState } from "react"
 import "./UplinkComponent.scss"
 import theme from "../style/_vars.scss"
 import QRCode from "qrcode"
 
-import { RTCContext } from "../contexts/RTCContext"
-import { AppContext } from "../contexts/AppContext"
-
+import { useRTC, useApp } from "../hooks"
 import CyberLoadingAnim from "../dumb/CyberLoadingAnim"
 
 const UplinkComponent = (props) => {
 	const { deviceState } = props
 	const [qrUrl, setQrUrl] = useState()
 	const requestRef = React.useRef()
-	const RTCState = useContext(RTCContext)
-	// const deviceState = useContext(DeviceMetricsContext)
-	const AppState = useContext(AppContext)
+	const RTCState = useRTC()
+	const AppState = useApp()
 	const sendDeviceDetails = (RTCState, deviceState) => {
 		if (deviceState) {
 			RTCState.sendData({
@@ -59,9 +56,7 @@ const UplinkComponent = (props) => {
 				quality: 0.5,
 				margin: 1,
 				color: {
-					light: theme.themeColour1,
 					light: "#25f",
-					dark: "#f83",
 					dark: theme.themeColour1,
 				},
 			},
@@ -80,10 +75,12 @@ const UplinkComponent = (props) => {
 				<div className='qrCodeLink'>
 					<a
 						target='_blank'
+						rel='noreferrer'
 						href={`${window.location.origin}?id=${RTCState.peerId}`}
 					>
 						<img
 							srcSet={qrUrl}
+							alt='QR Code for device connection'
 							className='qr-uplink'
 						/>
 					</a>
