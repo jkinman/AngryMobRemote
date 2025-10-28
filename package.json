@@ -2,6 +2,7 @@
   "name": "remote",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://jkinman.github.io",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-regular-svg-icons": "^6.2.1",
@@ -29,7 +30,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "npm run build && find ../jkinman.github.io -mindepth 1 -not -path '../jkinman.github.io/.git*' -delete && cp -r build/* ../jkinman.github.io/ && echo 'Build copied to jkinman.github.io. Now pushing to GitHub...' && cd ../jkinman.github.io && git add . && git commit -m 'Deploy update' && git push origin master"
   },
   "eslintConfig": {
     "extends": [
