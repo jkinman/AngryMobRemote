@@ -99,26 +99,29 @@ const RTCProvider = (props) => {
 	const [stateTransferHandler, setStateTransferHandler] = useState(() => (data) => {})
 	let dataCB = () => {}
 	const [status, setStatus] = useState(EMPTY)
+	
+	// Check if peer opened but state wasn't updated - fix it immediately
+	if (peer.id && !state.peerId) {
+		dispatch({ type: "setPeer", payload: peer })
+		dispatch({ type: "setPeerId", payload: peer.id })
+		dispatch({ type: "setStatus", payload: OPEN })
+		setStatus(OPEN)
+	}
 
 	useEffect(() => {
-		// Only initialize once - check if peer already has an ID or is already open
-		if (peer.id || peer.open) {
-			// If peer is already open but state doesn't have the ID, update it
-			if (peer.id && !state.peerId) {
-				dispatch({ type: "setPeer", payload: peer })
-				dispatch({ type: "setPeerId", payload: peer.id })
-				dispatch({ type: "setStatus", payload: OPEN })
-				setStatus(OPEN)
-			}
-			return
-		}
-
+		if (status !== EMPTY) return
+		
 		dispatch({ type: "setStatus", payload: CONNECTING })
 		setStatus(CONNECTING)
 
-		peer.on("close", (p) => {
-			// debugger
-		})
+		const handleOpen = (id) => {
+			dispatch({ type: "setPeer", payload: peer })
+			dispatch({ type: "setPeerId", payload: id })
+			dispatch({ type: "setStatus", payload: OPEN })
+			setStatus(OPEN)
+		}
+
+		peer.on("close", () => {})
 		peer.on("error", (p) => {
 			dispatch({ type: "disconnection", payload: p })
 		})
@@ -126,12 +129,7 @@ const RTCProvider = (props) => {
 			dispatch({ type: "disconnection", payload: p })
 		})
 
-		peer.on("open", (id) => {
-			dispatch({ type: "setPeer", payload: peer })
-			dispatch({ type: "setPeerId", payload: id })
-			dispatch({ type: "setStatus", payload: OPEN })
-			setStatus(OPEN)
-		})
+		peer.on("open", handleOpen)
 
 		peer.on("connection", (dataConnection) => {
 			dispatch({ type: "setStatus", payload: CONNECTED })
@@ -149,7 +147,13 @@ const RTCProvider = (props) => {
 				dispatch({ type: "disconnection", payload: p })
 			})
 		})
-	}, [peer])
+		
+		// Check if peer is already open after attaching listeners
+		if (peer.open && peer.id) {
+			handleOpen(peer.id)
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
 	const dataIncoming = (data) => {
 		if (data.data) dataCB(data.data)
