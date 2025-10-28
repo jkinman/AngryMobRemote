@@ -4,6 +4,8 @@ Turn your phone into a wireless, gyroscopic controller for a 3D scene running in
 
 The technical challenge was mapping the phone's accelerometer and gyroscope data (Euler angles: alpha, beta, gamma) into a Three.js camera quaternion that updates at 60 FPS with sub-frame latency. The WebRTC DataChannel handles the streaming, PeerJS manages the P2P handshake, and quaternion math converts device orientation into smooth camera rotation. The result is a responsive, wireless 3D controller that works on both iOS and Android.
 
+I started with the concept of having a server and client component, then realized I could do this totally peer-to-peer with WebRTC data channels, and it wound up being this demo. Combining WebGL, WebRTC, device sensor data, and a gaming aesthetic.
+
 I wrapped the tech in a synthwave/vaporwave cyberpunk aesthetic because it looks DOPE!
 
 **Live Demo:** [https://jkinman.github.io](https://jkinman.github.io)
