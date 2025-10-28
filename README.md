@@ -1,23 +1,12 @@
 # Joel Kinman - WebGL/WebRTC Tech Demo
 
-> A fully static, peer-to-peer 3D vaporwave experience with real-time device orientation control via WebRTC.
+Turn your phone into a wireless, gyroscopic controller for a 3D scene running in your browser. This project demonstrates real-time quaternion-based camera control by streaming device orientation data from a mobile device to a desktop browser over a peer-to-peer WebRTC connection - no servers, no backend, just pure client-side JavaScript and some interesting math.
 
-**Live Demo:** [https://jkinman.github.io/AngryMobRemote/](https://jkinman.github.io/AngryMobRemote/)
-
-## Overview
-
-This tech demo proves a concept I had: combining **WebRTC peer-to-peer communication** with **Three.js 3D graphics** and **device orientation APIs** to create a wireless, serverless camera control system. Your phone becomes a gyroscopic controller for a 3D scene running in your browser.
+The technical challenge was mapping the phone's accelerometer and gyroscope data (Euler angles: alpha, beta, gamma) into a Three.js camera quaternion that updates at 60 FPS with sub-frame latency. The WebRTC DataChannel handles the streaming, PeerJS manages the P2P handshake, and quaternion math converts device orientation into smooth camera rotation. The result is a responsive, wireless 3D controller that works on both iOS and Android.
 
 I wrapped the tech in a synthwave/vaporwave cyberpunk aesthetic because it looks DOPE!
 
-### Key Features
-
-- **100% Static** - No server-side code, hosted on GitHub Pages
-- **Peer-to-Peer** - WebRTC data channels for real-time communication
-- **Real-time 3D** - Three.js with custom post-processing pipeline
-- **Device Orientation** - Accelerometer/gyroscope data from mobile devices
-- **Cross-Platform** - Works on iOS and Android
-- **Zero Latency** - Direct P2P connection, no server round-trips
+**Live Demo:** [https://jkinman.github.io](https://jkinman.github.io)
 
 ---
 
@@ -47,6 +36,68 @@ I wrapped the tech in a synthwave/vaporwave cyberpunk aesthetic because it looks
 - **Create React App** - Zero-config build system
 - **Webpack** - Module bundler
 - **Babel** - ES6+ transpilation
+
+---
+
+## Cool Technical Features
+
+### Device Orientation to Camera Control
+
+Quaternion-based camera rotation using device sensors:
+
+```javascript
+setObjectQuaternion(quaternion, alpha, beta, gamma, orient)
+├─ Convert Euler angles to quaternion
+├─ Apply device orientation offset
+└─ Update camera rotation matrix
+```
+
+The phone's DeviceOrientationEvent fires at 60 FPS, providing alpha, beta, and gamma Euler angles. These are converted to a quaternion representation and applied directly to the Three.js camera's rotation matrix. The quaternion approach avoids gimbal lock and provides smooth interpolation between orientations. The WebRTC DataChannel maintains sub-frame latency, so camera movement feels instant - there's no perceptible lag between moving your phone and seeing the camera rotate.
+
+### Zero-Server P2P Architecture
+
+No backend required - everything runs client-side:
+- PeerJS handles WebRTC signaling via public STUN server
+- Data flows directly between devices
+- Can be hosted on any static file server (GitHub Pages, S3, etc.)
+
+### Cross-Platform Mobile Support
+
+```javascript
+// iOS 13+ permission handling
+if (typeof DeviceMotionEvent.requestPermission === 'function') {
+  await DeviceMotionEvent.requestPermission()
+}
+
+// Android auto-grants permissions
+else {
+  // Automatically link handlers
+}
+```
+
+### Electromagnetic Disturbance System
+
+Custom glitch effect that randomly spikes RGB chromatic aberration every 8-20 seconds, simulating electromagnetic interference:
+
+```javascript
+// Automated glitch cycle
+- Random intervals (8-20 seconds)
+- Variable intensity (80-120% of max)
+- Smooth animation curve (ramp up → hold → fade)
+- Duration: 200-500ms per spike
+- Respects pass enabled state
+```
+
+### Modular Post-Processing
+
+Each effect can be toggled independently with automatic render-to-screen management:
+
+```javascript
+updateRenderToScreen()
+├─ Find last enabled pass in chain
+├─ Set renderToScreen = true on last pass only
+└─ Ensures output renders to canvas
+```
 
 ---
 
@@ -243,66 +294,6 @@ Scene Geometry
       ▼
   Final Output
   (to screen)
-```
-
----
-
-## Cool Technical Features
-
-### Electromagnetic Disturbance System
-
-Custom glitch effect that randomly spikes RGB chromatic aberration every 8-20 seconds, simulating electromagnetic interference:
-
-```javascript
-// Automated glitch cycle
-- Random intervals (8-20 seconds)
-- Variable intensity (80-120% of max)
-- Smooth animation curve (ramp up → hold → fade)
-- Duration: 200-500ms per spike
-- Respects pass enabled state
-```
-
-### Device Orientation to Camera Control
-
-Quaternion-based camera rotation using device sensors:
-
-```javascript
-setObjectQuaternion(quaternion, alpha, beta, gamma, orient)
-├─ Convert Euler angles to quaternion
-├─ Apply device orientation offset
-└─ Update camera rotation matrix
-```
-
-### Zero-Server P2P Architecture
-
-No backend required - everything runs client-side:
-- PeerJS handles WebRTC signaling via public STUN server
-- Data flows directly between devices
-- Can be hosted on any static file server (GitHub Pages, S3, etc.)
-
-### Cross-Platform Mobile Support
-
-```javascript
-// iOS 13+ permission handling
-if (typeof DeviceMotionEvent.requestPermission === 'function') {
-  await DeviceMotionEvent.requestPermission()
-}
-
-// Android auto-grants permissions
-else {
-  // Automatically link handlers
-}
-```
-
-### Modular Post-Processing
-
-Each effect can be toggled independently with automatic render-to-screen management:
-
-```javascript
-updateRenderToScreen()
-├─ Find last enabled pass in chain
-├─ Set renderToScreen = true on last pass only
-└─ Ensures output renders to canvas
 ```
 
 ---
