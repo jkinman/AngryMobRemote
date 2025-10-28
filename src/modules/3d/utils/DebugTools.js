@@ -7,9 +7,9 @@ import * as dat from "lil-gui"
 export class DebugTools {
 	/**
 	 * Create debug tools
-	 * @param {boolean} [showControls=false] - Whether to show controls initially
+	 * @param {boolean} [showControls=true] - Whether to show controls initially
 	 */
-	constructor(showControls = false) {
+	constructor(showControls = true) {
 		this.showControls = showControls
 		this.stats = new Stats()
 		this.gui = new dat.GUI()
@@ -29,6 +29,12 @@ export class DebugTools {
 		this.stats.dom.className = "fps"
 		this.stats.dom.style = ""
 		elfps.appendChild(this.stats.dom)
+		
+		// Make FPS counter clickable to toggle GUI
+		this.stats.dom.style.cursor = "pointer"
+		this.stats.dom.addEventListener("click", () => {
+			this.setVisible(!this.showControls)
+		})
 	}
 
 	/**

@@ -16,7 +16,7 @@ const initialState = {
 	showAbout: false,
 	showCV: false,
 	showIntro: true,
-	show3DControls: false,
+	show3DControls: true,
 	loading: false,
 	preloadProgress: false,
 	navState: NavState.begin,

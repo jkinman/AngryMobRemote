@@ -16,13 +16,13 @@ class SceneBase {
 	/**
 	 * Create a new scene
 	 * @param {Object} props - Scene configuration
-	 * @param {boolean} [props.showControls=false] - Whether to show debug controls
+	 * @param {boolean} [props.showControls=true] - Whether to show debug controls
 	 */
 	constructor(props = {}) {
 		this.mounted = false
 		this.clock = new THREE.Clock()
 		this.data = {}
-		this.showControls = props.showControls || false
+		this.showControls = props.showControls !== undefined ? props.showControls : true
 	}
 
 	/**
@@ -92,7 +92,7 @@ class SceneBase {
 		textureCube.generateMipmaps = false
 		textureCube.wrapS = textureCube.wrapT = THREE.ClampToEdgeWrapping
 		textureCube.minFilter = THREE.LinearFilter
-		textureCube.encoding = THREE.sRGBEncoding
+		textureCube.colorSpace = THREE.SRGBColorSpace
 		this.scene.background = textureCube
 	}
 

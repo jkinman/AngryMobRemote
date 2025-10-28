@@ -6,7 +6,7 @@ import { GammaCorrectionShader } from "three/examples/jsm/shaders/GammaCorrectio
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js"
 import { RGBShiftShader } from "three/examples/jsm/shaders/RGBShiftShader.js"
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js"
-import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass"
+import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass.js"
 
 /**
  * Create the vaporwave terrain with animated ground planes
@@ -82,69 +82,197 @@ export const createPostProcessing = (gui, renderer, camera, scene) => {
 		height: window.innerHeight,
 	}
 	
-	// Post-processing
+	// Performance configuration
+	const effectsConfig = {
+		useRGBShift: true,
+		useBloom: true,
+		useFilm: false,  // Off by default
+		pixelRatio: 2.0,  // Full quality on Retina displays
+		bloomStrength: 0.3,
+		scanlineCount: 300,  // Lower from 900 for better performance
+		enableGlitch: true,  // Electromagnetic disturbance effect
+		glitchMinInterval: 8,  // Minimum seconds between glitches
+		glitchMaxInterval: 20,  // Maximum seconds between glitches
+		baseRGBShift: 0,  // No RGB shift normally
+		maxRGBShift: 0.1  // Maximum RGB shift during glitch
+	}
+	
 	const effectComposer = new EffectComposer(renderer)
 	effectComposer.setSize(sizes.width, sizes.height)
-	effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+	effectComposer.setPixelRatio(effectsConfig.pixelRatio)
 
+	// Base passes (always on)
 	const renderPass = new RenderPass(scene, camera)
 	effectComposer.addPass(renderPass)
-
-	const folder = gui.addFolder("post")
-
-	// RGB Shift effect
-	const rgbShiftPass = new ShaderPass(RGBShiftShader)
-	rgbShiftPass.uniforms["amount"].value = 0.001
-	folder
-		.add(rgbShiftPass.uniforms["amount"], "value")
-		.min(0)
-		.max(0.01)
-		.step(0.00001)
-		.name("RGBShift intensity")
-	effectComposer.addPass(rgbShiftPass)
 	
-	// Gamma correction
 	const gammaCorrectionPass = new ShaderPass(GammaCorrectionShader)
 	effectComposer.addPass(gammaCorrectionPass)
 
-	// Bloom effect
-	const bloomParams = {
-		strength: 0.3,
+	// Optional RGB Shift
+	const rgbShiftPass = new ShaderPass(RGBShiftShader)
+	rgbShiftPass.uniforms["amount"].value = effectsConfig.baseRGBShift
+	rgbShiftPass.enabled = true  // Explicitly enable
+	effectComposer.addPass(rgbShiftPass)
+	
+	// Electromagnetic glitch effect system
+	let glitchTimeout = null
+	let isGlitching = false
+	
+	const triggerGlitch = () => {
+		if (!effectsConfig.enableGlitch || !rgbShiftPass.enabled) {
+			scheduleNextGlitch()
+			return
+		}
+		
+		isGlitching = true
+		const startValue = rgbShiftPass.uniforms["amount"].value
+		const targetValue = effectsConfig.maxRGBShift * (0.8 + Math.random() * 0.4) // 80-120% of max
+		const glitchDuration = 200 + Math.random() * 300 // 200-500ms spike
+		const startTime = Date.now()
+		
+		// Animate RGB shift spike
+		const animateGlitch = () => {
+			const elapsed = Date.now() - startTime
+			const progress = Math.min(elapsed / glitchDuration, 1)
+			
+			if (progress < 0.3) {
+				// Ramp up quickly (0-30% of duration)
+				const rampProgress = progress / 0.3
+				rgbShiftPass.uniforms["amount"].value = startValue + (targetValue - startValue) * rampProgress
+				requestAnimationFrame(animateGlitch)
+			} else if (progress < 0.5) {
+				// Hold at peak (30-50% of duration)
+				rgbShiftPass.uniforms["amount"].value = targetValue
+				requestAnimationFrame(animateGlitch)
+			} else if (progress < 1) {
+				// Fade back down (50-100% of duration)
+				const fadeProgress = (progress - 0.5) / 0.5
+				rgbShiftPass.uniforms["amount"].value = targetValue - (targetValue - effectsConfig.baseRGBShift) * fadeProgress
+				requestAnimationFrame(animateGlitch)
+			} else {
+				// Reset to base value
+				rgbShiftPass.uniforms["amount"].value = effectsConfig.baseRGBShift
+				isGlitching = false
+				scheduleNextGlitch()
+			}
+		}
+		
+		animateGlitch()
 	}
-
-	const bloomPass = new UnrealBloomPass()
-	bloomPass.strength = bloomParams.strength
-
-	folder
-		.add(bloomParams, "strength", 0.0, 6.0)
-		.onChange((value) => {
-			bloomPass.strength = Number(value)
-		})
-		.name("Bloom Strength")
-
+	
+	const scheduleNextGlitch = () => {
+		if (glitchTimeout) clearTimeout(glitchTimeout)
+		
+		// Random interval between min and max
+		const interval = (effectsConfig.glitchMinInterval + 
+			Math.random() * (effectsConfig.glitchMaxInterval - effectsConfig.glitchMinInterval)) * 1000
+		
+		glitchTimeout = setTimeout(triggerGlitch, interval)
+	}
+	
+	// Start the glitch cycle
+	if (effectsConfig.enableGlitch) {
+		scheduleNextGlitch()
+	}
+	
+	// Optional Bloom (most expensive)
+	const bloomPass = new UnrealBloomPass(
+		new THREE.Vector2(sizes.width, sizes.height),
+		effectsConfig.bloomStrength,
+		0.4,  // radius
+		0.85  // threshold
+	)
+	bloomPass.enabled = true  // Explicitly enable
 	effectComposer.addPass(bloomPass)
 
-	// Film grain effect
-	const filmPass = new FilmPass(
-		0.35, // noise intensity
-		0.34, // scanline intensity
-		900, // scanline count
-		false // grayscale
-	)
+	// Optional Film (expensive - scanlines)
+	const filmPass = new FilmPass(0.35, 0.34, effectsConfig.scanlineCount, false)
+	filmPass.enabled = effectsConfig.useFilm  // Off by default
+	effectComposer.addPass(filmPass)
+	
+	// Set initial renderToScreen on last enabled pass
+	const initialPasses = [rgbShiftPass, bloomPass, filmPass]
+	let lastEnabledPass = null
+	initialPasses.forEach(pass => {
+		if (pass.enabled) lastEnabledPass = pass
+	})
+	if (lastEnabledPass) lastEnabledPass.renderToScreen = true
 
-	folder.add(filmPass.uniforms.grayscale, "value").name("grayscale")
-	folder
-		.add(filmPass.uniforms.nIntensity, "value", 0, 1)
-		.name("noise intensity")
-	folder
-		.add(filmPass.uniforms.sIntensity, "value", 0, 1)
-		.name("scanline intensity")
-	folder
-		.add(filmPass.uniforms.sCount, "value", 0, 1000)
-		.name("scanline count")
+	// Post-Processing GUI folder
+	const perfFolder = gui.addFolder("Post-Processing")
+	
+	// Function to update which pass renders to screen (must be declared before use)
+	const updateRenderToScreen = () => {
+		// Find the last enabled pass and make it render to screen
+		const passes = [rgbShiftPass, bloomPass, filmPass]
+		let lastEnabledPass = null
+		passes.forEach(pass => {
+			pass.renderToScreen = false
+			if (pass.enabled) lastEnabledPass = pass
+		})
+		if (lastEnabledPass) lastEnabledPass.renderToScreen = true
+	}
+	
+	perfFolder.add(effectsConfig, 'pixelRatio', 0.5, 2, 0.1)
+		.name("Pixel Ratio")
+		.onChange((value) => {
+			effectComposer.setPixelRatio(value)
+		})
+	
+	perfFolder.add(effectsConfig, 'useRGBShift')
+		.name("Enable RGB Shift")
+		.onChange((value) => { 
+			rgbShiftPass.enabled = value
+			updateRenderToScreen()
+		})
+	
+	perfFolder.add(effectsConfig, 'useBloom')
+		.name("Enable Bloom")
+		.onChange((value) => { 
+			bloomPass.enabled = value
+			updateRenderToScreen()
+		})
+	
+	perfFolder.add(effectsConfig, 'bloomStrength', 0.0, 3.0, 0.1)
+		.name("Bloom Intensity")
+		.onChange((value) => { bloomPass.strength = value })
+	
+	perfFolder.add(effectsConfig, 'useFilm')
+		.name("Enable Film Grain")
+		.onChange((value) => { 
+			filmPass.enabled = value
+			updateRenderToScreen()
+		})
+	
+	perfFolder.add(effectsConfig, 'scanlineCount', 100, 1000, 100)
+		.name("Scanline Count")
+		.onChange((value) => {
+			filmPass.uniforms.sCount.value = value
+		})
+	
+	perfFolder.open()  // Keep open for easy testing
+
+	// Advanced controls in separate folder
+	const folder = gui.addFolder("Advanced")
+	folder.add(effectsConfig, 'enableGlitch')
+		.name("EM Disturbance Effect")
+		.onChange((value) => {
+			if (value) scheduleNextGlitch()
+			else if (glitchTimeout) clearTimeout(glitchTimeout)
+		})
+	folder.add(effectsConfig, 'glitchMinInterval', 3, 30, 1)
+		.name("Min Interval (sec)")
+	folder.add(effectsConfig, 'glitchMaxInterval', 10, 60, 1)
+		.name("Max Interval (sec)")
+	folder.add(effectsConfig, 'baseRGBShift', 0, 0.01, 0.0001)
+		.name("Base RGB Shift")
+		.onChange((value) => {
+			if (!isGlitching) rgbShiftPass.uniforms["amount"].value = value
+		})
+	folder.add(effectsConfig, 'maxRGBShift', 0.001, 0.02, 0.001)
+		.name("Max Glitch Intensity")
 	folder.close()
 
-	effectComposer.addPass(filmPass)
 	return effectComposer
 }
 
@@ -154,7 +282,7 @@ export const createPostProcessing = (gui, renderer, camera, scene) => {
  * @param {dat.GUI} gui - Debug GUI folder for light controls
  */
 export const setupLights = (scene, gui) => {
-	const ambientLight = new THREE.AmbientLight(theme.themeColour1, 10)
+	const ambientLight = new THREE.AmbientLight(theme.themeColour1, 16)
 	scene.add(ambientLight)
 	gui
 		.add(ambientLight, "intensity")
@@ -291,4 +419,3 @@ export const createSun = () => {
 	sphere.position.set(0, 0, -1000)
 	return sphere
 }
-
