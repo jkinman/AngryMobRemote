@@ -23,8 +23,8 @@ export const createTerrain = (gui) => {
 	// Plane
 	const parameters = {
 		displacementScale: 0.55,
-		metalness: 0.7,
-		roughness: 0.5,
+		metalness: 0.1641,
+		roughness: 1,
 	}
 
 	const geometry = new THREE.PlaneGeometry(1, 2, 24, 24)

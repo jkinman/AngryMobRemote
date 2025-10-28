@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import "./UplinkComponent.scss"
 import theme from "../style/_vars.scss"
 import QRCode from "qrcode"
@@ -12,7 +12,8 @@ const UplinkComponent = (props) => {
 	const requestRef = React.useRef()
 	const RTCState = useRTC()
 	const AppState = useApp()
-	const sendDeviceDetails = (RTCState, deviceState) => {
+	
+	const sendDeviceDetails = useCallback((RTCState, deviceState) => {
 		if (deviceState) {
 			RTCState.sendData({
 				data: {
@@ -21,13 +22,14 @@ const UplinkComponent = (props) => {
 				},
 			})
 		}
-		requestRef.current = requestAnimationFrame(sendDeviceDetails)
-	}
+		requestRef.current = requestAnimationFrame(() => sendDeviceDetails(RTCState, deviceState))
+	}, [])
 
 	useEffect(() => {
 		RTCState.sendData({
 			state: { showAbout: AppState.showAbout, showCV: AppState.showCV },
 		})
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [AppState.showAbout, AppState.showCV])
 
 	useEffect(() => {
@@ -37,11 +39,12 @@ const UplinkComponent = (props) => {
 			)
 		}
 		return () => cancelAnimationFrame(requestRef.current)
-	}, [deviceState, RTCState])
+	}, [deviceState, RTCState, sendDeviceDetails])
 
 	useEffect(() => {
 		if (AppState.RTCId && RTCState.peerId)
 			RTCState.connectToPeer(AppState.RTCId)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [AppState.RTCId, RTCState.peerId])
 
 	useEffect(() => {
@@ -71,18 +74,18 @@ const UplinkComponent = (props) => {
 
 	return (
 		<div className='uplink'>
-			{!AppState.RTCId && !RTCState.peerConnection && (
+			{!AppState.RTCId && !RTCState.peerConnection && RTCState.peerId && qrUrl && (
 				<div className='qrCodeLink'>
 					<a
 						target='_blank'
 						rel='noreferrer'
 						href={`${window.location.origin}?id=${RTCState.peerId}`}
 					>
-						<img
-							srcSet={qrUrl}
-							alt='QR Code for device connection'
-							className='qr-uplink'
-						/>
+					<img
+						src={qrUrl}
+						alt='QR Code for device connection'
+						className='qr-uplink'
+					/>
 					</a>
 				</div>
 			)}

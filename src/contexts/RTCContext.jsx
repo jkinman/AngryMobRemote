@@ -101,8 +101,18 @@ const RTCProvider = (props) => {
 	const [status, setStatus] = useState(EMPTY)
 
 	useEffect(() => {
-		if (status !== EMPTY) return
-		if (state.peerId) return
+		// Only initialize once - check if peer already has an ID or is already open
+		if (peer.id || peer.open) {
+			// If peer is already open but state doesn't have the ID, update it
+			if (peer.id && !state.peerId) {
+				dispatch({ type: "setPeer", payload: peer })
+				dispatch({ type: "setPeerId", payload: peer.id })
+				dispatch({ type: "setStatus", payload: OPEN })
+				setStatus(OPEN)
+			}
+			return
+		}
+
 		dispatch({ type: "setStatus", payload: CONNECTING })
 		setStatus(CONNECTING)
 
@@ -115,14 +125,6 @@ const RTCProvider = (props) => {
 		peer.on("disconnected", (p) => {
 			dispatch({ type: "disconnection", payload: p })
 		})
-		// peer.on("error", console.log )
-		// peer.on('disconnected', (event) => {
-		// 	console.log('peer disconnected', event)
-		// 	// itterate over the open connections
-		// 	state.dataConnections.forEach((key, value) => {
-		// 		console.log('error', value)
-		// 	})
-		// } )
 
 		peer.on("open", (id) => {
 			dispatch({ type: "setPeer", payload: peer })
@@ -131,16 +133,15 @@ const RTCProvider = (props) => {
 			setStatus(OPEN)
 		})
 
-	peer.on("connection", (dataConnection) => {
-		dispatch({ type: "setStatus", payload: CONNECTED })
-		setStatus(CONNECTED)
+		peer.on("connection", (dataConnection) => {
+			dispatch({ type: "setStatus", payload: CONNECTED })
+			setStatus(CONNECTED)
 
 			dispatch({ type: "addDataConnection", payload: dataConnection })
-			// dataConnection.on("data", dataCB)
 			dataConnection.on("data", (data) => dataIncoming(data))
 			dataConnection.on("close", (p) => {
 				dispatch({ type: "disconnection", payload: p })
-			}) // was triggered on moble page refresh
+			})
 			dataConnection.on("error", (p) => {
 				dispatch({ type: "disconnection", payload: p })
 			})
@@ -148,7 +149,7 @@ const RTCProvider = (props) => {
 				dispatch({ type: "disconnection", payload: p })
 			})
 		})
-	}, [])
+	}, [peer])
 
 	const dataIncoming = (data) => {
 		if (data.data) dataCB(data.data)

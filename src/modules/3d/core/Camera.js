@@ -36,6 +36,7 @@ export class CameraController {
 		this.controls = new OrbitControls(this.camera, renderer.domElement)
 		this.controls.enableDamping = true
 		this.controls.autoRotate = true
+		this.controls.autoRotateSpeed = 1.0 // Half of default (2.0)
 		this.controls.update()
 	}
 

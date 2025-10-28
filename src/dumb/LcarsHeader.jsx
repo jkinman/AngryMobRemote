@@ -35,7 +35,7 @@ export const LcarsHeader = (props) => {
 						href='https://github.com/jkinman/AngryMobRemote'
 						className='source'
 					>
-						git repo <FontAwesomeIcon icon={faCodeBranch} />
+						SOURCE CODE <FontAwesomeIcon icon={faCodeBranch} />
 					</a>
 				</div>
 				<div className='data-cascade-button-group'>

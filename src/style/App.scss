@@ -4,6 +4,11 @@
 @use "./lcars";
 @import "./lcars-nemesis-blue.css";
 
+html {
+	margin: 0;
+	padding: 0;
+}
+
 // Note: body font-family is set by lcars-nemesis-blue.css (Antonio font)
 // Don't override it here or the LCARS header font will be lost
 body {
@@ -15,6 +20,13 @@ body {
 	overflow: hidden;
 	height: 100vh;
 	font-size: 10px;
+	margin: 0;
+	padding: 0;
+}
+
+#root {
+	margin: 0;
+	padding: 0;
 }
 
 @media only screen and (max-width: 500px) {

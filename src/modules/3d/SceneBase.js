@@ -5,6 +5,7 @@ import theme from "../../style/_vars.scss"
 import { WebGLRendererWrapper } from "./core/Renderer"
 import { CameraController } from "./core/Camera"
 import { DebugTools } from "./utils/DebugTools"
+import { HeadlightManager } from "./utils/HeadlightManager"
 import * as AssetLoader from "./AssetLoaders"
 import * as VaporwaveScene from "./scene/VaporwaveScene"
 
@@ -128,6 +129,124 @@ class SceneBase {
 			car.rotateY(Math.PI)
 			this.scene.add(car)
 			this.car = car
+
+
+			// Create headlights using WORLD space coordinates directly
+			// Car bounding box: front at z=-0.041 (Min.z), left at x=-0.014, right at x=0.014
+			const headlightConfig = {
+				// Positions in WORLD space
+				leftPosition: new THREE.Vector3(-0.010, 0.010, -0.041),   // Left front corner
+				rightPosition: new THREE.Vector3(0.010, 0.010, -0.041),   // Right front corner
+				color: 0x545454, // Gray
+				intensity: 8,
+				distance: 10,
+				angle: (10 * Math.PI) / 180, // 10 degrees
+				penumbra: 0.05,
+				castShadow: false,
+				targetDistance: -20, // Point forward (negative Z direction)
+			}
+
+			// Create lights and add them to the scene (not parented to car)
+			this.headlights = []
+			
+			// Store car reference for manual syncing if needed
+			this.carForLights = car
+			
+			// Left headlight
+			const leftLight = new THREE.SpotLight(
+				headlightConfig.color,
+				headlightConfig.intensity,
+				headlightConfig.distance,
+				headlightConfig.angle,
+				headlightConfig.penumbra,
+				2 // decay
+			)
+			leftLight.position.copy(headlightConfig.leftPosition)
+			leftLight.name = "headlight_left"
+			
+			// Target points forward in world space
+			const leftTarget = new THREE.Object3D()
+			leftTarget.position.set(
+				headlightConfig.leftPosition.x, 
+				headlightConfig.leftPosition.y, 
+				headlightConfig.leftPosition.z + headlightConfig.targetDistance
+			)
+			this.scene.add(leftTarget)
+			leftLight.target = leftTarget
+			this.scene.add(leftLight) // Add to scene, not car
+			this.headlights.push(leftLight)
+
+			// Right headlight
+			const rightLight = new THREE.SpotLight(
+				headlightConfig.color,
+				headlightConfig.intensity,
+				headlightConfig.distance,
+				headlightConfig.angle,
+				headlightConfig.penumbra,
+				2 // decay
+			)
+			rightLight.position.copy(headlightConfig.rightPosition)
+			rightLight.name = "headlight_right"
+			
+			// Target points forward in world space
+			const rightTarget = new THREE.Object3D()
+			rightTarget.position.set(
+				headlightConfig.rightPosition.x, 
+				headlightConfig.rightPosition.y, 
+				headlightConfig.rightPosition.z + headlightConfig.targetDistance
+			)
+			this.scene.add(rightTarget)
+			rightLight.target = rightTarget
+			this.scene.add(rightLight) // Add to scene, not car
+			this.headlights.push(rightLight)
+
+			// Create tail lights (red spotlights pointing backward at the rear)
+			// Rear of car is at z=0.025 (Max.z)
+			this.taillights = []
+
+			// Left tail light - SpotLight pointing backward
+			const leftTailLight = new THREE.SpotLight(
+				0xff0000,  // Red
+				0.5,       // Intensity
+				0.5,       // Distance
+				(70 * Math.PI) / 180, // 70 degree angle
+				1,         // Penumbra
+				2          // Decay
+			)
+			leftTailLight.position.set(-0.010, 0.008, 0.025) // Left rear corner
+			leftTailLight.name = "taillight_left"
+			
+			// Target points backward (positive Z direction)
+			const leftTailTarget = new THREE.Object3D()
+			leftTailTarget.position.set(-0.010, 0.008, 5) // Point backward
+			this.scene.add(leftTailTarget)
+			leftTailLight.target = leftTailTarget
+			this.scene.add(leftTailLight)
+			this.taillights.push(leftTailLight)
+
+			// Right tail light - SpotLight pointing backward
+			const rightTailLight = new THREE.SpotLight(
+				0xff0000,  // Red
+				0.5,       // Intensity
+				0.5,       // Distance
+				(70 * Math.PI) / 180, // 70 degree angle
+				1,         // Penumbra
+				2          // Decay
+			)
+			rightTailLight.position.set(0.010, 0.008, 0.025) // Right rear corner
+			rightTailLight.name = "taillight_right"
+			
+			// Target points backward (positive Z direction)
+			const rightTailTarget = new THREE.Object3D()
+			rightTailTarget.position.set(0.010, 0.008, 5) // Point backward
+			this.scene.add(rightTailTarget)
+			rightTailLight.target = rightTailTarget
+			this.scene.add(rightTailLight)
+			this.taillights.push(rightTailLight)
+			
+			// Initialize empty helpers arrays (will be created via GUI)
+			this.lightHelpers = []
+			this.taillightHelpers = []
 		} catch (error) {
 			console.error("Failed to load assets:", error)
 		}
@@ -163,6 +282,111 @@ class SceneBase {
 			this.debug.gui,
 			this.cameraController.camera
 		)
+
+		// Add headlight controls if headlights exist
+		if (this.headlights && this.headlights.length > 0) {
+			HeadlightManager.addGUIControls(
+				this.debug.gui, 
+				this.headlights, 
+				this.scene, 
+				this.lightHelpers
+			)
+		}
+
+		// Add tail light controls if tail lights exist
+		if (this.taillights && this.taillights.length > 0) {
+			this.addTaillightGUIControls()
+		}
+	}
+
+	/**
+	 * Add GUI controls for tail lights
+	 * @private
+	 */
+	addTaillightGUIControls() {
+		const folder = this.debug.gui.addFolder("Tail Lights")
+
+		const light = this.taillights[0]
+		const settings = {
+			enabled: true,
+			showHelpers: false,
+			intensity: light.intensity,
+			distance: light.distance,
+			angle: (light.angle * 180) / Math.PI,
+			penumbra: light.penumbra,
+			color: `#${light.color.getHexString()}`,
+		}
+
+		folder
+			.add(settings, "enabled")
+			.name("Tail Lights On")
+			.onChange((value) => {
+				this.taillights.forEach((l) => (l.visible = value))
+			})
+
+		folder
+			.add(settings, "showHelpers")
+			.name("Show Helpers")
+			.onChange((value) => {
+				if (value) {
+					// Create and add helpers if they don't exist
+					if (this.taillightHelpers.length === 0) {
+						this.taillights.forEach((light) => {
+							const helper = new THREE.SpotLightHelper(light)
+							this.scene.add(helper)
+							this.taillightHelpers.push(helper)
+						})
+					} else {
+						// Show existing helpers
+						this.taillightHelpers.forEach((helper) => {
+							helper.visible = true
+						})
+					}
+				} else {
+					// Hide helpers
+					this.taillightHelpers.forEach((helper) => {
+						helper.visible = false
+					})
+				}
+			})
+
+		folder
+			.add(settings, "intensity", 0, 10, 0.5)
+			.name("Intensity")
+			.onChange((value) => {
+				this.taillights.forEach((l) => (l.intensity = value))
+			})
+
+		folder
+			.add(settings, "distance", 0.5, 10, 0.5)
+			.name("Distance")
+			.onChange((value) => {
+				this.taillights.forEach((l) => (l.distance = value))
+			})
+
+		folder
+			.add(settings, "angle", 10, 180, 5)
+			.name("Angle (deg)")
+			.onChange((value) => {
+				const radians = (value * Math.PI) / 180
+				this.taillights.forEach((l) => (l.angle = radians))
+			})
+
+		folder
+			.add(settings, "penumbra", 0, 1, 0.1)
+			.name("Penumbra")
+			.onChange((value) => {
+				this.taillights.forEach((l) => (l.penumbra = value))
+			})
+
+		folder
+			.addColor(settings, "color")
+			.name("Color")
+			.onChange((value) => {
+				this.taillights.forEach((l) => l.color.setStyle(value))
+			})
+
+		folder.close()
 	}
 
 	/**
@@ -209,6 +433,24 @@ class SceneBase {
 		if (this.plane && this.plane2) {
 			this.plane.position.z = (elapsedTime * 0.15) % 2
 			this.plane2.position.z = ((elapsedTime * 0.15) % 2) - 2
+		}
+
+		// Update light helpers if they exist and are visible
+		if (this.lightHelpers && this.lightHelpers.length > 0) {
+			this.lightHelpers.forEach(helper => {
+				if (helper.visible) {
+					helper.update()
+				}
+			})
+		}
+
+		// Update tail light helpers if they exist and are visible
+		if (this.taillightHelpers && this.taillightHelpers.length > 0) {
+			this.taillightHelpers.forEach(helper => {
+				if (helper.visible) {
+					helper.update()
+				}
+			})
 		}
 	}
 
