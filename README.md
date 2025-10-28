@@ -6,7 +6,7 @@ The technical challenge was mapping the phone's accelerometer and gyroscope data
 
 I started with the concept of having a server and client component, then realized I could do this totally peer-to-peer with WebRTC data channels, and it wound up being this demo. Combining WebGL, WebRTC, device sensor data, and a gaming aesthetic.
 
-I wrapped the tech in a synthwave/vaporwave cyberpunk aesthetic because it looks DOPE!
+I wrapped the tech in a synthwave/vaporwave cyberpunk aesthetic because it's fun.
 
 **Live Demo:** [https://jkinman.github.io](https://jkinman.github.io)
 

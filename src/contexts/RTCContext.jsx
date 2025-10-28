@@ -97,19 +97,13 @@ const RTCProvider = (props) => {
 	const [state, dispatch] = React.useReducer(reducer, initialState)
 	const [peer] = useState(() => new Peer())
 	const [stateTransferHandler, setStateTransferHandler] = useState(() => (data) => {})
-	let dataCB = () => {}
+	const dataCBRef = React.useRef(() => {})  // Use ref instead of let!
 	const [status, setStatus] = useState(EMPTY)
-	
-	// Check if peer opened but state wasn't updated - fix it immediately
-	if (peer.id && !state.peerId) {
-		dispatch({ type: "setPeer", payload: peer })
-		dispatch({ type: "setPeerId", payload: peer.id })
-		dispatch({ type: "setStatus", payload: OPEN })
-		setStatus(OPEN)
-	}
+	const [listenersAttached, setListenersAttached] = useState(false)
 
 	useEffect(() => {
-		if (status !== EMPTY) return
+		if (listenersAttached) return
+		setListenersAttached(true)
 		
 		dispatch({ type: "setStatus", payload: CONNECTING })
 		setStatus(CONNECTING)
@@ -136,7 +130,8 @@ const RTCProvider = (props) => {
 			setStatus(CONNECTED)
 
 			dispatch({ type: "addDataConnection", payload: dataConnection })
-			dataConnection.on("data", (data) => dataIncoming(data))
+			dataConnection.on("data", dataIncoming)
+			
 			dataConnection.on("close", (p) => {
 				dispatch({ type: "disconnection", payload: p })
 			})
@@ -155,15 +150,24 @@ const RTCProvider = (props) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
+	// Check for mismatch after listeners are attached
+	useEffect(() => {
+		if (!listenersAttached) return
+		if (peer.id && !state.peerId) {
+			dispatch({ type: "setPeer", payload: peer })
+			dispatch({ type: "setPeerId", payload: peer.id })
+			dispatch({ type: "setStatus", payload: OPEN })
+			setStatus(OPEN)
+		}
+	}, [listenersAttached, peer.id, state.peerId, peer])
+
 	const dataIncoming = (data) => {
-		if (data.data) dataCB(data.data)
+		if (data.data) dataCBRef.current(data.data)
 		if (data.state && stateTransferHandler)  stateTransferHandler( data.state )
 	}
 	const storeDataCallback = (cb) => {
-		// setDataCB(cb)
-		dataCB = cb
+		dataCBRef.current = cb
 		dispatch({ type: "setDataHandler", payload: cb })
-		// debugger
 		state.dataConnections.forEach(function (value, key) {
 			value.on("data", dataIncoming)
 		})

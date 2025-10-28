@@ -405,12 +405,13 @@ class SceneBase {
 		this.debug.begin()
 
 		const elapsedTime = this.clock.getElapsedTime()
+		const deltaTime = this.clock.getDelta()
 
 		// Update animated elements
 		this.updateAnimations(elapsedTime)
 
 		// Update camera from device data or orbit controls
-		this.updateCamera()
+		this.updateCamera(deltaTime)
 
 		// Render
 		if (this.effectComposer) {
@@ -458,7 +459,7 @@ class SceneBase {
 	 * Update camera based on device orientation or orbit controls
 	 * @private
 	 */
-	updateCamera() {
+	updateCamera(deltaTime) {
 		if (this.data?.beta) {
 			// Device orientation control
 			this.cameraController.enableAutoRotate(false)
