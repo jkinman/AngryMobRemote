@@ -9,29 +9,28 @@ const DeviceMetrics = (props) => {
 		<div>
 			{deviceState.isMobile ? (
 				<div>
-					{!deviceState.permissionGranted ? (
-						<div
-						style={{
-							margin: "1",
-							display: "flex",
-							flexDirection: "column",
-						}}
+				{!deviceState.permissionGranted ? (
+					<div
+					style={{
+						margin: "1",
+						display: "flex",
+						flexDirection: "column",
+					}}
+					>
+						<p>
+							{deviceState.needsPermission 
+								? "You need to allow the site to access your accelerometer by clicking the button below and selecting allow"
+								: "Click the button below to enable device sensors"
+							}
+						</p>
+						<button
+							className='cyberpunk2077 purple'
+							onClick={deviceState.enableDeviceOrientationCallback}
 						>
-							{deviceState.needsPermission ? (
-								<>
-									<p>You need to allow the site to access your accelerometer by clicking the button below and selecting allow</p>
-									<button
-										className='cyberpunk2077 purple'
-										onClick={deviceState.enableDeviceOrientationCallback}
-									>
-										enable device metrics
-									</button>
-								</>
-							) : (
-								<p>Connecting device sensors...</p>
-							)}
-						</div>
-					) : (
+							enable device metrics
+						</button>
+					</div>
+				) : (
 						<div style={{ margin: "1em" }}>
 							<p style={{ color: "green" }}>✓ Device sensors connected</p>
 							<AccelerometerDisplay

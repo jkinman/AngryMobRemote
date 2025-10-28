@@ -68,7 +68,7 @@ const DeviceMetricsProvider = (props) => {
 
 	useEffect(() => {
 		window.addEventListener("scroll", handleScrollCallback, true)
-		enableDeviceOrientationCallback()
+		// Don't auto-enable - require user gesture for both iOS and Android
 	}, [])
 
 	const linkHandlers = () => {
@@ -99,9 +99,15 @@ const DeviceMetricsProvider = (props) => {
 					dispatch({ type: "device/setPermissionStatus", payload: "denied" })
 				})
 		} else {
-			// Handle Android and other devices that don't require permission
-			dispatch({ type: "device/setPermissionStatus", payload: "granted" })
-			linkHandlers()
+			// Handle Android and other devices - attach handlers with user gesture
+			// Modern browsers require user interaction even without explicit permission API
+			try {
+				linkHandlers()
+				dispatch({ type: "device/setPermissionStatus", payload: "granted" })
+			} catch (err) {
+				console.error("Error enabling device sensors:", err)
+				dispatch({ type: "device/setPermissionStatus", payload: "denied" })
+			}
 		}
 	}
 
