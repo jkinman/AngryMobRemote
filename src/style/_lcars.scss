@@ -103,6 +103,7 @@
 .lcars-body-container {
 	// height: 82vh;
 	overflow: hidden;
+	min-height: calc(100vh - 200px);
 }
 .data-cascade-button-group {
 	padding: 5px;
