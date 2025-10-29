@@ -221,11 +221,12 @@ export class HeadlightManager {
 	 * @param {Array<THREE.SpotLight>} lights - Array of lights
 	 * @param {THREE.Scene} scene - The scene (for adding/removing helpers)
 	 * @param {Array} helpersArray - Reference to the helpers array to modify
+	 * @returns {Object} The toggle controller for remote control
 	 */
 	static addGUIControls(gui, lights, scene, helpersArray) {
 		const folder = gui.addFolder("Headlights")
 
-		if (lights.length === 0) return
+		if (lights.length === 0) return null
 
 		// Use first light as reference for shared settings
 		const light = lights[0]
@@ -240,7 +241,8 @@ export class HeadlightManager {
 			color: `#${light.color.getHexString()}`,
 		}
 
-		folder
+		// Store reference to toggle controller for remote control
+		const toggleController = folder
 			.add(settings, "enabled")
 			.name("Headlights On")
 			.onChange((value) => {
@@ -309,7 +311,7 @@ export class HeadlightManager {
 
 		folder.close()
 
-		return folder
+		return toggleController
 	}
 }
 

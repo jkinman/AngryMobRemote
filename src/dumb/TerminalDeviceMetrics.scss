@@ -1,0 +1,312 @@
+// Terminal Device Metrics - Cyberpunk Hacker Style
+
+.terminal-error {
+	margin: 2rem 0;
+	
+	.error-box {
+		border: 2px solid #ff0000;
+		padding: 1.5rem;
+		background: rgba(255, 0, 0, 0.1);
+		box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+		
+		.error-header {
+			font-size: 1.2rem;
+			color: #ff0000;
+			margin-bottom: 1rem;
+			font-weight: bold;
+			letter-spacing: 2px;
+		}
+		
+		.error-message {
+			color: #ff6666;
+			line-height: 1.6;
+		}
+	}
+}
+
+.terminal-permission {
+	margin: 1rem 0;
+	
+	.permission-box {
+		border: 3px solid #ffff00;
+		padding: 1.5rem 1rem;
+		background: rgba(255, 255, 0, 0.05);
+		box-shadow: 
+			0 0 15px rgba(255, 255, 0, 0.3),
+			inset 0 0 30px rgba(255, 255, 0, 0.05);
+		text-align: center;
+		
+		.permission-header {
+			font-size: 1.1rem;
+			color: #ffff00;
+			margin-bottom: 1rem;
+			font-weight: bold;
+			letter-spacing: 2px;
+			text-shadow: 0 0 10px rgba(255, 255, 0, 0.8);
+		}
+		
+		.permission-message {
+			margin-bottom: 1.5rem;
+			
+			p {
+				margin: 0.5rem 0;
+				color: #00ff00;
+				font-size: 1rem;
+				letter-spacing: 0.5px;
+			}
+			
+			.sub-message {
+				font-size: 0.85rem;
+				color: #00ffff;
+				line-height: 1.5;
+				margin-top: 0.75rem;
+			}
+		}
+		
+		.terminal-button {
+			background: transparent;
+			border: 2px solid #00ff00;
+			color: #00ff00;
+			padding: 1rem 2rem;
+			font-size: 1.1rem;
+			font-family: 'Courier New', Courier, Monaco, monospace;
+			cursor: pointer;
+			letter-spacing: 2px;
+			font-weight: bold;
+			transition: all 0.2s;
+			box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+			width: 100%;
+			max-width: 300px;
+			
+			&:hover {
+				background: rgba(0, 255, 0, 0.1);
+				box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+				transform: scale(1.02);
+			}
+			
+			&:active {
+				transform: scale(0.98);
+				box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+			}
+		}
+		
+		.permission-note {
+			margin-top: 1rem;
+			color: #00ff00;
+			opacity: 0.7;
+			font-size: 0.85rem;
+		}
+	}
+}
+
+.terminal-sensors {
+	margin: 2rem 0;
+	
+	.sensor-status {
+		margin-bottom: 1.5rem;
+		padding: 0.75rem;
+		border: 1px solid #00ff00;
+		background: rgba(0, 255, 0, 0.05);
+		text-align: center;
+		font-size: 1.1rem;
+		font-weight: bold;
+		letter-spacing: 2px;
+		
+		.green {
+			text-shadow: 0 0 5px rgba(0, 255, 0, 0.8);
+		}
+	}
+	
+	.sensor-data {
+		display: flex;
+		gap: 0.75rem;
+		justify-content: space-between;
+		
+		.data-section {
+			flex: 1;
+			margin: 1rem 0;
+			padding: 0.75rem;
+			border-left: 3px solid #00ff00;
+			background: rgba(0, 255, 0, 0.02);
+			
+			.section-title {
+				color: #00ff00;
+				font-size: 0.9rem;
+				margin-bottom: 0.5rem;
+				font-weight: bold;
+				letter-spacing: 1px;
+			}
+			
+			.data-line {
+				display: flex;
+				justify-content: space-between;
+				padding: 0.3rem 0;
+				margin-left: 0.5rem;
+				font-size: 0.85rem;
+				border-bottom: 1px solid rgba(0, 255, 0, 0.1);
+				
+				&:last-child {
+					border-bottom: none;
+				}
+				
+				.data-label {
+					color: #00ff00;
+					opacity: 0.8;
+					min-width: 60px;
+				}
+				
+				.data-value {
+					font-weight: bold;
+					letter-spacing: 0.5px;
+					text-shadow: 0 0 3px rgba(0, 255, 255, 0.5);
+					
+					&.cyan {
+						color: #00ffff;
+					}
+				}
+			}
+		}
+	}
+	
+	.streaming-indicator {
+		margin-top: 2rem;
+		padding: 0.75rem;
+		border: 1px dashed #00ff00;
+		text-align: center;
+		color: #00ff00;
+		font-size: 0.9rem;
+		background: rgba(0, 255, 0, 0.02);
+		letter-spacing: 1px;
+	}
+}
+
+// Shared styles
+.cyan {
+	color: #00ffff;
+}
+
+.green {
+	color: #00ff00;
+}
+
+// Blinking animation
+.blink {
+	animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+	0%, 50% {
+		opacity: 1;
+	}
+	51%, 100% {
+		opacity: 0;
+	}
+}
+
+// Glitch animation for warnings
+.glitch {
+	animation: glitch 0.5s infinite;
+}
+
+@keyframes glitch {
+	0% {
+		transform: translate(0);
+	}
+	20% {
+		transform: translate(-2px, 2px);
+	}
+	40% {
+		transform: translate(-2px, -2px);
+	}
+	60% {
+		transform: translate(2px, 2px);
+	}
+	80% {
+		transform: translate(2px, -2px);
+	}
+	100% {
+		transform: translate(0);
+	}
+}
+
+// Mobile responsive
+@media only screen and (max-width: 500px) {
+	.terminal-permission {
+		margin: 0.5rem 0;
+		
+		.permission-box {
+			padding: 1rem 0.75rem;
+			border-width: 2px;
+			
+			.permission-header {
+				font-size: 1rem;
+				letter-spacing: 1px;
+				margin-bottom: 0.75rem;
+			}
+			
+			.permission-message {
+				margin-bottom: 1rem;
+				
+				p {
+					font-size: 0.9rem;
+					margin: 0.4rem 0;
+				}
+				
+				.sub-message {
+					font-size: 0.8rem;
+					line-height: 1.4;
+					margin-top: 0.5rem;
+				}
+			}
+			
+			.terminal-button {
+				padding: 0.65rem 1.25rem;
+				font-size: 0.95rem;
+			}
+			
+			.permission-note {
+				margin-top: 0.75rem;
+				font-size: 0.8rem;
+			}
+		}
+	}
+	
+	.terminal-sensors {
+		.sensor-status {
+			padding: 0.5rem;
+			font-size: 0.95rem;
+			margin-bottom: 0.75rem;
+		}
+		
+		.sensor-data {
+			gap: 0.5rem;
+			
+			.data-section {
+				padding: 0.5rem;
+				margin: 0.75rem 0;
+				
+				.section-title {
+					font-size: 0.8rem;
+					margin-bottom: 0.4rem;
+				}
+				
+				.data-line {
+					font-size: 0.75rem;
+					padding: 0.25rem 0;
+					margin-left: 0.25rem;
+					
+					.data-label {
+						min-width: 50px;
+					}
+				}
+			}
+		}
+		
+		.streaming-indicator {
+			margin-top: 0.75rem;
+			padding: 0.5rem;
+			font-size: 0.8rem;
+		}
+	}
+}
+

@@ -1,0 +1,224 @@
+// Cyberpunk Hacker Terminal Aesthetic
+
+.terminal-controller {
+	width: 100vw;
+	height: 100vh;
+	background: #000000;
+	overflow: auto;
+	padding: 0.5rem;
+	box-sizing: border-box;
+	font-family: 'Courier New', Courier, Monaco, monospace;
+	color: #00ff00;
+	
+	// Scanline effect
+	background-image: 
+		repeating-linear-gradient(
+			0deg,
+			rgba(0, 255, 0, 0.03) 0px,
+			transparent 1px,
+			transparent 2px,
+			rgba(0, 255, 0, 0.03) 3px
+		);
+	
+	// Slight glow effect
+	text-shadow: 0 0 2px rgba(0, 255, 0, 0.5);
+}
+
+.terminal-container {
+	max-width: 600px;
+	margin: 0 auto;
+	padding: 0.75rem;
+	border: 2px solid #00ff00;
+	border-radius: 4px;
+	background: rgba(0, 20, 0, 0.8);
+	box-shadow: 
+		0 0 10px rgba(0, 255, 0, 0.3),
+		inset 0 0 20px rgba(0, 255, 0, 0.05);
+}
+
+.terminal-header {
+	font-size: 1rem;
+	font-weight: bold;
+	margin-bottom: 1rem;
+	padding-bottom: 0.4rem;
+	border-bottom: 1px solid #00ff00;
+	letter-spacing: 1px;
+}
+
+.terminal-status {
+	margin-bottom: 1rem;
+	font-size: 0.85rem;
+	
+	.status-line {
+		margin: 0.4rem 0;
+		line-height: 1.4;
+	}
+}
+
+.light-controls {
+	display: flex;
+	gap: 0.5rem;
+	margin: 0.75rem 0;
+	padding: 0.5rem;
+	border: 1px solid #00ff00;
+	background: rgba(0, 255, 0, 0.02);
+	
+	.light-toggle {
+		flex: 1;
+		background: transparent;
+		border: 2px solid #00ff00;
+		color: #00ff00;
+		padding: 0.4rem 0.5rem;
+		font-size: 0.7rem;
+		font-family: 'Courier New', Courier, Monaco, monospace;
+		cursor: pointer;
+		letter-spacing: 0.5px;
+		font-weight: bold;
+		transition: all 0.2s;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		
+		&.active {
+			background: rgba(0, 255, 0, 0.15);
+			box-shadow: 0 0 10px rgba(0, 255, 0, 0.4);
+			border-color: #00ff00;
+		}
+		
+		&.inactive {
+			border-color: #666;
+			color: #666;
+		}
+		
+		&:hover {
+			transform: scale(1.02);
+		}
+		
+		&:active {
+			transform: scale(0.98);
+		}
+	}
+}
+
+.terminal-content {
+	margin: 1rem 0;
+	min-height: auto;
+}
+
+.terminal-actions {
+	margin: 1rem 0 0.5rem 0;
+	padding: 0.75rem 0;
+	border-top: 1px solid #00ff00;
+	text-align: center;
+	
+	.disconnect-button {
+		background: transparent;
+		border: 2px solid #ff0000;
+		color: #ff0000;
+		padding: 0.65rem 1.5rem;
+		font-size: 0.95rem;
+		font-family: 'Courier New', Courier, Monaco, monospace;
+		cursor: pointer;
+		letter-spacing: 2px;
+		font-weight: bold;
+		transition: all 0.2s;
+		box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+		
+		&:hover {
+			background: rgba(255, 0, 0, 0.1);
+			box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+			transform: scale(1.02);
+		}
+		
+		&:active {
+			transform: scale(0.98);
+			box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+		}
+	}
+}
+
+.terminal-footer {
+	margin-top: 0.5rem;
+	padding-top: 0.5rem;
+	opacity: 0.5;
+	font-size: 0.8rem;
+}
+
+// Terminal colors
+.green {
+	color: #00ff00;
+}
+
+.cyan {
+	color: #00ffff;
+}
+
+.yellow {
+	color: #ffff00;
+}
+
+.red {
+	color: #ff0000;
+}
+
+.prompt {
+	color: #00ff00;
+	margin-right: 0.5rem;
+}
+
+// Blinking cursor animation
+.blink {
+	animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+	0%, 50% {
+		opacity: 1;
+	}
+	51%, 100% {
+		opacity: 0;
+	}
+}
+
+// Glitch effect for warnings
+.glitch {
+	animation: glitch 0.3s infinite;
+}
+
+@keyframes glitch {
+	0% {
+		transform: translate(0);
+	}
+	20% {
+		transform: translate(-2px, 2px);
+	}
+	40% {
+		transform: translate(-2px, -2px);
+	}
+	60% {
+		transform: translate(2px, 2px);
+	}
+	80% {
+		transform: translate(2px, -2px);
+	}
+	100% {
+		transform: translate(0);
+	}
+}
+
+// Mobile responsive
+@media only screen and (max-width: 500px) {
+	.terminal-controller {
+		padding: 0.5rem;
+	}
+	
+	.terminal-container {
+		padding: 0.75rem;
+		font-size: 0.9rem;
+	}
+	
+	.terminal-header {
+		font-size: 1rem;
+	}
+}
+

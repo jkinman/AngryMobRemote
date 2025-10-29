@@ -6,7 +6,7 @@ import SceneBase from "../modules/3d/SceneBase.js"
  * Manages the lifecycle of the Three.js scene
  */
 export const Render3d = (props) => {
-	const { storeDataCallback, showControls, isClient } = props
+	const { storeDataCallback, showControls, isClient, headlightsOn, taillightsOn } = props
 	const sceneRef = useRef(null)
 
 	// Initialize scene when client mode is activated (only once)
@@ -36,6 +36,14 @@ export const Render3d = (props) => {
 			sceneRef.current.setShowControls(showControls)
 		}
 	}, [showControls, isClient])
+
+	// Update light states when they change
+	useEffect(() => {
+		console.log('Render3d light effect:', { headlightsOn, taillightsOn, hasScene: !!sceneRef.current, isClient })
+		if (sceneRef.current && isClient) {
+			sceneRef.current.setLightStates(headlightsOn, taillightsOn)
+		}
+	}, [headlightsOn, taillightsOn, isClient])
 
 	return null
 }

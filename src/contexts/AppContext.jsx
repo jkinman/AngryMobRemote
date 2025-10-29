@@ -20,19 +20,24 @@ const initialState = {
 	loading: false,
 	preloadProgress: false,
 	navState: NavState.begin,
+	headlightsOn: true,
+	taillightsOn: true,
 }
 
 const reducer = (state, action) => {
 	switch (action.type) {
 		case "initializeState":
 			return initialState
-		case "stateTransfer":
-			return {
-				...state,
-				// ...action.payload
-				showAbout: action.payload.showAbout,
-				showCV: action.payload.showCV,
-			}
+	case "stateTransfer":
+		console.log('AppContext stateTransfer received:', action.payload)
+		return {
+			...state,
+			// ...action.payload
+			showAbout: action.payload.showAbout,
+			showCV: action.payload.showCV,
+			headlightsOn: action.payload.headlightsOn !== undefined ? action.payload.headlightsOn : state.headlightsOn,
+			taillightsOn: action.payload.taillightsOn !== undefined ? action.payload.taillightsOn : state.taillightsOn,
+		}
 
 		case "setRTCId":
 			return {
@@ -69,17 +74,28 @@ const reducer = (state, action) => {
 				showCV: false,
 				showAbout: false,
 			}
-		case "setShowCV":
-			return {
-				...state,
-				showAbout: false,
-				showIntro: false,
-				showCV: action.payload,
-			}
+	case "setShowCV":
+		return {
+			...state,
+			showAbout: false,
+			showIntro: false,
+			showCV: action.payload,
+		}
+	
+	case "setHeadlights":
+		return {
+			...state,
+			headlightsOn: action.payload,
+		}
+	
+	case "setTaillights":
+		return {
+			...state,
+			taillightsOn: action.payload,
+		}
 
-			return state
-		default:
-			return state
+	default:
+		return state
 	}
 }
 
@@ -99,6 +115,14 @@ const AppProvider = (props) => {
 	const toggleIntro = (param) => {
 		const show = param ? param : !state.showIntro
 		dispatch({ type: "setShowIntro", payload: show })
+	}
+	const toggleHeadlights = (param) => {
+		const on = param !== undefined ? param : !state.headlightsOn
+		dispatch({ type: "setHeadlights", payload: on })
+	}
+	const toggleTaillights = (param) => {
+		const on = param !== undefined ? param : !state.taillightsOn
+		dispatch({ type: "setTaillights", payload: on })
 	}
 
 	const setRTCId = (id) => dispatch({ type: "setRTCId", payload: id })
@@ -122,6 +146,8 @@ const AppProvider = (props) => {
 				toggleAbout,
 				toggleCV,
 				toggleIntro,
+				toggleHeadlights,
+				toggleTaillights,
 				stateTransfer,
 			}}
 		>

@@ -26,11 +26,22 @@ const UplinkComponent = (props) => {
 	}, [])
 
 	useEffect(() => {
+		console.log('UplinkComponent sending state:', {
+			showAbout: AppState.showAbout, 
+			showCV: AppState.showCV,
+			headlightsOn: AppState.headlightsOn,
+			taillightsOn: AppState.taillightsOn,
+		})
 		RTCState.sendData({
-			state: { showAbout: AppState.showAbout, showCV: AppState.showCV },
+			state: { 
+				showAbout: AppState.showAbout, 
+				showCV: AppState.showCV,
+				headlightsOn: AppState.headlightsOn,
+				taillightsOn: AppState.taillightsOn,
+			},
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [AppState.showAbout, AppState.showCV])
+	}, [AppState.showAbout, AppState.showCV, AppState.headlightsOn, AppState.taillightsOn])
 
 	useEffect(() => {
 		if (deviceState && deviceState.isMobile) {

@@ -24,6 +24,12 @@ class SceneBase {
 		this.clock = new THREE.Clock()
 		this.data = {}
 		this.showControls = props.showControls !== undefined ? props.showControls : true
+		
+		// Pending light states (applied after assets load)
+		this.pendingLightStates = {
+			headlights: true,
+			taillights: true
+		}
 	}
 
 	/**
@@ -247,6 +253,12 @@ class SceneBase {
 			// Initialize empty helpers arrays (will be created via GUI)
 			this.lightHelpers = []
 			this.taillightHelpers = []
+			
+			// Apply any pending light states
+			console.log('Assets loaded, applying pending light states:', this.pendingLightStates)
+			if (this.pendingLightStates) {
+				this.applyLightStates(this.pendingLightStates.headlights, this.pendingLightStates.taillights)
+			}
 		} catch (error) {
 			console.error("Failed to load assets:", error)
 		}
@@ -285,7 +297,7 @@ class SceneBase {
 
 		// Add headlight controls if headlights exist
 		if (this.headlights && this.headlights.length > 0) {
-			HeadlightManager.addGUIControls(
+			this.headlightToggleController = HeadlightManager.addGUIControls(
 				this.debug.gui, 
 				this.headlights, 
 				this.scene, 
@@ -317,7 +329,8 @@ class SceneBase {
 			color: `#${light.color.getHexString()}`,
 		}
 
-		folder
+		// Store reference to the toggle controller for remote control
+		this.taillightToggleController = folder
 			.add(settings, "enabled")
 			.name("Tail Lights On")
 			.onChange((value) => {
@@ -492,6 +505,78 @@ class SceneBase {
 		if (this.debug) {
 			this.debug.setVisible(show)
 		}
+	}
+
+	/**
+	 * Set headlight and taillight visibility (remote control)
+	 * Queues state if assets aren't loaded yet
+	 * @param {boolean} headlightsOn - Whether headlights should be on
+	 * @param {boolean} taillightsOn - Whether taillights should be on
+	 */
+	setLightStates(headlightsOn, taillightsOn) {
+		console.log('setLightStates called:', { headlightsOn, taillightsOn })
+		console.log('Has headlights array?', !!this.headlights, 'Length:', this.headlights?.length)
+		console.log('Has taillights array?', !!this.taillights, 'Length:', this.taillights?.length)
+		
+		// Store pending states
+		if (headlightsOn !== undefined) {
+			this.pendingLightStates.headlights = headlightsOn
+		}
+		if (taillightsOn !== undefined) {
+			this.pendingLightStates.taillights = taillightsOn
+		}
+		
+		// If assets are loaded, apply immediately
+		if (this.headlights || this.taillights) {
+			console.log('Assets loaded, applying immediately')
+			this.applyLightStates(headlightsOn, taillightsOn)
+		} else {
+			console.log('Assets not loaded yet, states queued:', this.pendingLightStates)
+		}
+	}
+	
+	/**
+	 * Apply light states directly (internal method)
+	 * @private
+	 */
+	applyLightStates(headlightsOn, taillightsOn) {
+		console.log('applyLightStates called:', { headlightsOn, taillightsOn })
+		
+		// Update headlights
+		if (headlightsOn !== undefined) {
+			console.log('Processing headlights, value:', headlightsOn)
+			if (this.headlightToggleController) {
+				// Use GUI controller to keep everything in sync
+				console.log('Setting headlight via controller to:', headlightsOn)
+				this.headlightToggleController.setValue(headlightsOn)
+			} else if (this.headlights) {
+				// Fallback: directly set visibility if controller not ready yet
+				console.log('Setting headlight directly to:', headlightsOn, 'on', this.headlights.length, 'lights')
+				this.headlights.forEach((l) => {
+					console.log('Setting light visible:', l.name, 'to', headlightsOn)
+					l.visible = headlightsOn
+				})
+			}
+		}
+		
+		// Update taillights
+		if (taillightsOn !== undefined) {
+			console.log('Processing taillights, value:', taillightsOn)
+			if (this.taillightToggleController) {
+				// Use GUI controller to keep everything in sync
+				console.log('Setting taillight via controller to:', taillightsOn)
+				this.taillightToggleController.setValue(taillightsOn)
+			} else if (this.taillights) {
+				// Fallback: directly set visibility if controller not ready yet
+				console.log('Setting taillight directly to:', taillightsOn, 'on', this.taillights.length, 'lights')
+				this.taillights.forEach((l) => {
+					console.log('Setting light visible:', l.name, 'to', taillightsOn)
+					l.visible = taillightsOn
+				})
+			}
+		}
+		
+		console.log('applyLightStates complete')
 	}
 
 	/**

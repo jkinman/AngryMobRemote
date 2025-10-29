@@ -1,18 +1,20 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import "./style/App.scss"
 import Render3d from "./dumb/Render3d"
 import MainLayout from "./pages/MainLayout"
-import ControllerLayout from "./pages/ControllerLayout"
+import TerminalControllerLayout from "./pages/TerminalControllerLayout"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFileArrowDown } from "@fortawesome/free-solid-svg-icons"
 import ComputerAndMobile from './img/laptop+mobile.png'
+import QRCode from "qrcode"
+import theme from "./style/_vars.scss"
 
 // Custom hooks
 import { useApp, useRTC, useDeviceMetrics } from "./hooks"
 
 // components
+import TerminalDeviceMetrics from "./dumb/TerminalDeviceMetrics"
 import UplinkComponent from "./smart/UplinkComponent"
-import DeviceMetrics from "./smart/DeviceMetrics"
 import CyberpunkModal from "./dumb/CyberPunkModal"
 import ConnectionStatus from "./dumb/ConnectionStatus"
 
@@ -20,6 +22,8 @@ function App() {
 	const RTCState = useRTC()
 	const DeviceState = useDeviceMetrics()
 	const AppState = useApp()
+	const [qrUrl, setQrUrl] = useState(null)
+
 	// Set up RTC state transfer handler (once on mount)
 	useEffect(() => {
 		RTCState.setStateTransferHandler(AppState.stateTransfer)
@@ -31,6 +35,7 @@ function App() {
 		let params = new URL(document.location).searchParams
 		if (params.has("id")) {
 			AppState.setRTCId(params.get("id"))
+			AppState.toggleIntro(false) // Don't show intro modal on mobile/remote
 		} else {
 			AppState.setIsClient(true)
 		}
@@ -39,23 +44,57 @@ function App() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
+	// Generate QR code for intro modal
+	useEffect(() => {
+		if (!RTCState.peerId) return
+		const qrLink = `${window.location.origin}?id=${RTCState.peerId}`
+		QRCode.toDataURL(
+			qrLink,
+			{
+				errorCorrectionLevel: "L",
+				version: 5,
+				type: "image/jpeg",
+				quality: 0.5,
+				margin: 1,
+				color: {
+					light: "#25f",
+					dark: theme.themeColour1,
+				},
+			},
+			(err, url) => {
+				if (err) console.error(err)
+				else setQrUrl(url)
+			}
+		)
+	}, [RTCState.peerId])
+
 	return (
 		<div>
-			{/* This is the remote display */}
-			{AppState.isRemote && (
-				<ControllerLayout
-					showQR={false}
-					RTCId={AppState.RTCId}
-					leftTop={<ConnectionStatus {...RTCState} />}
-					aboutHandler={() => {AppState.toggleAbout()}}
-					cvHandler={() => AppState.toggleCV()}
-			>
-				<h1>controller</h1>
-					<DeviceMetrics />
-				<p>This is companion app controls aspects of the app's main module.</p><p>The orientation of your device's accelerometer should be linked the 3D scene's camera.</p>
+		{/* This is the remote display */}
+		{AppState.isRemote && (
+			<>
+				<TerminalControllerLayout
+					connectionStatus={RTCState.status}
+					deviceId={RTCState.peerId}
+					headlightsOn={AppState.headlightsOn}
+					taillightsOn={AppState.taillightsOn}
+					onToggleHeadlights={() => {
+						console.log('Toggle headlights clicked, current:', AppState.headlightsOn)
+						AppState.toggleHeadlights()
+					}}
+					onToggleTaillights={() => {
+						console.log('Toggle taillights clicked, current:', AppState.taillightsOn)
+						AppState.toggleTaillights()
+					}}
+				>
+					<TerminalDeviceMetrics deviceState={DeviceState} />
+				</TerminalControllerLayout>
+				{/* Hidden component that handles WebRTC connection and data streaming */}
+				<div style={{ display: 'none' }}>
 					<UplinkComponent deviceState={DeviceState} />
-				</ControllerLayout>
-			)}
+				</div>
+			</>
+		)}
 
 			{/* This is the 3D client scene */}
 			{AppState.isClient && (
@@ -66,57 +105,70 @@ function App() {
 					cvHandler={() => AppState.toggleCV()}
 				></MainLayout>
 			)}
-			<Render3d
-				RTCState={RTCState}
-				isClient={AppState.isClient}
-				storeDataCallback={RTCState.storeDataCallback}
-				showControls={AppState.show3DControls}
-				dimScene={AppState.showAbout}
-			/>
-			<CyberpunkModal
-				show={AppState.showAbout}
-				close={AppState.toggleAbout}
-			>
-				<>
-					<h1>About this app</h1>
-					<h2>uplink access point</h2>
-					<p>
-						Scan the uplink access point QR code on your mobile to unlock the
-						full demo.
-					</p>
-					<h2>tech details</h2>
-					<p>A few things to note:</p>
-					<ul>
-						<li>
-							This demo is completly static, no server side code needed
-						</li>
-						<li>All communication is done peer to peer</li>
-						<li>All graphics are rendered in realtime</li>
-					</ul>
-					<span>
-						After linking, the 3D scene's camera is updated in realtime with the device's orientation. I dropped the tech into
-						this Vaporwave scene I coded for fun.
-					</span>
-				</>
-			</CyberpunkModal>
+		<Render3d
+			RTCState={RTCState}
+			isClient={AppState.isClient}
+			storeDataCallback={RTCState.storeDataCallback}
+			showControls={AppState.show3DControls}
+			dimScene={AppState.showAbout}
+			headlightsOn={AppState.headlightsOn}
+			taillightsOn={AppState.taillightsOn}
+		/>
+		<CyberpunkModal
+			show={AppState.showAbout}
+			close={AppState.toggleAbout}
+		>
+			<>
+				<h1>About This Demo</h1>
 
-			<CyberpunkModal
-				show={AppState.showIntro}
-				close={AppState.toggleIntro}
-			>
-				<>
-					<h1>Intro</h1>
-					<p>This is optimized to be run on a computer with a mobile phone companion.</p>
-					<img src={ComputerAndMobile} alt="Computer and mobile device" width="200px"/>
-					<h2>3D Scene</h2>
-					<p>You can orbit the camera by clicking and dragging your mouse or finger anywhere on the scene, scrolling will change the camera zoom</p>
-					<h2>to unlock the controller</h2>
-					<span>
-						Scan the uplink access point QR code on your mobile to unlock the
-						full demo. (Just like a menu at a restaurant)
-					</span>
-				</>
-			</CyberpunkModal>
+				<p>
+					Turn your phone into a wireless gyroscopic controller for this 3D scene. 
+					Your device's accelerometer streams orientation data over a peer-to-peer 
+					WebRTC connection—no servers, no backend, just pure client-side JavaScript.
+				</p>
+
+				<h2>How It Works</h2>
+				<p>
+					Scan the QR code with your mobile device to establish a direct WebRTC connection. 
+					Your phone's orientation (alpha, beta, gamma) is converted to quaternion-based 
+					camera rotation at 60 FPS with sub-frame latency.
+				</p>
+
+				<h2>Tech Stack</h2>
+				<ul>
+					<li>Three.js for real-time WebGL rendering</li>
+					<li>WebRTC DataChannel for P2P communication</li>
+					<li>Device Orientation API for gyroscope data</li>
+					<li>React + SASS for the UI</li>
+				</ul>
+			</>
+		</CyberpunkModal>
+
+		<CyberpunkModal
+			show={AppState.showIntro}
+			close={AppState.toggleIntro}
+		>
+			<>
+				<h1>Welcome</h1>
+				<p>
+					Turn your phone into a wireless gyroscopic controller for this 3D scene. 
+					Your device's orientation data is streamed over a peer-to-peer WebRTC connection 
+					and converted to quaternion-based camera rotation.
+				</p>
+				<div style={{ textAlign: 'center', margin: '1em 0' }}>
+					<img src={ComputerAndMobile} alt="Computer and mobile device" width="160px"/>
+				</div>
+
+				<h2>How to Use</h2>
+				<p>
+					<strong>Desktop:</strong> Click and drag to orbit, scroll to zoom.
+				</p>
+				<p>
+					<strong>Mobile:</strong> Scan the QR code to connect, enable device sensors, 
+					and control the camera with your phone's gyroscope.
+				</p>
+			</>
+		</CyberpunkModal>
 
 			<CyberpunkModal
 				show={AppState.showCV}
