@@ -60,6 +60,25 @@ export class CameraController {
 	}
 
 	/**
+	 * Reset camera to initial state (used when remote disconnects)
+	 */
+	resetToInitial() {
+		// Reset camera quaternion to identity (no rotation)
+		this.camera.quaternion.identity()
+		
+		// Reset camera to initial lookAt
+		this.camera.lookAt(0, 10.1, 0)
+		
+		// Reset orbit controls to initial state
+		if (this.controls) {
+			this.controls.target.set(0, 10.1, 0)
+			this.controls.reset()
+			this.controls.autoRotate = true
+			this.controls.update()
+		}
+	}
+
+	/**
 	 * Handle window resize
 	 * @param {number} width - New window width
 	 * @param {number} height - New window height

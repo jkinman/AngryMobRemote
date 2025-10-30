@@ -221,9 +221,10 @@ export class HeadlightManager {
 	 * @param {Array<THREE.SpotLight>} lights - Array of lights
 	 * @param {THREE.Scene} scene - The scene (for adding/removing helpers)
 	 * @param {Array} helpersArray - Reference to the helpers array to modify
+	 * @param {Function} [onToggleCallback] - Optional callback when toggle changes
 	 * @returns {Object} The toggle controller for remote control
 	 */
-	static addGUIControls(gui, lights, scene, helpersArray) {
+	static addGUIControls(gui, lights, scene, helpersArray, onToggleCallback = null) {
 		const folder = gui.addFolder("Headlights")
 
 		if (lights.length === 0) return null
@@ -247,6 +248,10 @@ export class HeadlightManager {
 			.name("Headlights On")
 			.onChange((value) => {
 				lights.forEach((l) => (l.visible = value))
+				// Notify AppState when GUI changes (for sync with remote)
+				if (onToggleCallback) {
+					onToggleCallback(value)
+				}
 			})
 
 		folder

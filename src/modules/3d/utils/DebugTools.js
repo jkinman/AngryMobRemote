@@ -12,7 +12,10 @@ export class DebugTools {
 	constructor(showControls = true) {
 		this.showControls = showControls
 		this.stats = new Stats()
-		this.gui = new dat.GUI()
+		
+		// Create GUI with custom container
+		const guiContainer = document.getElementById("gui-container")
+		this.gui = new dat.GUI({ container: guiContainer })
 		this.gui.close()
 
 		this.setupStats()

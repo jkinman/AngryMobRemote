@@ -210,15 +210,46 @@
 @media only screen and (max-width: 500px) {
 	.terminal-controller {
 		padding: 0.5rem;
+		// Fix for mobile Safari viewport issues
+		min-height: 100vh;
+		height: auto;
+		padding-bottom: 2rem; // Extra padding for bottom content
 	}
 	
 	.terminal-container {
 		padding: 0.75rem;
 		font-size: 0.9rem;
+		margin-bottom: 1rem; // Ensure bottom spacing
 	}
 	
 	.terminal-header {
-		font-size: 1rem;
+		font-size: 0.95rem;
+		margin-bottom: 0.75rem;
+	}
+	
+	.terminal-status {
+		margin-bottom: 0.75rem;
+		font-size: 0.8rem;
+	}
+	
+	.terminal-content {
+		margin: 0.75rem 0;
+	}
+	
+	.terminal-actions {
+		margin: 0.75rem 0 0.5rem 0;
+		padding: 0.5rem 0;
+		
+		.disconnect-button {
+			width: 100%;
+			padding: 0.75rem 1rem;
+			font-size: 0.85rem;
+		}
+	}
+	
+	.terminal-footer {
+		margin-top: 0.5rem;
+		padding-bottom: 0.5rem;
 	}
 }
 

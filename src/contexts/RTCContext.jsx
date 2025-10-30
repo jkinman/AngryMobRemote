@@ -96,7 +96,7 @@ const RTCContext = React.createContext()
 const RTCProvider = (props) => {
 	const [state, dispatch] = React.useReducer(reducer, initialState)
 	const [peer] = useState(() => new Peer())
-	const [stateTransferHandler, setStateTransferHandler] = useState(() => (data) => {})
+	const stateTransferHandlerRef = React.useRef((data) => {})  // Use ref to avoid closure issues
 	const dataCBRef = React.useRef(() => {})  // Use ref instead of let!
 	const [status, setStatus] = useState(EMPTY)
 	const [listenersAttached, setListenersAttached] = useState(false)
@@ -163,7 +163,7 @@ const RTCProvider = (props) => {
 
 	const dataIncoming = (data) => {
 		if (data.data) dataCBRef.current(data.data)
-		if (data.state && stateTransferHandler)  stateTransferHandler( data.state )
+		if (data.state && stateTransferHandlerRef.current)  stateTransferHandlerRef.current(data.state)
 	}
 	const storeDataCallback = (cb) => {
 		dataCBRef.current = cb
@@ -184,9 +184,8 @@ const RTCProvider = (props) => {
 			dispatch({ type: "disconnection", payload: p })
 		)
 
-		connection.on("data", (data) =>
-			dispatch({ type: "dataRecieved", payload: data })
-		)
+		// Use dataIncoming to handle state transfers (same as incoming connections)
+		connection.on("data", dataIncoming)
 		connection.on("open", () => {
 			dispatch({ type: "setConnectionId", payload: connection.connectionId })
 		})
@@ -203,15 +202,29 @@ const RTCProvider = (props) => {
 		}
 	}
 
+	const broadcastState = (data) => {
+		// Broadcast to all connected peers (client sends to all remotes)
+		if (state.dataConnections.size > 0) {
+			console.log('Broadcasting state to', state.dataConnections.size, 'connections')
+			state.dataConnections.forEach((connection) => {
+				if (connection.open) {
+					connection.send(data)
+				}
+			})
+		}
+	}
+
 	const updateState = (data) => {
 		if (state.connection?.connectionId && state.status === CONNECTED) {
 			// console.log(data)
 			state.connection.send(data)
 		}
 	}
-	// const setStateTransferHandler= (handler) => {
-	// 	dispatch({type:'setStateTransferHandler', payload:handler})
-	// }
+	
+	const setStateTransferHandler = (handler) => {
+		stateTransferHandlerRef.current = handler
+	}
+	
 	const getQRLink = (light, dark) => {
 		const qrLink = `${window.location.origin}?id=${state.peerId}`
 		return QRCode.toDataURL(
@@ -243,6 +256,7 @@ const RTCProvider = (props) => {
 				dispatch,
 				getQRLink,
 				sendData,
+				broadcastState,
 				connectToPeer,
 				storeDataCallback,
 				updateState,

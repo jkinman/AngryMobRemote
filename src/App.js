@@ -11,6 +11,7 @@ import { useApp, useRTC, useDeviceMetrics } from "./hooks"
 // Components
 import TerminalDeviceMetrics from "./dumb/TerminalDeviceMetrics"
 import UplinkComponent from "./smart/UplinkComponent"
+import StateBroadcaster from "./smart/StateBroadcaster"
 import ConnectionStatus from "./dumb/ConnectionStatus"
 
 // Modal components
@@ -90,15 +91,19 @@ function App() {
 			</>
 		)}
 
-			{/* This is the 3D client scene */}
-			{AppState.isClient && (
+		{/* This is the 3D client scene */}
+		{AppState.isClient && (
+			<>
 				<MainLayout
 					leftMid={<ConnectionStatus {...RTCState} />}
 					connected={RTCState.peerConnection}
 					aboutHandler={() => {AppState.toggleAbout()}}
 					cvHandler={() => AppState.toggleCV()}
 				></MainLayout>
-			)}
+				{/* Hidden component that broadcasts state changes to connected remotes */}
+				<StateBroadcaster />
+			</>
+		)}
 		<Render3d
 			RTCState={RTCState}
 			isClient={AppState.isClient}
@@ -107,6 +112,8 @@ function App() {
 			dimScene={AppState.showAbout}
 			headlightsOn={AppState.headlightsOn}
 			taillightsOn={AppState.taillightsOn}
+			onHeadlightsChange={(value) => AppState.toggleHeadlights(value)}
+			onTaillightsChange={(value) => AppState.toggleTaillights(value)}
 		/>
 		
 		<AboutModal show={AppState.showAbout} onClose={AppState.toggleAbout} />

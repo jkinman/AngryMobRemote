@@ -272,40 +272,42 @@
 	}
 	
 	.terminal-sensors {
+		margin: 0.75rem 0;
+		
 		.sensor-status {
-			padding: 0.5rem;
-			font-size: 0.95rem;
-			margin-bottom: 0.75rem;
+			padding: 0.4rem;
+			font-size: 0.85rem;
+			margin-bottom: 0.5rem;
 		}
 		
 		.sensor-data {
-			gap: 0.5rem;
+			gap: 0.4rem;
 			
 			.data-section {
-				padding: 0.5rem;
-				margin: 0.75rem 0;
+				padding: 0.4rem;
+				margin: 0.5rem 0;
 				
 				.section-title {
-					font-size: 0.8rem;
-					margin-bottom: 0.4rem;
+					font-size: 0.75rem;
+					margin-bottom: 0.3rem;
 				}
 				
 				.data-line {
-					font-size: 0.75rem;
-					padding: 0.25rem 0;
+					font-size: 0.7rem;
+					padding: 0.2rem 0;
 					margin-left: 0.25rem;
 					
 					.data-label {
-						min-width: 50px;
+						min-width: 45px;
 					}
 				}
 			}
 		}
 		
 		.streaming-indicator {
-			margin-top: 0.75rem;
-			padding: 0.5rem;
-			font-size: 0.8rem;
+			margin-top: 0.5rem;
+			padding: 0.4rem;
+			font-size: 0.75rem;
 		}
 	}
 }

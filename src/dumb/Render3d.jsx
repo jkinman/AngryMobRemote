@@ -6,15 +6,20 @@ import SceneBase from "../modules/3d/SceneBase.js"
  * Manages the lifecycle of the Three.js scene
  */
 export const Render3d = (props) => {
-	const { storeDataCallback, showControls, isClient, headlightsOn, taillightsOn } = props
+	const { storeDataCallback, showControls, isClient, headlightsOn, taillightsOn, onHeadlightsChange, onTaillightsChange, RTCState } = props
 	const sceneRef = useRef(null)
+	const prevPeerConnectionRef = useRef(false)
 
 	// Initialize scene when client mode is activated (only once)
 	useEffect(() => {
 		if (!isClient) return
 
 		// Initialize scene
-		const scene = new SceneBase({ showControls })
+		const scene = new SceneBase({ 
+			showControls,
+			onHeadlightsChange,
+			onTaillightsChange
+		})
 		sceneRef.current = scene
 
 		scene.startUp().then(() => {
@@ -28,7 +33,25 @@ export const Render3d = (props) => {
 				sceneRef.current = null
 			}
 		}
-	}, [isClient]) // Only depend on isClient, not showControls or storeDataCallback
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isClient]) // Only depend on isClient - callbacks and showControls are set at construction time
+
+	// Reset camera when remote disconnects
+	useEffect(() => {
+		if (!isClient || !sceneRef.current || !RTCState) return
+
+		const wasConnected = prevPeerConnectionRef.current
+		const isConnected = RTCState.peerConnection
+
+		// Detect disconnect: was connected, now not connected
+		if (wasConnected && !isConnected) {
+			console.log('RTC disconnected - resetting camera to initial state')
+			sceneRef.current.resetCamera()
+		}
+
+		// Store current connection state for next comparison
+		prevPeerConnectionRef.current = isConnected
+	}, [isClient, RTCState?.peerConnection, RTCState])
 
 	// Update controls visibility when it changes
 	useEffect(() => {

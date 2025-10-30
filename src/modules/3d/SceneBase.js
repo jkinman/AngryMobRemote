@@ -18,6 +18,8 @@ class SceneBase {
 	 * Create a new scene
 	 * @param {Object} props - Scene configuration
 	 * @param {boolean} [props.showControls=true] - Whether to show debug controls
+	 * @param {Function} [props.onHeadlightsChange] - Callback when headlights change
+	 * @param {Function} [props.onTaillightsChange] - Callback when taillights change
 	 */
 	constructor(props = {}) {
 		this.mounted = false
@@ -25,6 +27,8 @@ class SceneBase {
 		this.data = {}
 		this.showControls = props.showControls !== undefined ? props.showControls : true
 		this.vehicleManager = null
+		this.onHeadlightsChange = props.onHeadlightsChange
+		this.onTaillightsChange = props.onTaillightsChange
 	}
 
 	/**
@@ -191,7 +195,8 @@ class SceneBase {
 				this.debug.gui, 
 				this.headlights, 
 				this.scene, 
-				this.lightHelpers
+				this.lightHelpers,
+				this.onHeadlightsChange
 			)
 		}
 
@@ -225,6 +230,10 @@ class SceneBase {
 			.name("Tail Lights On")
 			.onChange((value) => {
 				this.taillights.forEach((l) => (l.visible = value))
+				// Notify AppState when GUI changes (for sync with remote)
+				if (this.onTaillightsChange) {
+					this.onTaillightsChange(value)
+				}
 			})
 
 		folder
@@ -381,6 +390,19 @@ class SceneBase {
 	 */
 	updateData(data) {
 		this.data = data
+	}
+
+	/**
+	 * Reset camera to initial state (called on RTC disconnect)
+	 */
+	resetCamera() {
+		// Clear device data so updateCamera switches to orbit controls
+		this.data = {}
+		
+		// Reset camera to initial state
+		if (this.cameraController) {
+			this.cameraController.resetToInitial()
+		}
 	}
 
 	/**
