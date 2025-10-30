@@ -49,15 +49,20 @@ body .button {
 	height: 100%;
 }
 
-.gui-container {
-	position: fixed;
-	bottom: 0;
-	right: 0;
-	z-index: 10000;
-}
-
-.lil-gui {
+.lil-gui.root {
 	pointer-events: all;
+	position: fixed !important;
+	top: auto !important;
+	right: 0 !important;
+	bottom: 0 !important;
+	left: auto !important;
+	
+	// Mobile responsive fixes
+	@media only screen and (max-width: 768px) {
+		max-height: 70vh !important;
+		overflow-y: auto !important;
+		-webkit-overflow-scrolling: touch;
+	}
 }
 
 .fps {

@@ -111,11 +111,11 @@ export class HeadlightManager {
 			leftOffset: new THREE.Vector3(-15, 5, -30),
 			rightOffset: new THREE.Vector3(15, 5, -30),
 			// Light properties
-			color: 0xffffee,
-			intensity: 200,
-			distance: 100,
-			angle: Math.PI / 6, // 30 degrees
-			penumbra: 0.3,
+			color: 0x0f0f0f,
+			intensity: 10,
+			distance: 25,
+			angle: (27 * Math.PI) / 180, // 27 degrees
+			penumbra: 0.05,
 			decay: 2,
 			// Direction
 			targetDistance: 50, // How far ahead the light points

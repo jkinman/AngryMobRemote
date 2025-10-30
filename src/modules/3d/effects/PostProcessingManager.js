@@ -246,7 +246,7 @@ export class PostProcessingManager {
 				}
 			})
 		
-		perfFolder.open()  // Keep open for easy testing
+		perfFolder.close()  // Closed by default for accordion behavior
 
 		// Advanced controls in separate folder
 		const folder = this.gui.addFolder("Advanced")

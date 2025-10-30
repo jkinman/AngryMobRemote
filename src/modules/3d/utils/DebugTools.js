@@ -13,6 +13,9 @@ export class DebugTools {
 		this.showControls = showControls
 		this.stats = new Stats()
 		
+		// Track all folders for accordion behavior
+		this.folders = []
+		
 		// Create GUI with custom container
 		const guiContainer = document.getElementById("gui-container")
 		this.gui = new dat.GUI({ container: guiContainer })
@@ -68,12 +71,47 @@ export class DebugTools {
 	}
 
 	/**
-	 * Add a GUI folder
+	 * Add a GUI folder with accordion behavior
 	 * @param {string} name - Folder name
 	 * @returns {dat.GUI} The created folder
 	 */
 	addFolder(name) {
-		return this.gui.addFolder(name)
+		const folder = this.gui.addFolder(name)
+		
+		// Track this folder
+		this.folders.push(folder)
+		
+		// Setup accordion behavior: when this folder opens, close all others
+		this._setupAccordionBehavior(folder)
+		
+		return folder
+	}
+
+	/**
+	 * Setup accordion behavior for a folder
+	 * Only one folder can be open at a time
+	 * @private
+	 */
+	_setupAccordionBehavior(targetFolder) {
+		// Find the folder's title element (the clickable part)
+		const titleElement = targetFolder.domElement.querySelector('.title')
+		
+		if (titleElement) {
+			// Add click listener to the title
+			titleElement.addEventListener('click', () => {
+				// Small delay to let lil-gui's native open/close happen first
+				setTimeout(() => {
+					// If this folder is now open, close all others
+					if (!targetFolder._closed) {
+						this.folders.forEach(folder => {
+							if (folder !== targetFolder && !folder._closed) {
+								folder.close()
+							}
+						})
+					}
+				}, 10)
+			})
+		}
 	}
 }
 

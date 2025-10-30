@@ -149,20 +149,42 @@ class SceneBase {
 	 * @private
 	 */
 	setupVaporwaveScene() {
-		const terrainGroup = VaporwaveScene.createTerrain(this.debug.addFolder("terrain"))
+		const lightsFolder = this.debug.addFolder("Scene Lights")
+		VaporwaveScene.setupLights(this.scene, lightsFolder)
+		lightsFolder.close()
+
+		const terrainFolder = this.debug.addFolder("Terrain")
+		const terrainGroup = VaporwaveScene.createTerrain(terrainFolder)
+		terrainFolder.close()
 		this.scene.add(terrainGroup)
 
 		this.plane = this.scene.getObjectByName("vaporWaveGround1")
 		this.plane2 = this.scene.getObjectByName("vaporWaveGround2")
-
-		VaporwaveScene.setupLights(this.scene, this.debug.addFolder("lights"))
 	}
 
 	/**
-	 * Set up post-processing effects
+	 * Set up post-processing effects and GUI controls
+	 * Controls are ordered by priority: vehicle lights → effects → scene → camera → terrain
 	 * @private
 	 */
 	setupPostProcessing() {
+		// 1. Add headlight controls first (highest priority)
+		if (this.headlights && this.headlights.length > 0) {
+			this.headlightToggleController = HeadlightManager.addGUIControls(
+				this.debug.gui, 
+				this.headlights, 
+				this.scene, 
+				this.lightHelpers,
+				this.onHeadlightsChange
+			)
+		}
+
+		// 2. Add tail light controls second
+		if (this.taillights && this.taillights.length > 0) {
+			this.addTaillightGUIControls()
+		}
+
+		// 3. Add post-processing effects third
 		const postProcessing = VaporwaveScene.createPostProcessing(
 			this.debug.gui,
 			this.webglRenderer.instance,
@@ -184,26 +206,13 @@ class SceneBase {
 			}
 		}
 
+		// 4. Add camera controls fourth (after scene lights and before terrain in setupVaporwaveScene)
+		const cameraFolder = this.debug.addFolder("Camera")
 		VaporwaveScene.addCameraDebugControls(
-			this.debug.gui,
+			cameraFolder,
 			this.cameraController.camera
 		)
-
-		// Add headlight controls if headlights exist
-		if (this.headlights && this.headlights.length > 0) {
-			this.headlightToggleController = HeadlightManager.addGUIControls(
-				this.debug.gui, 
-				this.headlights, 
-				this.scene, 
-				this.lightHelpers,
-				this.onHeadlightsChange
-			)
-		}
-
-		// Add tail light controls if tail lights exist
-		if (this.taillights && this.taillights.length > 0) {
-			this.addTaillightGUIControls()
-		}
+		cameraFolder.close()
 	}
 
 	/**
