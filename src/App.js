@@ -91,19 +91,19 @@ function App() {
 			</>
 		)}
 
-		{/* This is the 3D client scene */}
-		{AppState.isClient && (
-			<>
-				<MainLayout
-					leftMid={<ConnectionStatus {...RTCState} />}
-					connected={RTCState.peerConnection}
-					aboutHandler={() => {AppState.toggleAbout()}}
-					cvHandler={() => AppState.toggleCV()}
-				></MainLayout>
-				{/* Hidden component that broadcasts state changes to connected remotes */}
-				<StateBroadcaster />
-			</>
-		)}
+	{/* This is the 3D client scene */}
+	{AppState.isClient && (
+		<>
+			<MainLayout
+				leftMid={<ConnectionStatus {...RTCState} />}
+				connected={RTCState.peerConnection}
+				aboutHandler={() => {AppState.toggleAbout()}}
+				cvHandler={() => AppState.toggleCV()}
+			></MainLayout>
+			{/* Hidden component that broadcasts state changes to connected remotes */}
+			<StateBroadcaster />
+		</>
+	)}
 		<Render3d
 			RTCState={RTCState}
 			isClient={AppState.isClient}
